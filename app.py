@@ -1,4 +1,4 @@
-"""Vibe 量化系统 - Streamlit 主界面（最终版）"""
+"""Vibe 量化系统 - Streamlit 主界面（带清缓存按钮）"""
 import streamlit as st
 import pandas as pd
 from datetime import datetime
@@ -29,6 +29,12 @@ with st.sidebar:
     st.divider()
     if st.button("🚀 运行分析", type="primary", use_container_width=True):
         st.session_state.run = True
+    st.divider()
+    if st.button("🔄 清除缓存并重启", use_container_width=True, help="如果数据出错点这个"):
+        st.cache_resource.clear()
+        st.cache_data.clear()
+        st.session_state.clear()
+        st.rerun()
 
 @st.cache_resource(show_spinner=False)
 def get_vibe():
@@ -50,8 +56,8 @@ if st.session_state.get('run', False):
         progress_bar.progress(20)
         kline_data = vibe.load_data(n_stocks=n_stocks, min_market_cap=0)
         progress_bar.progress(50)
-        if not kline_data:
-            st.error("❌ 未能获取到任何股票数据，请检查网络或稍后重试")
+        if not kline_data or len(kline_data) == 0:
+            st.error("❌ 未能获取到任何股票数据，请点击左侧 🔄 清除缓存并重启")
             st.stop()
         status.text("🏭 加载行业分类中...")
         industry_map = vibe.get_industry_map()
