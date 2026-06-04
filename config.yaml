@@ -1,0 +1,66 @@
+system:
+  name: "Vibe 量化分析 v1.0"
+  data_source: "akshare"
+  cache_dir: "./data"
+  log_level: "INFO"
+
+data:
+  stock_pool: "all"
+  start_date: "2020-01-01"
+  end_date: "today"
+  exclude_st: true
+  exclude_suspended: true
+  min_market_cap: 50
+  min_list_days: 60
+
+trend:
+  enabled: true
+  lookback: 20
+  vol_ma: 20
+  vol_mult: 1.5
+  stop_loss: 0.08
+  take_profit: 0.30
+  trailing_stop: 0.10
+  max_hold_days: 60
+
+rotation:
+  enabled: true
+  lookback: 20
+  top_n: 5
+  stocks_per_industry: 3
+  rebalance_freq: "W"
+  min_industry_strength: 0.02
+
+factors:
+  enabled: true
+  top_n: 10
+  weights:
+    value: 0.20
+    quality: 0.25
+    growth: 0.20
+    momentum: 0.25
+    volatility: 0.10
+  detail:
+    pe: true
+    pb: true
+    dividend_yield: true
+    roe: true
+    ocf_to_profit: true
+    revenue_growth: true
+    profit_growth: true
+    momentum_20d: true
+    momentum_60d: true
+    volatility_60d: true
+
+risk:
+  max_position_pct: 0.20
+  max_industry_pct: 0.30
+  max_total_position: 0.80
+  stop_loss_pct: 0.02
+  max_drawdown_alert: 0.15
+
+backtest:
+  initial_cash: 1000000
+  commission: 0.0003
+  stamp_tax: 0.001
+  slippage: 0.001
