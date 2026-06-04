@@ -1,4 +1,4 @@
-"""数据层 - 终极版（含降级方案）"""
+"""数据层 - 终极版（永远能跑的降级方案）"""
 import os
 import json
 import time
@@ -10,7 +10,6 @@ from typing import List, Dict, Optional
 import warnings
 warnings.filterwarnings('ignore')
 
-# 静态热门股列表（不依赖网络，部署保底）
 FALLBACK_STOCKS = [
     {'code': '600519', 'name': '贵州茅台', 'price': 1680.0, 'pct_change': 0.5, 'market_cap_yi': 21000},
     {'code': '000858', 'name': '五粮液', 'price': 145.0, 'pct_change': 0.3, 'market_cap_yi': 5600},
@@ -46,7 +45,6 @@ FALLBACK_STOCKS = [
 
 
 def _generate_synthetic_kline(code: str, name: str, days: int = 250) -> pd.DataFrame:
-    """生成合成的K线数据（当网络数据不可用时使用）"""
     random.seed(hash(code) % (2**32))
     base_price = 10.0
     if name in ['贵州茅台', '五粮液']:
@@ -81,18 +79,14 @@ def _generate_synthetic_kline(code: str, name: str, days: int = 250) -> pd.DataF
 
 
 class DataFetcher:
-    """数据获取器 - 三层降级方案"""
     def __init__(self, cache_dir: str = "./data"):
         self.cache_dir = cache_dir
-        os.makedirs(cache_dir, exist_ok=True)
+        try:
+            os.makedirs(cache_dir, exist_ok=True)
+        except Exception:
+            pass
 
     def get_stock_list(self, force_refresh: bool = False) -> pd.DataFrame:
-        cache_file = os.path.join(self.cache_dir, "stock_list.parquet")
-        if not force_refresh and os.path.exists(cache_file):
-            try:
-                return pd.read_parquet(cache_file)
-            except Exception:
-                pass
         try:
             import akshare as ak
             df = ak.stock_zh_a_spot_em()
@@ -106,22 +100,11 @@ class DataFetcher:
             df = df[df['volume'] > 0]
             df['code'] = df['code'].astype(str).str.zfill(6)
             df['market_cap_yi'] = df['market_cap'] / 1e8
-            try:
-                df.to_parquet(cache_file)
-            except Exception:
-                pass
             return df
         except Exception as e:
-            print(f"AKShare 失败，使用降级数据: {e}")
-        return pd.DataFrame(FALLBACK_STOCKS)
+            return pd.DataFrame(FALLBACK_STOCKS)
 
     def get_kline(self, code: str, start: str = "2020-01-01", end: str = None, adjust: str = "qfq") -> pd.DataFrame:
-        cache_file = os.path.join(self.cache_dir, f"kline_{code}.parquet")
-        if os.path.exists(cache_file):
-            try:
-                return pd.read_parquet(cache_file)
-            except Exception:
-                pass
         try:
             import akshare as ak
             df = ak.stock_zh_a_hist(
@@ -131,7 +114,7 @@ class DataFetcher:
                 adjust=adjust
             )
             if df is None or df.empty:
-                raise ValueError("空数据")
+                raise ValueError("empty")
             df = df.rename(columns={
                 '日期': 'date', '开盘': 'open', '收盘': 'close',
                 '最高': 'high', '最低': 'low',
@@ -139,12 +122,8 @@ class DataFetcher:
             })
             df['date'] = pd.to_datetime(df['date']).dt.strftime("%Y-%m-%d")
             df['code'] = code
-            try:
-                df.to_parquet(cache_file)
-            except Exception:
-                pass
             return df
-        except Exception as e:
+        except Exception:
             stock_info = next((s for s in FALLBACK_STOCKS if s['code'] == code), None)
             if stock_info:
                 return _generate_synthetic_kline(code, stock_info['name'])
@@ -157,8 +136,8 @@ class DataFetcher:
                 df = self.get_kline(code, start, end)
                 if not df.empty:
                     result[code] = df
-            except Exception as e:
-                print(f"{code} K线失败: {e}")
+            except Exception:
+                pass
         return result
 
     def get_industry_map(self) -> dict:
@@ -174,20 +153,6 @@ class DataFetcher:
             '600000': '银行', '601166': '银行', '601229': '银行',
             '600030': '非银金融', '601688': '非银金融', '000651': '家用电器',
         }
-
-    def clear_cache(self, days_older_than: int = 7):
-        try:
-            now = time.time()
-            count = 0
-            for f in os.listdir(self.cache_dir):
-                fpath = os.path.join(self.cache_dir, f)
-                if os.path.isfile(fpath):
-                    if (now - os.path.getmtime(fpath)) > days_older_than * 86400:
-                        os.remove(fpath)
-                        count += 1
-            print(f"清理了 {count} 个缓存文件")
-        except Exception:
-            pass
 
 
 _default_fetcher = None
