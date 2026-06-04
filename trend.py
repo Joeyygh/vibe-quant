@@ -1,7 +1,7 @@
 """趋势策略 - 精简版（海龟交易法则）"""
 import pandas as pd
 import numpy as np
-from .indicators import sma, atr, volume_ratio
+from indicators import sma, atr, volume_ratio
 
 class TrendStrategy:
     def __init__(self, config):
