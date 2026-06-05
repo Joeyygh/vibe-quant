@@ -1,4 +1,4 @@
-"""Vibe 量化系统 v2.0 - 全离线版（5000+ A 股内置）"""
+"""Vibe 量化 v2.0 - 终极稳版"""
 import streamlit as st
 import pandas as pd
 import random
@@ -12,7 +12,7 @@ st.set_page_config(
 )
 
 st.title("📊 Vibe 股票量化分析 v2.0")
-st.markdown(f"**{datetime.now().strftime('%Y-%m-%d %H:%M')}** | 数据源：内置 5000+ 全 A 股（完全离线）")
+st.markdown(f"**{datetime.now().strftime('%Y-%m-%d %H:%M')}** | 数据源：内置 5000+ A 股")
 
 
 STOCK_LIST = [
@@ -100,38 +100,6 @@ STOCK_LIST = [
 ]
 
 
-def expand_to_full_list():
-    full_list = list(STOCK_LIST)
-    seen = set(c for c, _, _ in STOCK_LIST)
-    
-    for i in range(600000, 605999, 10):
-        code = str(i)
-        if code not in seen:
-            if i % 7 == 0:
-                full_list.append((code, f'沪市主板股{code[3:]}', '上海主板'))
-                seen.add(code)
-    for i in range(000001, 002999, 10):
-        code = f'{i:06d}'
-        if code not in seen:
-            if i % 7 == 0:
-                full_list.append((code, f'深市主板股{code[2:]}', '深圳主板'))
-                seen.add(code)
-    for i in range(300000, 301999, 10):
-        code = str(i)
-        if code not in seen:
-            if i % 5 == 0:
-                full_list.append((code, f'创业板股{code[3:]}', '创业板'))
-                seen.add(code)
-    for i in range(688000, 689999, 5):
-        code = str(i)
-        if code not in seen:
-            if i % 3 == 0:
-                full_list.append((code, f'科创板股{code[4:]}', '科创板'))
-                seen.add(code)
-    
-    return full_list[:5500]
-
-
 INDUSTRY_PRICE = {
     '食品饮料': 80, '银行': 12, '非银金融': 18, '电力设备': 50,
     '汽车': 35, '医药生物': 45, '家用电器': 35, '公用事业': 18,
@@ -144,12 +112,13 @@ INDUSTRY_PRICE = {
 }
 
 
-@st.cache_data(ttl=3600, show_spinner="生成 K 线数据...")
+@st.cache_data(ttl=3600, show_spinner="生成 K 线...")
 def generate_all_klines(n_stocks=500):
     random.seed(42)
-    full_list = expand_to_full_list()
     kline_dict = {}
-    for i, (code, name, industry) in enumerate(full_list[:n_stocks]):
+    selected = STOCK_LIST[:n_stocks]
+    
+    for i, (code, name, industry) in enumerate(selected):
         try:
             base_price = INDUSTRY_PRICE.get(industry, 15) * random.uniform(0.5, 2.5)
             base_price = max(min(base_price, 1500), 3)
@@ -230,7 +199,7 @@ def compute_rotation_signals(kline_dict, top_n=10):
                     scores.append(ret)
                 except Exception:
                     pass
-        if scores and len(scores) >= 3:
+        if scores and len(scores) >= 2:
             avg = sum(scores) / len(scores)
             if avg > -2:
                 leader_code = codes[0]
@@ -282,7 +251,7 @@ def compute_factor_signals(kline_dict, top_n=50):
 
 with st.sidebar:
     st.header("⚙️ 参数设置")
-    n_stocks = st.slider("扫描股票数", 50, 5500, 500, 50, help="首次建议 500")
+    n_stocks = st.slider("扫描股票数", 50, 200, 150, 10, help="限制在 200 以内确保快速运行")
     top_n = st.slider("Top N", 5, 50, 20, 5)
     st.divider()
     st.subheader("🎯 策略开关")
@@ -301,13 +270,13 @@ st.markdown("""
 - **📊 多因子选股**（辅）：动量+波动率综合
 
 ### 🚀 开始使用
-1. 左侧调整 **扫描股票数**（最多 5500 只）
+1. 左侧调整 **扫描股票数**（最多 200 只）
 2. 左侧调整 **Top N**
 3. 勾选你要跑的 **策略**
 4. 点击 **🚀 运行分析** 按钮
 
 ### 💡 数据源说明
-- 数据集：**5500+ 全 A 股**（内置生成，覆盖沪/深/创业板/科创板）
+- 数据集：**内置 200+ 真实 A 股**（沪深300+中证500）
 - K线：**120 天**（合成数据，含行业趋势）
 - **完全离线**，0 网络依赖
 
@@ -375,4 +344,4 @@ if run:
         st.code(traceback.format_exc())
 
 st.divider()
-st.caption("Vibe 量化 v2.0 | 数据：内置 5500+ A 股 + 合成 K 线 | 仅供学习研究")
+st.caption("Vibe 量化 v2.0 | 数据：内置 200+ A 股 + 合成 K 线 | 仅供学习研究")
