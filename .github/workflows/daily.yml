@@ -21,7 +21,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install tushare pandas
+          pip install akshare pandas pyarrow
 
       - name: Update data
         env:
