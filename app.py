@@ -96,17 +96,18 @@ def compute_all_signals_streaming(df_klines, top_n=20):
     }
 
 
+# 关键：先加载数据，再渲染侧边栏
+df_stocks, df_klines, load_info = load_tushare_data()
+
+if df_stocks is not None:
+    all_industries = sorted(df_stocks['industry'].unique().tolist())
+    industries_options = ['全部'] + all_industries
+else:
+    industries_options = ['全部']
+
 with st.sidebar:
     st.header("⚙️ 参数设置")
-    if 'industries' not in st.session_state:
-        st.session_state.industries = ['全部']
-    df_stocks_temp, _, _ = load_tushare_data()
-    if df_stocks_temp is not None:
-        all_industries = sorted(df_stocks_temp['industry'].unique().tolist())
-        industries_options = ['全部'] + all_industries
-        if st.session_state.industries != industries_options:
-            st.session_state.industries = industries_options
-    selected_industry = st.selectbox("🏭 行业筛选", st.session_state.industries, index=0, help="选特定行业避免重复扫描")
+    selected_industry = st.selectbox("🏭 行业筛选", industries_options, index=0, help=f"共 {len(industries_options) - 1} 个行业可选")
     if selected_industry == '全部':
         n_stocks = st.slider("扫描股票数", 50, 500, 200, 50, help="建议 ≤ 300")
     else:
@@ -146,12 +147,11 @@ if run:
     try:
         status.text("📊 加载 Tushare 真实数据...")
         progress.progress(20)
-        df_stocks, df_klines, info = load_tushare_data()
-        if df_stocks is None:
-            st.error(f"❌ {info}")
+        if df_stocks is None or df_klines is None:
+            st.error(f"❌ {load_info}")
             st.info("💡 提示：请确保 GitHub Actions 已成功跑过一次（生成 data/ 目录）")
             st.stop()
-        st.info(f"📊 {info}")
+        st.info(f"📊 {load_info}")
         
         status.text("🎯 应用行业筛选...")
         progress.progress(40)
