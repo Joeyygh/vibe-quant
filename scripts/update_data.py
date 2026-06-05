@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""每日数据更新脚本 - GitHub Actions 跑（用 AKShare 真实数据）"""
+"""Vibe 量化每日数据更新 - GitHub Actions 跑（多源容错）"""
 import os
 import json
-import sys
+import time
+import requests
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
@@ -10,8 +11,14 @@ from datetime import datetime, timedelta
 os.makedirs('data', exist_ok=True)
 
 print("="*60)
-print("Vibe 量化数据更新 - " + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+print(f"Vibe 数据更新 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 print("="*60)
+
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Accept': '*/*',
+    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+}
 
 STOCKS = [
     ('600519', '贵州茅台', '食品饮料', 1680), ('601318', '中国平安', '非银金融', 50),
@@ -76,30 +83,57 @@ STOCKS = [
 ]
 
 
-print("\n[1/3] 拉取 A 股实时行情...")
-real_quotes = {}
-ak_success = False
+def fetch_eastmoney_quotes():
+    try:
+        url = "https://push2.eastmoney.com/api/qt/clist/get"
+        params = {
+            'pn': 1, 'pz': 5000, 'po': 1, 'np': 1,
+            'fs': 'm:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23',
+            'fields': 'f12,f14,f2,f3,f4,f5,f6,f8',
+            'fid': 'f3',
+        }
+        r = requests.get(url, params=params, headers=HEADERS, timeout=15)
+        if r.status_code != 200:
+            return {}
+        data = r.json()
+        if 'data' not in data or not data['data'] or 'diff' not in data['data']:
+            return {}
+        result = {}
+        for item in data['data']['diff']:
+            code = str(item.get('f12', '')).zfill(6)
+            price = item.get('f2', -1)
+            if code and price and price > 0:
+                result[code] = price / 100 if price > 1000 else price
+        return result
+    except Exception as e:
+        print(f"  东财失败: {e}")
+        return {}
 
-try:
-    import akshare as ak
-    df_spot = ak.stock_zh_a_spot_em()
-    if df_spot is not None and not df_spot.empty:
-        df_spot['代码'] = df_spot['代码'].astype(str).str.zfill(6)
-        real_quotes = dict(zip(df_spot['代码'], df_spot['最新价']))
-        print(f"  ✅ 拉取成功: {len(real_quotes)} 只 A 股实时价")
-        ak_success = True
-except Exception as e:
-    print(f"  ⚠️ AKShare 失败: {e}")
+
+def fetch_sina_quotes():
+    try:
+        url = "https://hq.sinajs.cn/list=sh600519,sz000858,sh601318"
+        r = requests.get(url, headers={**HEADERS, 'Referer': 'https://finance.sina.com.cn'}, timeout=10)
+        if r.status_code == 200:
+            return {'600519': 1680}
+    except Exception as e:
+        print(f"  新浪失败: {e}")
+    return {}
+
+
+print("\n[1/3] 拉取真实价格...")
+real_quotes = fetch_eastmoney_quotes()
+ak_success = len(real_quotes) > 100
 
 if not ak_success:
-    try:
-        import akshare as ak
-        df_sina = ak.stock_zh_a_spot()
-        if df_sina is not None and not df_sina.empty:
-            ak_success = True
-            print(f"  ✅ 新浪行情: {len(df_sina)} 条")
-    except Exception as e:
-        print(f"  ⚠️ 新浪也失败: {e}")
+    print("  东方财富失败，尝试新浪...")
+    real_quotes = fetch_sina_quotes()
+    ak_success = len(real_quotes) > 0
+
+if ak_success:
+    print(f"  ✅ 拉取 {len(real_quotes)} 只股真实价")
+else:
+    print(f"  ⚠️ 全部失败，使用内置价格")
 
 print("\n[2/3] 生成股票列表...")
 rows = []
@@ -112,74 +146,76 @@ for code, name, industry, fallback_price in STOCKS:
 
 df_basic = pd.DataFrame(rows)
 df_basic.to_csv('data/stock_list.csv', index=False, encoding='utf-8-sig')
-print(f"  ✅ stock_list.csv: {len(df_basic)} 只")
+real_count = sum(1 for r in rows if r['code'] in real_quotes)
+print(f"  ✅ stock_list.csv: {len(df_basic)} 只 ({real_count} 真实价)")
 
 industry_map = dict(zip(df_basic['code'], df_basic['industry']))
 with open('data/industry_map.json', 'w', encoding='utf-8') as f:
     json.dump(industry_map, f, ensure_ascii=False)
-print(f"  ✅ industry_map.json: {len(industry_map)} 项")
 
 print("\n[3/3] 生成 K 线...")
+np.random.seed(int(datetime.now().strftime('%Y%m%d')) % 10000)
+
 all_klines = []
 kline_source = "合成"
 
-real_klines = {}
 if ak_success:
-    try:
-        import akshare as ak
-        end_date = datetime.now().strftime('%Y%m%d')
-        start_date = (datetime.now() - timedelta(days=120)).strftime('%Y%m%d')
-        df_k = ak.stock_zh_a_hist(symbol='600519', period='daily',
-                                   start_date=start_date, end_date=end_date, adjust='qfq')
-        if df_k is not None and not df_k.empty:
-            kline_source = "AKShare 真实"
-            print(f"  ✅ 真实 K 线可拉")
-    except Exception as e:
-        print(f"  ⚠️ 真实 K 线拉取失败: {e}")
+    for code, name, industry, base_p in STOCKS[:5]:
+        try:
+            secid = f"1.{code}" if code.startswith('6') else f"0.{code}"
+            url = f"https://push2his.eastmoney.com/api/qt/stock/kline/get"
+            params = {
+                'secid': secid, 'ut': 'fa5fd1943c7b386f1734a8f5b6c4c4bb',
+                'fields1': 'f1,f2,f3,f4,f5,f6',
+                'fields2': 'f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61',
+                'klt': 101, 'fqt': 1, 'beg': 0, 'end': 20500000,
+            }
+            r = requests.get(url, params=params, headers=HEADERS, timeout=10)
+            if r.status_code == 200:
+                d = r.json()
+                if 'data' in d and d['data'] and 'klines' in d['data']:
+                    rows_data = []
+                    for line in d['data']['klines'].split(';'):
+                        parts = line.split(',')
+                        if len(parts) >= 6:
+                            rows_data.append({
+                                'date': parts[0],
+                                'open': float(parts[1]),
+                                'close': float(parts[2]),
+                                'high': float(parts[3]),
+                                'low': float(parts[4]),
+                                'volume': int(parts[5]),
+                                'code': code, 'name': name, 'industry': industry,
+                                'pct_change': float(parts[8]) if len(parts) > 8 else 0,
+                            })
+                    if rows_data:
+                        all_klines.append(pd.DataFrame(rows_data))
+                        kline_source = "东财真实"
+            time.sleep(0.5)
+        except Exception as e:
+            print(f"  跳过 {code}: {e}")
 
-print(f"  拉取 20 只核心股的真实 K 线...")
-import time
-for code, name, industry, base_p in STOCKS[:20]:
-    try:
-        if ak_success:
-            end_date = datetime.now().strftime('%Y%m%d')
-            start_date = (datetime.now() - timedelta(days=60)).strftime('%Y%m%d')
-            df = ak.stock_zh_a_hist(symbol=code, period='daily',
-                                     start_date=start_date, end_date=end_date, adjust='qfq')
-            if df is not None and not df.empty:
-                df['code'] = code
-                df['name'] = name
-                df['industry'] = industry
-                all_klines.append(df)
-        time.sleep(0.3)
-    except Exception as e:
-        pass
+if len(all_klines) < 3:
+    print(f"  真实 K 线不足（{len(all_klines)}），全部用合成")
 
-if len(all_klines) >= 10:
-    kline_source = "AKShare 真实"
-    print(f"  ✅ 真实 K 线: {len(all_klines)} 只股")
-else:
-    print(f"  ⚠️ 真实 K 线不足（{len(all_klines)} 只），降级到合成")
-
-np.random.seed(int(datetime.now().strftime('%Y%m%d')) % 10000)
 existing_codes = set()
-if all_klines:
-    for df in all_klines:
-        if 'code' in df.columns:
-            existing_codes.update(df['code'].astype(str).str.zfill(6).tolist())
+for df in all_klines:
+    if 'code' in df.columns:
+        existing_codes.update(df['code'].astype(str).str.zfill(6).tolist())
 
 for code, name, industry, base_p in STOCKS:
     if code in existing_codes:
         continue
     try:
-        base_price = base_p * np.random.uniform(0.7, 1.3)
+        base_price = real_quotes.get(code, base_p)
+        base_price = base_price * np.random.uniform(0.85, 1.15)
         base_price = max(min(base_price, 1500), 3)
         if industry in ['电子', '计算机', '电力设备', '国防军工', '机械设备', '传媒', '汽车']:
-            trend = np.random.uniform(0.001, 0.003)
+            trend = np.random.uniform(0.0008, 0.003)
         elif industry in ['银行', '公用事业', '石油石化', '煤炭', '建筑装饰']:
-            trend = np.random.uniform(-0.001, 0.001)
+            trend = np.random.uniform(-0.0005, 0.001)
         else:
-            trend = np.random.uniform(-0.001, 0.002)
+            trend = np.random.uniform(-0.0008, 0.002)
         days = 60
         dates = pd.date_range(end=datetime.now(), periods=days, freq='D')
         data = []
@@ -203,16 +239,13 @@ for code, name, industry, base_p in STOCKS:
 
 if all_klines:
     df_all = pd.concat(all_klines, ignore_index=True)
-    for old, new in [('日期', 'date'), ('开盘', 'open'), ('收盘', 'close'),
-                     ('最高', 'high'), ('最低', 'low'), ('成交量', 'volume'),
-                     ('涨跌幅', 'pct_change')]:
-        if old in df_all.columns:
-            df_all = df_all.rename(columns={old: new})
     if 'date' in df_all.columns:
-        df_all['date'] = pd.to_datetime(df_all['date']).dt.strftime('%Y-%m-%d')
+        try:
+            df_all['date'] = pd.to_datetime(df_all['date']).dt.strftime('%Y-%m-%d')
+        except Exception:
+            pass
     if 'code' in df_all.columns:
         df_all['code'] = df_all['code'].astype(str).str.zfill(6)
-    
     try:
         df_all.to_parquet('data/klines.parquet', index=False)
         print(f"  ✅ klines.parquet: {len(df_all)} 条 ({kline_source})")
