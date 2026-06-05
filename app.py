@@ -1,4 +1,4 @@
-"""Vibe 量化 v2.0 - 终极稳版"""
+"""Vibe 量化 v2.0 - 终极稳版（三策略精选版）"""
 import streamlit as st
 import pandas as pd
 import random
@@ -12,7 +12,7 @@ st.set_page_config(
 )
 
 st.title("📊 Vibe 股票量化分析 v2.0")
-st.markdown(f"**{datetime.now().strftime('%Y-%m-%d %H:%M')}** | 数据源：内置 5000+ A 股")
+st.markdown(f"**{datetime.now().strftime('%Y-%m-%d %H:%M')}** | 数据源：内置 200+ A 股")
 
 
 STOCK_LIST = [
@@ -113,23 +113,23 @@ INDUSTRY_PRICE = {
 
 
 @st.cache_data(ttl=3600, show_spinner="生成 K 线...")
-def generate_all_klines(n_stocks=500):
+def generate_all_klines(n_stocks=200):
     random.seed(42)
     kline_dict = {}
     selected = STOCK_LIST[:n_stocks]
-    
+
     for i, (code, name, industry) in enumerate(selected):
         try:
             base_price = INDUSTRY_PRICE.get(industry, 15) * random.uniform(0.5, 2.5)
             base_price = max(min(base_price, 1500), 3)
-            
+
             if industry in ['电子', '计算机', '电力设备', '国防军工', '机械设备', '传媒', '汽车']:
                 trend = random.uniform(0.002, 0.012)
             elif industry in ['银行', '公用事业', '石油石化', '煤炭', '建筑装饰']:
                 trend = random.uniform(-0.003, 0.005)
             else:
                 trend = random.uniform(-0.005, 0.008)
-            
+
             days = 120
             dates = pd.date_range(end=datetime.now(), periods=days, freq='D')
             data = []
@@ -153,111 +153,86 @@ def generate_all_klines(n_stocks=500):
     return kline_dict
 
 
-def compute_trend_signals(kline_dict, top_n=20):
-    rows = []
-    for code, (df, _) in kline_dict.items():
+def compute_all_signals(kline_dict, top_n=20):
+    trend_set = set()
+    factor_list = []
+    industry_groups = {}
+
+    for code, (df, ind) in kline_dict.items():
         if df is None or len(df) < 60:
             continue
         try:
-            df = df.copy()
-            df['ma20'] = df['close'].rolling(20).mean()
-            df['ma60'] = df['close'].rolling(60).mean()
             last = df.iloc[-1]
             prev = df.iloc[-5]
-            if pd.isna(last['ma20']) or pd.isna(last['ma60']):
-                continue
-            if last['close'] > last['ma20'] and last['ma20'] > last['ma60']:
-                if last['close'] > prev['close']:
-                    rows.append({
-                        '代码': str(code),
-                        '名称': str(last['name']),
-                        '现价': round(float(last['close']), 2),
-                        '今日涨幅%': round(float(last['pct_change']), 2),
-                        'MA20': round(float(last['ma20']), 2),
-                        'MA60': round(float(last['ma60']), 2),
-                    })
+            ma20 = df['close'].iloc[-20:].mean()
+            ma60 = df['close'].iloc[-60:].mean()
+
+            if (last['close'] > ma20 and ma20 > ma60 and last['close'] > prev['close']):
+                trend_set.add(code)
+
+            ret_20 = (df['close'].iloc[-1] / df['close'].iloc[-20] - 1) * 100
+            vol = df['pct_change'].std()
+            score = 50 + ret_20 * 1.5 - vol * 2
+            factor_list.append((code, score))
+
+            industry_groups.setdefault(ind, []).append((code, ret_20))
         except Exception:
             continue
-    if not rows:
-        return pd.DataFrame()
-    return pd.DataFrame(rows).head(top_n)
 
+    factor_list.sort(key=lambda x: -x[1])
+    factor_set = set(c for c, _ in factor_list[:top_n])
 
-def compute_rotation_signals(kline_dict, top_n=10):
-    industries = {}
-    for code, (df, ind) in kline_dict.items():
-        industries.setdefault(ind, []).append(code)
-    
-    rows = []
-    for ind, codes in industries.items():
-        scores = []
-        for code in codes:
-            df, _ = kline_dict[code]
-            if df is not None and len(df) >= 20:
-                try:
-                    ret = (float(df['close'].iloc[-1]) / float(df['close'].iloc[-20]) - 1) * 100
-                    scores.append(ret)
-                except Exception:
-                    pass
-        if scores and len(scores) >= 2:
-            avg = sum(scores) / len(scores)
-            if avg > -2:
-                leader_code = codes[0]
-                leader_name = ''
-                leader_price = 0
-                df_leader, _ = kline_dict[leader_code]
-                if df_leader is not None and len(df_leader) > 0:
-                    leader_name = str(df_leader['name'].iloc[0])
-                    leader_price = float(df_leader['close'].iloc[-1])
-                rows.append({
-                    '行业': str(ind),
-                    '龙头': leader_name,
-                    '龙头代码': str(leader_code),
-                    '现价': round(leader_price, 2),
-                    '行业20日均涨幅%': round(avg, 2),
-                    '成分股数': len(scores),
-                })
-    if not rows:
-        return pd.DataFrame()
-    return pd.DataFrame(rows).sort_values('行业20日均涨幅%', ascending=False).head(top_n)
+    rotation_set = set()
+    for ind, lst in industry_groups.items():
+        if lst:
+            best = max(lst, key=lambda x: x[1])
+            if best[1] > 0:
+                rotation_set.add(best[0])
 
+    all_three = trend_set & rotation_set & factor_set
 
-def compute_factor_signals(kline_dict, top_n=50):
-    rows = []
-    for code, (df, _) in kline_dict.items():
-        if df is None or len(df) < 60:
-            continue
-        try:
-            ret_20 = (float(df['close'].iloc[-1]) / float(df['close'].iloc[-20]) - 1) * 100
-            ret_5 = (float(df['close'].iloc[-1]) / float(df['close'].iloc[-5]) - 1) * 100
-            vol = float(df['pct_change'].std())
-            score = 50 + ret_20 * 1.5 + ret_5 * 0.5 - vol * 2
-            name = str(df['name'].iloc[-1]) if 'name' in df.columns else str(code)
+    def make_detail(code_set):
+        rows = []
+        for code in code_set:
+            df, ind = kline_dict[code]
+            if df is None or len(df) == 0:
+                continue
+            last = df.iloc[-1]
+            ret_20 = (df['close'].iloc[-1] / df['close'].iloc[-20] - 1) * 100
+            vol = df['pct_change'].std()
+            score = 50 + ret_20 * 1.5 - vol * 2
             rows.append({
                 '代码': str(code),
-                '名称': name,
-                '现价': round(float(df['close'].iloc[-1]), 2),
-                '5日涨幅%': round(ret_5, 2),
-                '20日涨幅%': round(ret_20, 2),
+                '名称': str(last['name']),
+                '行业': ind,
+                '现价': round(float(last['close']), 2),
+                '今日%': round(float(last['pct_change']), 2),
+                '20日%': round(ret_20, 2),
                 '波动率': round(vol, 2),
-                '综合得分': round(score, 2),
+                '综合分': round(score, 2),
             })
-        except Exception:
-            continue
-    if not rows:
-        return pd.DataFrame()
-    return pd.DataFrame(rows).sort_values('综合得分', ascending=False).head(top_n)
+        return pd.DataFrame(rows).sort_values('综合分', ascending=False) if rows else pd.DataFrame()
+
+    return {
+        'trend': (trend_set, make_detail(trend_set)),
+        'rotation': (rotation_set, make_detail(rotation_set)),
+        'factors': (factor_set, make_detail(factor_set)),
+        'all_three': (all_three, make_detail(all_three)),
+    }
 
 
 with st.sidebar:
     st.header("⚙️ 参数设置")
-    n_stocks = st.slider("扫描股票数", 50, 200, 150, 10, help="限制在 200 以内确保快速运行")
+    n_stocks = st.slider("扫描股票数", 50, 200, 150, 10)
     top_n = st.slider("Top N", 5, 50, 20, 5)
     st.divider()
     st.subheader("🎯 策略开关")
     use_trend = st.checkbox("趋势策略", value=True)
     use_rotation = st.checkbox("行业轮动", value=True)
     use_factors = st.checkbox("多因子", value=True)
+    st.divider()
+    st.subheader("💎 精选模式")
+    only_all_three = st.checkbox("🎯 只看三策略都通过", value=False, help="只显示三个策略都符合的股票")
     st.divider()
     run = st.button("🚀 运行分析", type="primary", use_container_width=True)
 
@@ -268,11 +243,12 @@ st.markdown("""
 - **🔥 趋势策略**（主）：均线多头 + 量价齐升
 - **🔄 行业轮动**（主）：强势行业龙头
 - **📊 多因子选股**（辅）：动量+波动率综合
+- **💎 三策略精选**：取三策略交集，**最强信号**！
 
 ### 🚀 开始使用
 1. 左侧调整 **扫描股票数**（最多 200 只）
-2. 左侧调整 **Top N**
-3. 勾选你要跑的 **策略**
+2. 勾选你要跑的 **策略**
+3. **勾选"💎 只看三策略都通过"** → 直接看最强信号
 4. 点击 **🚀 运行分析** 按钮
 
 ### 💡 数据源说明
@@ -295,49 +271,81 @@ if run:
         if not kline_dict:
             st.error("❌ 生成K线数据失败")
             st.stop()
-        
-        status.text("🔍 计算策略信号...")
-        progress.progress(70)
-        if use_trend:
-            trend_df = compute_trend_signals(kline_dict, top_n=top_n)
-        if use_rotation:
-            rotation_df = compute_rotation_signals(kline_dict, top_n=10)
-        if use_factors:
-            factors_df = compute_factor_signals(kline_dict, top_n=top_n*2)
-        
+
+        status.text("🔍 计算三策略信号...")
+        progress.progress(60)
+        results = compute_all_signals(kline_dict, top_n=top_n)
+
         progress.progress(100)
         status.text("✅ 分析完成！")
         progress.empty()
         status.empty()
-        
-        total_signals = (len(trend_df) if use_trend and trend_df is not None and not trend_df.empty else 0) + \
-                        (len(rotation_df) if use_rotation and rotation_df is not None and not rotation_df.empty else 0) + \
-                        (len(factors_df) if use_factors and factors_df is not None and not factors_df.empty else 0)
-        st.success(f"🎉 已扫描 {len(kline_dict)} 只股票，触发信号 {total_signals} 条")
-        
-        if use_trend:
-            st.header("🔥 趋势策略信号（均线多头+量价齐升）")
-            if trend_df is not None and not trend_df.empty:
-                st.dataframe(trend_df, use_container_width=True, hide_index=True)
-                st.caption(f"📊 共 {len(trend_df)} 只股票触发趋势买入信号")
+
+        if only_all_three:
+            st.header("💎 三策略精选（三策略都通过的最强信号）")
+            codes, df = results['all_three']
+            if not df.empty:
+                st.success(f"🎯 找到 {len(codes)} 只三策略都通过的股票！")
+                st.dataframe(df, use_container_width=True, hide_index=True)
+                st.caption(f"💎 三策略交集 = 趋势 ✓ + 行业轮动 ✓ + 多因子 ✓")
+
+                with st.expander("📊 查看每只股详细评分"):
+                    for _, row in df.iterrows():
+                        st.markdown(f"**{row['代码']} {row['名称']}** ({row['行业']})")
+                        col1, col2, col3, col4 = st.columns(4)
+                        col1.metric("现价", f"{row['现价']}")
+                        col2.metric("今日%", f"{row['今日%']}%")
+                        col3.metric("20日%", f"{row['20日%']}%")
+                        col4.metric("综合分", f"{row['综合分']}")
             else:
-                st.info("📭 今日无趋势策略信号（市场处于震荡或下跌趋势）")
-        
-        if use_rotation:
-            st.header("🔄 行业轮动信号（强势行业龙头）")
-            if rotation_df is not None and not rotation_df.empty:
-                st.dataframe(rotation_df, use_container_width=True, hide_index=True)
-                st.caption(f"📊 共 {len(rotation_df)} 个行业进入强势区域")
-            else:
-                st.info("📭 今日无行业轮动信号")
-        
-        if use_factors:
-            st.header("📊 多因子精选（综合Top榜单）")
-            if factors_df is not None and not factors_df.empty:
-                st.dataframe(factors_df, use_container_width=True, hide_index=True)
-                st.caption(f"📊 共 {len(factors_df)} 只股票入选多因子精选")
-            else:
-                st.info("📭 今日无多因子信号")
+                st.warning("📭 三策略无交集，请尝试关闭某个策略或调大扫描数")
+
+            st.divider()
+            st.subheader("📊 各策略统计")
+            col1, col2, col3 = st.columns(3)
+            col1.metric("🔥 趋势", len(results['trend'][0]))
+            col2.metric("🔄 行业轮动", len(results['rotation'][0]))
+            col3.metric("📊 多因子 Top", len(results['factors'][0]))
+        else:
+            total_signals = 0
+            if use_trend: total_signals += len(results['trend'][0])
+            if use_rotation: total_signals += len(results['rotation'][0])
+            if use_factors: total_signals += len(results['factors'][0])
+            st.success(f"🎉 已扫描 {len(kline_dict)} 只股票，触发信号 {total_signals} 条")
+
+            codes, df = results['all_three']
+            if not df.empty:
+                st.header("💎 三策略精选（最强信号）")
+                st.dataframe(df, use_container_width=True, hide_index=True)
+                st.caption(f"💎 三策略交集 = 趋势 ✓ + 行业轮动 ✓ + 多因子 ✓（共 {len(codes)} 只）")
+                st.divider()
+
+            if use_trend:
+                st.header("🔥 趋势策略信号（均线多头+量价齐升）")
+                codes, df = results['trend']
+                if not df.empty:
+                    st.dataframe(df, use_container_width=True, hide_index=True)
+                    st.caption(f"📊 共 {len(codes)} 只股票触发趋势买入信号")
+                else:
+                    st.info("📭 今日无趋势策略信号")
+
+            if use_rotation:
+                st.header("🔄 行业轮动信号（强势行业龙头）")
+                codes, df = results['rotation']
+                if not df.empty:
+                    st.dataframe(df, use_container_width=True, hide_index=True)
+                    st.caption(f"📊 共 {len(codes)} 个行业进入强势区域")
+                else:
+                    st.info("📭 今日无行业轮动信号")
+
+            if use_factors:
+                st.header("📊 多因子精选（综合Top榜单）")
+                codes, df = results['factors']
+                if not df.empty:
+                    st.dataframe(df, use_container_width=True, hide_index=True)
+                    st.caption(f"📊 共 {len(codes)} 只股票入选多因子精选")
+                else:
+                    st.info("📭 今日无多因子信号")
     except Exception as e:
         st.error(f"❌ 运行出错: {e}")
         import traceback
