@@ -70,13 +70,17 @@ for i, code in enumerate(codes):
 
 if all_klines:
     df_all = pd.concat(all_klines, ignore_index=True)
+    df_all = df_all.loc[:, ~df_all.columns.duplicated()]
     df_all = df_all.rename(columns={
         'trade_date': 'date', 'vol': 'volume', 'pct_chg': 'pct_change'
     })
+    df_all = df_all.loc[:, ~df_all.columns.duplicated()]
     df_all['date'] = pd.to_datetime(df_all['date'], format='%Y%m%d').dt.strftime('%Y-%m-%d')
     name_map = dict(zip(df_basic['code'], df_basic['name']))
     df_all['name'] = df_all['code'].map(name_map)
+    df_all['industry'] = df_all['code'].map(industry_map).fillna('未分类')
     df_all['code'] = df_all['code'].astype(str).str.zfill(6)
+    df_all = df_all.loc[:, ~df_all.columns.duplicated()]
     
     try:
         df_all.to_parquet('data/klines.parquet', index=False)
@@ -88,10 +92,11 @@ if all_klines:
 print("\n[3/3] 拉取今日行情...")
 df_today = pro.daily(trade_date=end_date)
 if df_today is not None and not df_today.empty:
+    df_today = df_today.loc[:, ~df_today.columns.duplicated()]
     df_today['code'] = df_today['ts_code'].str.split('.').str[0]
     df_today['code'] = df_today['code'].astype(str).str.zfill(6)
     df_today['name'] = df_today['code'].map(name_map)
-    df_today['industry'] = df_today['code'].map(industry_map)
+    df_today['industry'] = df_today['code'].map(industry_map).fillna('未分类')
     df_today = df_today.rename(columns={'pct_chg': 'pct_change', 'vol': 'volume'})
     df_today.to_csv('data/today_quote.csv', index=False, encoding='utf-8-sig')
     print(f"  ✅ today_quote.csv: {len(df_today)} 条")
