@@ -213,7 +213,7 @@ with st.sidebar:
             n_stocks = len(holdings)
         selected_industry = None
     
-    top_n = st.slider("Top N", 5, 30, 10, 1)
+    top_n = st.slider("Top N", 5, 50, 10, 1, help="多因子策略显示前 N 名")
     st.divider()
     st.subheader("🎯 策略开关")
     use_trend = st.checkbox("趋势策略", value=True)
