@@ -52,6 +52,39 @@ def load_tushare_data():
         return None, None
 
 
+def smart_sample(df_stocks, n_stocks):
+    """智能采样：主板+创业板+科创板全平衡"""
+    if n_stocks >= len(df_stocks):
+        return df_stocks['code'].tolist()
+    
+    # 三大板块分类
+    main_prefixes = ('000', '001', '002', '600', '601', '603', '605')
+    chinext = ('300',)  # 创业板
+    star = ('688',)     # 科创板
+    
+    df_main = df_stocks[df_stocks['code'].str.startswith(main_prefixes)]
+    df_chinext = df_stocks[df_stocks['code'].str.startswith(chinext)]
+    df_star = df_stocks[df_stocks['code'].str.startswith(star)]
+    
+    # 按 3:3:2 比例分配 (主板 40%, 创业板 35%, 科创板 25%)
+    n_main = int(n_stocks * 0.40)
+    n_chinext = int(n_stocks * 0.35)
+    n_star = n_stocks - n_main - n_chinext
+    
+    codes = []
+    codes.extend(df_main['code'].head(n_main).tolist())
+    codes.extend(df_chinext['code'].head(n_chinext).tolist())
+    codes.extend(df_star['code'].head(n_star).tolist())
+    
+    # 不够时从剩余补
+    if len(codes) < n_stocks:
+        existing = set(codes)
+        remaining = df_stocks[~df_stocks['code'].isin(existing)]['code'].tolist()
+        codes.extend(remaining[:n_stocks - len(codes)])
+    
+    return codes[:n_stocks]
+
+
 def compute_signals(df_klines, top_n=20):
     trend_set = set()
     factor_list = []
@@ -250,7 +283,7 @@ with st.sidebar:
     scan_mode = st.radio("扫描模式", ["行业筛选", "我的持仓"])
     if scan_mode == "行业筛选":
         selected_industry = st.selectbox("行业", industries_options, index=0)
-        n_stocks = st.slider("扫描数", 10, 2000, 200, 10)
+        n_stocks = st.slider("扫描数", 10, 2000, 2000, 10)
     else:
         if not holdings:
             st.warning("还没有持仓")
@@ -275,11 +308,12 @@ st.markdown("""
 - 三策略精选 (胜率 83%)
 - 5 过滤叠加 (胜率 100%)
 - 7 条件叠加 (宽松/严格)
+- 2000 智能采样 (主板 40% + 创业板 35% + 科创板 25%)
 """)
 
 if run:
     if df_stocks is None or df_klines is None:
-        st.error("数据未加载，请先确保 data 文件存在")
+        st.error("数据未加载")
     elif scan_mode == "我的持仓" and not holdings:
         st.error("先添加持仓")
     else:
@@ -293,8 +327,8 @@ if run:
                 codes = [str(c).zfill(6) for c in codes]
                 filter_msg = f"持仓 {len(codes)} 只"
             elif selected_industry == '全部':
-                codes = df_stocks['code'].head(n_stocks).tolist()
-                filter_msg = f"全部 前 {n_stocks} 只"
+                codes = smart_sample(df_stocks, n_stocks)
+                filter_msg = f"全部 智能采样 {len(codes)} 只 (主板+创业板+科创板)"
             else:
                 codes = df_stocks[df_stocks['industry'] == selected_industry]['code'].head(n_stocks).tolist()
                 filter_msg = f"行业 {selected_industry} {len(codes)} 只"
