@@ -1,20 +1,13 @@
-"""Vibe 量化 v2.0 - 持仓管理 + 行业筛选 + 7条件 + 5过滤"""
+"""Vibe 量化 v2.0"""
 import streamlit as st
 import pandas as pd
 import os
 import json
 from datetime import datetime
 
-st.set_page_config(
-    page_title="Vibe 量化 v2.0",
-    page_icon="📊",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
+st.set_page_config(page_title="Vibe 量化 v2.0", page_icon="📊", layout="wide", initial_sidebar_state="expanded")
 st.title("📊 Vibe 股票量化分析 v2.0")
 st.markdown(f"**{datetime.now().strftime('%Y-%m-%d %H:%M')}** | 数据源：Tushare 真实数据")
-
 
 HOLDINGS_FILE = 'my_holdings.json'
 
@@ -46,7 +39,6 @@ def load_tushare_data():
         df_stocks['code'] = df_stocks['code'].astype(str).str.zfill(6)
         df_stocks['industry'] = df_stocks['industry'].astype(str).fillna('未分类')
         df_stocks = df_stocks[df_stocks['industry'].notna() & (df_stocks['industry'] != '') & (df_stocks['industry'] != 'nan')]
-
         df_klines = pd.read_parquet('data/klines.parquet')
         df_klines = df_klines.loc[:, ~df_klines.columns.duplicated()]
         df_klines['code'] = df_klines['code'].astype(str).str.zfill(6)
@@ -122,7 +114,6 @@ def compute_signals(df_klines, top_n=20):
 
 
 def apply_extra_filters(df_sub):
-    """5 个额外过滤条件"""
     if len(df_sub) < 14:
         return False
     last = df_sub.iloc[-1]
@@ -133,13 +124,6 @@ def apply_extra_filters(df_sub):
     vol_5day = df_sub['volume'].iloc[-5:].mean()
     if vol_5day <= 0 or vol_today / vol_5day < 0.8:
         return False
-    diff_close = df_sub['close'].diff()
-    gain = diff_close.where(diff_close > 0, 0).rolling(14).mean()
-    loss = (-diff_close.where(diff_close < 0, 0)).rolling(14).mean()
-    rs = gain / loss
-    rsi = 100 - (100 / (1 + rs))
-    rsi_today = float(rsi.iloc[-1]) if not rsi.empty else 50
-    if rsi_today > 75:
-        return False
-    close = df_sub['close']
-    ema_fast = close.ewm(span=12, adjust=
+    delta = df_sub['close'].diff()
+    gain = delta.where(delta > 0, 0).rolling(14, min_periods=1).mean()
+    loss_v
