@@ -53,35 +53,25 @@ def load_tushare_data():
 
 
 def smart_sample(df_stocks, n_stocks):
-    """智能采样：主板+创业板+科创板全平衡"""
     if n_stocks >= len(df_stocks):
         return df_stocks['code'].tolist()
-    
-    # 三大板块分类
     main_prefixes = ('000', '001', '002', '600', '601', '603', '605')
-    chinext = ('300',)  # 创业板
-    star = ('688',)     # 科创板
-    
+    chinext = ('300',)
+    star = ('688',)
     df_main = df_stocks[df_stocks['code'].str.startswith(main_prefixes)]
     df_chinext = df_stocks[df_stocks['code'].str.startswith(chinext)]
     df_star = df_stocks[df_stocks['code'].str.startswith(star)]
-    
-    # 按 3:3:2 比例分配 (主板 40%, 创业板 35%, 科创板 25%)
     n_main = int(n_stocks * 0.40)
     n_chinext = int(n_stocks * 0.35)
     n_star = n_stocks - n_main - n_chinext
-    
     codes = []
     codes.extend(df_main['code'].head(n_main).tolist())
     codes.extend(df_chinext['code'].head(n_chinext).tolist())
     codes.extend(df_star['code'].head(n_star).tolist())
-    
-    # 不够时从剩余补
     if len(codes) < n_stocks:
         existing = set(codes)
         remaining = df_stocks[~df_stocks['code'].isin(existing)]['code'].tolist()
         codes.extend(remaining[:n_stocks - len(codes)])
-    
     return codes[:n_stocks]
 
 
@@ -175,7 +165,8 @@ def apply_extra_filters(df_sub):
     diff_line = ema_fast - ema_slow
     if float(diff_line.iloc[-1]) <= 0:
         return False
-    if float(last['pct_change']) >= 9.5:
+    pct = float(last['pct_change'])
+    if pct >= 9.5 or pct < -3.0:
         return False
     return True
 
@@ -306,9 +297,9 @@ with st.sidebar:
 st.markdown("""
 ## Vibe 量化 v2.0
 - 三策略精选 (胜率 83%)
-- 5 过滤叠加 (胜率 100%)
+- 5 过滤叠加 (胜率 100%) 含涨跌幅>-3%
 - 7 条件叠加 (宽松/严格)
-- 2000 智能采样 (主板 40% + 创业板 35% + 科创板 25%)
+- 2000 智能采样 (主板+创业板+科创板)
 """)
 
 if run:
