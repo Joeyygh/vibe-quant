@@ -244,6 +244,7 @@ with st.sidebar:
     use_trend = st.checkbox("趋势", value=True)
     use_rotation = st.checkbox("行业轮动", value=True)
     use_factors = st.checkbox("多因子", value=True)
+    only_all_three = st.checkbox("只看三策略精选", value=False, help="勾选后只显示三策略交集，其他不显示")
     seven_strict = st.checkbox("7 条件严格 (建议宽)", value=False, help="不勾选 - 宽松 (容易有结果) / 勾选 - 严格 (极简)")
     st.divider()
     run = st.button("运行分析", type="primary", use_container_width=True)
@@ -313,6 +314,9 @@ if run:
             else:
                 st.info(f"三策略通过的股未通过 7 条件({mode_label}模式) - 试试切换模式")
             st.divider()
+
+        if only_all_three:
+            st.stop()
 
         if use_trend:
             st.header("趋势")
