@@ -6,7 +6,7 @@ import json
 from datetime import datetime
 
 st.set_page_config(page_title="Vibe 量化 v2.0", page_icon="📊", layout="wide", initial_sidebar_state="expanded")
-st.title("📊 Vibe 股票量化分析 v2.0")
+st.title("Vibe 股票量化分析 v2.0")
 st.markdown(f"**{datetime.now().strftime('%Y-%m-%d %H:%M')}** | 数据源：Tushare 真实数据")
 
 HOLDINGS_FILE = 'my_holdings.json'
@@ -31,8 +31,10 @@ def save_holdings(holdings):
 
 def load_tushare_data():
     if not os.path.exists('data/stock_list.csv'):
+        st.error("data/stock_list.csv 不存在")
         return None, None
     if not os.path.exists('data/klines.parquet'):
+        st.error("data/klines.parquet 不存在")
         return None, None
     try:
         df_stocks = pd.read_csv('data/stock_list.csv', dtype={'code': str})
@@ -42,11 +44,11 @@ def load_tushare_data():
         df_klines = pd.read_parquet('data/klines.parquet')
         df_klines = df_klines.loc[:, ~df_klines.columns.duplicated()]
         df_klines['code'] = df_klines['code'].astype(str).str.zfill(6)
-        if 'industry' in df_klines.columns:
-            df_klines['industry'] = df_klines['industry'].astype(str).fillna('未分类')
+        st.info(f"数据加载成功: {len(df_stocks)} 只股, {len(df_klines)} 条 K 线")
         return df_stocks, df_klines
     except Exception as e:
         st.error(f"数据加载失败: {e}")
+        st.code(str(e))
         return None, None
 
 
@@ -126,4 +128,234 @@ def apply_extra_filters(df_sub):
         return False
     delta = df_sub['close'].diff()
     gain = delta.where(delta > 0, 0).rolling(14, min_periods=1).mean()
-    loss_v
+    loss_val = (-delta.where(delta < 0, 0)).rolling(14, min_periods=1).mean()
+    if loss_val.iloc[-1] > 0:
+        rs = gain.iloc[-1] / loss_val.iloc[-1]
+        rsi_today = 100 - (100 / (1 + rs))
+    else:
+        rsi_today = 50
+    if rsi_today > 75:
+        return False
+    close = df_sub['close']
+    ema_fast = close.ewm(span=12, adjust=False).mean()
+    ema_slow = close.ewm(span=26, adjust=False).mean()
+    diff_line = ema_fast - ema_slow
+    if float(diff_line.iloc[-1]) <= 0:
+        return False
+    if float(last['pct_change']) >= 9.5:
+        return False
+    return True
+
+
+def apply_seven_conditions(df_klines, codes, strict=True):
+    passed = []
+    for code in codes:
+        try:
+            sub = df_klines[df_klines['code'] == code].sort_values('date')
+            if len(sub) < 30:
+                continue
+            last = sub.iloc[-1]
+            name = str(last.get('name', code))
+            if 'ST' in name or 'st' in name:
+                continue
+            if len(sub) < 11:
+                continue
+            ret_10d = (float(sub['close'].iloc[-1]) / float(sub['close'].iloc[-11]) - 1) * 100
+            if strict and ret_10d <= 5:
+                continue
+            if not strict and ret_10d < 0:
+                continue
+            vol_today = float(last['volume'])
+            vol_5day = sub['volume'].iloc[-5:].mean()
+            vol_min = 1.5 if strict else 1.0
+            if vol_5day <= 0 or vol_today / vol_5day <= vol_min:
+                continue
+            pct = float(last['pct_change'])
+            if strict and not (3.0 <= pct <= 5.0):
+                continue
+            if not strict and not (0.0 <= pct <= 7.0):
+                continue
+            ma5 = sub['close'].iloc[-5:].mean()
+            if float(last['close']) <= ma5:
+                continue
+            if 'amount' in sub.columns:
+                amt_3d = sub['amount'].iloc[-3:].sum()
+                amt_prev3 = sub['amount'].iloc[-6:-3].sum() if len(sub) >= 6 else amt_3d
+                if amt_3d - amt_prev3 <= 0:
+                    continue
+                amt_today = float(last['amount'])
+                amt_5day_avg = sub['amount'].iloc[-5:].mean()
+                if amt_today - amt_5day_avg <= 0:
+                    continue
+            else:
+                continue
+            passed.append(code)
+        except Exception:
+            continue
+    return passed
+
+
+df_stocks, df_klines = load_tushare_data()
+if df_stocks is None:
+    st.error("data 文件不存在")
+    industries_options = ['全部']
+    holdings = []
+    df_klines = None
+else:
+    industries_options = ['全部'] + sorted(df_stocks['industry'].unique().tolist())
+    holdings = load_holdings()
+
+with st.sidebar:
+    st.header("参数设置")
+    st.info(f"共 {len(industries_options) - 1} 个行业, {len(df_stocks) if df_stocks is not None else 0} 只股")
+    with st.expander("我的持仓管理", expanded=False):
+        st.write(f"当前持仓: {len(holdings)} 只")
+        if holdings:
+            for i, h in enumerate(holdings):
+                col1, col2 = st.columns([3, 1])
+                col1.write(f"{h.get('code', '')} {h.get('name', '')}")
+                if col2.button("X", key=f"del_{i}"):
+                    holdings.pop(i)
+                    save_holdings(holdings)
+                    st.rerun()
+        st.write("--- 添加 ---")
+        new_code = st.text_input("代码 (6位)", key="new_code", placeholder="如 600519")
+        if st.button("添加", key="add_btn"):
+            new_code = new_code.strip()
+            if len(new_code) == 6 and new_code.isdigit() and df_stocks is not None:
+                match = df_stocks[df_stocks['code'] == new_code]
+                if not match.empty:
+                    name = match.iloc[0]['name']
+                    if not any(h.get('code') == new_code for h in holdings):
+                        holdings.append({'code': new_code, 'name': name})
+                        save_holdings(holdings)
+                        st.success(f"已添加 {new_code} {name}")
+                        st.rerun()
+        st.write("--- 批量导入 ---")
+        bulk_text = st.text_area("每行一个代码", height=100)
+        if st.button("批量导入", key="bulk_btn"):
+            new_codes = [c.strip() for c in bulk_text.split('\n') if c.strip()]
+            added = 0
+            for nc in new_codes:
+                if len(nc) == 6 and nc.isdigit() and not any(h.get('code') == nc for h in holdings) and df_stocks is not None:
+                    match = df_stocks[df_stocks['code'] == nc]
+                    if not match.empty:
+                        holdings.append({'code': nc, 'name': match.iloc[0]['name']})
+                        added += 1
+            if added:
+                save_holdings(holdings)
+                st.success(f"已添加 {added} 只")
+                st.rerun()
+    st.divider()
+    scan_mode = st.radio("扫描模式", ["行业筛选", "我的持仓"])
+    if scan_mode == "行业筛选":
+        selected_industry = st.selectbox("行业", industries_options, index=0)
+        n_stocks = st.slider("扫描数", 10, 2000, 200, 10)
+    else:
+        if not holdings:
+            st.warning("还没有持仓")
+            n_stocks = 0
+        else:
+            st.info(f"持仓 {len(holdings)} 只")
+            n_stocks = len(holdings)
+        selected_industry = None
+    top_n = st.slider("Top N", 5, 50, 10, 1)
+    st.divider()
+    use_trend = st.checkbox("趋势", value=True)
+    use_rotation = st.checkbox("行业轮动", value=True)
+    use_factors = st.checkbox("多因子", value=True)
+    only_all_three = st.checkbox("只看三策略精选", value=False)
+    use_extra = st.checkbox("加 5 过滤 (胜率 100%)", value=True)
+    seven_strict = st.checkbox("7 条件严格", value=False)
+    st.divider()
+    run = st.button("运行分析", type="primary", use_container_width=True)
+
+st.markdown("""
+## Vibe 量化 v2.0
+- 三策略精选 (胜率 83%)
+- 5 过滤叠加 (胜率 100%)
+- 7 条件叠加 (宽松/严格)
+""")
+
+if run:
+    if df_stocks is None or df_klines is None:
+        st.error("数据未加载，请先确保 data 文件存在")
+    elif scan_mode == "我的持仓" and not holdings:
+        st.error("先添加持仓")
+    else:
+        progress = st.progress(0)
+        status = st.empty()
+        try:
+            status.text("应用筛选...")
+            progress.progress(30)
+            if scan_mode == "我的持仓":
+                codes = [h['code'] for h in holdings]
+                codes = [str(c).zfill(6) for c in codes]
+                filter_msg = f"持仓 {len(codes)} 只"
+            elif selected_industry == '全部':
+                codes = df_stocks['code'].head(n_stocks).tolist()
+                filter_msg = f"全部 前 {n_stocks} 只"
+            else:
+                codes = df_stocks[df_stocks['industry'] == selected_industry]['code'].head(n_stocks).tolist()
+                filter_msg = f"行业 {selected_industry} {len(codes)} 只"
+            df_sub = df_klines[df_klines['code'].isin(codes)].copy()
+            del df_klines
+            st.info(f"扫描 {filter_msg}, {len(df_sub)} 条")
+            status.text("计算...")
+            progress.progress(70)
+            results = compute_signals(df_sub, top_n=top_n)
+            progress.progress(100)
+            status.empty()
+            progress.empty()
+            st.success(f"完成 - {filter_msg}")
+            codes_3, df_3 = results['all_three']
+            if not df_3.empty:
+                st.header("三策略精选 (最强)")
+                st.dataframe(df_3, use_container_width=True, hide_index=True)
+                if use_extra:
+                    with st.spinner("应用 5 过滤..."):
+                        extra_codes = []
+                        for c in df_3['代码'].tolist():
+                            sub_c = df_sub[df_sub['code'] == c].sort_values('date')
+                            if len(sub_c) >= 14 and apply_extra_filters(sub_c):
+                                extra_codes.append(c)
+                        df_extra = df_3[df_3['代码'].isin(extra_codes)].copy() if extra_codes else pd.DataFrame()
+                    if not df_extra.empty:
+                        st.subheader("5 过滤叠加 (胜率 100%)")
+                        st.success(f"{len(df_extra)} 只通过全部 8 过滤")
+                        st.dataframe(df_extra, use_container_width=True, hide_index=True)
+                    else:
+                        st.info("三策略通过的股未通过 5 过滤")
+                    st.divider()
+                with st.spinner("应用 7 条件..."):
+                    seven_codes = apply_seven_conditions(df_sub, df_3['代码'].tolist(), strict=seven_strict)
+                    df_7 = df_3[df_3['代码'].isin(seven_codes)].copy() if seven_codes else pd.DataFrame()
+                mode_label = "严格" if seven_strict else "宽松"
+                if not df_7.empty:
+                    st.subheader(f"7 条件叠加 ({mode_label})")
+                    st.success(f"{len(df_7)} 只同时通过")
+                    st.dataframe(df_7, use_container_width=True, hide_index=True)
+                else:
+                    st.info(f"未通过 7 条件({mode_label})")
+                st.divider()
+            if only_all_three:
+                st.stop()
+            if use_trend:
+                st.header("趋势")
+                _, df = results['trend']
+                if not df.empty: st.dataframe(df, use_container_width=True, hide_index=True)
+            if use_rotation:
+                st.header("行业轮动")
+                _, df = results['rotation']
+                if not df.empty: st.dataframe(df, use_container_width=True, hide_index=True)
+            if use_factors:
+                st.header("多因子")
+                _, df = results['factors']
+                if not df.empty: st.dataframe(df, use_container_width=True, hide_index=True)
+        except Exception as e:
+            st.error(f"出错: {e}")
+            import traceback
+            st.code(traceback.format_exc())
+
+st.divider()
+st.caption(f"Vibe v2.0 | {datetime.now().strftime('%Y-%m-%d %H:%M')}")
