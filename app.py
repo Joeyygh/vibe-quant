@@ -3,11 +3,12 @@ import streamlit as st
 import pandas as pd
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 st.set_page_config(page_title="Vibe 量化 v2.0", page_icon="📊", layout="wide", initial_sidebar_state="expanded")
 st.title("Vibe 股票量化分析 v2.0")
-st.markdown(f"**{datetime.now().strftime('%Y-%m-%d %H:%M')}** | 数据源：Tushare 真实数据")
+beijing_now = (datetime.now(timezone.utc) + timedelta(hours=8)).strftime('%Y-%m-%d %H:%M')
+st.markdown(f"**{beijing_now} (北京时间)** | 数据源：Tushare 真实数据")
 
 HOLDINGS_FILE = 'my_holdings.json'
 
@@ -300,6 +301,7 @@ st.markdown("""
 - 5 过滤叠加 (胜率 100%) 含涨跌幅>-3%
 - 7 条件叠加 (宽松/严格)
 - 2000 智能采样 (主板+创业板+科创板)
+- 北京时间显示
 """)
 
 if run:
@@ -382,5 +384,6 @@ if run:
             import traceback
             st.code(traceback.format_exc())
 
+beijing_caption = (datetime.now(timezone.utc) + timedelta(hours=8)).strftime('%Y-%m-%d %H:%M')
 st.divider()
-st.caption(f"Vibe v2.0 | {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+st.caption(f"Vibe v2.0 | {beijing_caption} (北京时间)")
