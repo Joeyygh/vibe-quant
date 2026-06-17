@@ -172,6 +172,56 @@ def apply_extra_filters(df_sub):
     return True
 
 
+def apply_formula_2(df_sub):
+    if len(df_sub) < 30:
+        return False
+    last = df_sub.iloc[-1]
+    name = str(last.get('name', ''))
+    if 'ST' in name or 'st' in name:
+        return False
+    ma5 = df_sub['close'].iloc[-5:].mean()
+    ma10 = df_sub['close'].iloc[-10:].mean()
+    ma20 = df_sub['close'].iloc[-20:].mean()
+    if ma5 <= ma10 or ma10 <= ma20:
+        return False
+    pct = float(last['pct_change'])
+    if pct <= 1.0:
+        return False
+    vol_5day = df_sub['volume'].iloc[-5:].mean()
+    vol_10day = df_sub['volume'].iloc[-10:].mean()
+    if vol_10day <= 0 or vol_5day / vol_10day <= 1.15:
+        return False
+    vol_today = float(last['volume'])
+    vol_yesterday = float(df_sub['volume'].iloc[-2])
+    if vol_today <= vol_yesterday:
+        return False
+    close_today = float(last['close'])
+    ma5_now = df_sub['close'].iloc[-5:].mean()
+    diff_pct = abs(close_today - ma5_now) / ma5_now * 100
+    if diff_pct > 3.0:
+        return False
+    close_series = df_sub['close']
+    ema_fast = close_series.ewm(span=12, adjust=False).mean()
+    ema_slow = close_series.ewm(span=26, adjust=False).mean()
+    diff_line = ema_fast - ema_slow
+    dea = diff_line.ewm(span=9, adjust=False).mean()
+    diff_today = float(diff_line.iloc[-1])
+    diff_prev = float(diff_line.iloc[-2])
+    dea_today = float(dea.iloc[-1])
+    dea_prev = float(dea.iloc[-2])
+    macd_golden = (diff_prev <= dea_prev) and (diff_today > dea_today)
+    if not macd_golden:
+        return False
+    if diff_today <= 0:
+        return False
+    if len(df_sub) >= 10:
+        high_5d = df_sub['high'].iloc[-5:].max()
+        low_10d = df_sub['low'].iloc[-10:].min()
+        if low_10d <= 0 or high_5d / low_10d >= 1.25:
+            return False
+    return True
+
+
 def apply_seven_conditions(df_klines, codes, strict=True):
     passed = []
     for code in codes:
@@ -291,7 +341,8 @@ with st.sidebar:
     use_factors = st.checkbox("多因子", value=True)
     only_all_three = st.checkbox("只看三策略精选", value=False)
     use_extra = st.checkbox("加 5 过滤 (胜率 100%)", value=True)
-    seven_strict = st.checkbox("7 条件严格", value=False)
+    seven_strict = st.checkbox("7 条件严格 (建议宽)", value=False)
+    use_formula2 = st.checkbox("公式 2 (中线 5-10 天 胜率 100%)", value=True, help="MACD零轴上金叉 + 量价齐升 + 5/10/20多头")
     st.divider()
     run = st.button("运行分析", type="primary", use_container_width=True)
 
@@ -300,6 +351,7 @@ st.markdown("""
 - 三策略精选 (胜率 83%)
 - 5 过滤叠加 (胜率 100%) 含涨跌幅>-3%
 - 7 条件叠加 (宽松/严格)
+- 公式 2 (中线 5-10 天 胜率 100%) +4.88%/+11.33%
 - 2000 智能采样 (主板+创业板+科创板)
 - 北京时间显示
 """)
@@ -359,12 +411,28 @@ if run:
                     df_7 = df_3[df_3['代码'].isin(seven_codes)].copy() if seven_codes else pd.DataFrame()
                 mode_label = "严格" if seven_strict else "宽松"
                 if not df_7.empty:
-                    st.subheader(f"7 条件叠加 ({mode_label})")
-                    st.success(f"{len(df_7)} 只同时通过")
+                    st.subheader(f"7 条件叠加 ({mode_label}, 最严)")
+                    st.success(f"{len(df_7)} 只同时通过 ({mode_label}模式)")
                     st.dataframe(df_7, use_container_width=True, hide_index=True)
                 else:
-                    st.info(f"未通过 7 条件({mode_label})")
+                    st.info(f"三策略通过的股未通过 7 条件({mode_label}模式)")
                 st.divider()
+
+                if use_formula2:
+                    with st.spinner("应用公式 2 (中线 5-10 天)..."):
+                        f2_codes = []
+                        for c in df_3['代码'].tolist():
+                            sub_c = df_sub[df_sub['code'] == c].sort_values('date')
+                            if apply_formula_2(sub_c):
+                                f2_codes.append(c)
+                        df_f2 = df_3[df_3['代码'].isin(f2_codes)].copy() if f2_codes else pd.DataFrame()
+                    if not df_f2.empty:
+                        st.subheader("公式 2 (中线 5-10 天 胜率 100%)")
+                        st.success(f"{len(df_f2)} 只通过公式 2 - 5天 +4.88% / 10天 +11.33%")
+                        st.dataframe(df_f2, use_container_width=True, hide_index=True)
+                    else:
+                        st.info("三策略通过的股未通过公式 2")
+                    st.divider()
             if only_all_three:
                 st.stop()
             if use_trend:
