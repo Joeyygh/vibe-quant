@@ -351,7 +351,7 @@ st.markdown("""
 - 三策略精选 (胜率 83%)
 - 5 过滤叠加 (胜率 100%) 含涨跌幅>-3%
 - 7 条件叠加 (宽松/严格)
-- 公式 2 (中线 5-10 天 胜率 100%) +4.88%/+11.33%
+- 公式 2 (中线 5-10 天 胜率 100%) 含独立/叠加双模式
 - 2000 智能采样 (主板+创业板+科创板)
 - 北京时间显示
 """)
@@ -419,19 +419,45 @@ if run:
                 st.divider()
 
                 if use_formula2:
-                    with st.spinner("应用公式 2 (中线 5-10 天)..."):
-                        f2_codes = []
-                        for c in df_3['代码'].tolist():
-                            sub_c = df_sub[df_sub['code'] == c].sort_values('date')
-                            if apply_formula_2(sub_c):
-                                f2_codes.append(c)
-                        df_f2 = df_3[df_3['代码'].isin(f2_codes)].copy() if f2_codes else pd.DataFrame()
+                    f2_independent = st.checkbox("公式 2 独立模式 (不过三策略，直接扫全市场)", value=False, key="f2_indep")
+                    if f2_independent:
+                        with st.spinner("应用公式 2 (独立模式)..."):
+                            f2_codes = []
+                            for code in df_sub['code'].unique():
+                                sub_c = df_sub[df_sub['code'] == code].sort_values('date')
+                                if apply_formula_2(sub_c):
+                                    f2_codes.append(code)
+                            f2_rows = []
+                            for code in f2_codes:
+                                sub_c = df_sub[df_sub['code'] == code].sort_values('date')
+                                if sub_c.empty:
+                                    continue
+                                last = sub_c.iloc[-1]
+                                ret_20 = (last['close'] / sub_c['close'].iloc[-20] - 1) * 100
+                                f2_rows.append({
+                                    '代码': code,
+                                    '名称': str(last.get('name', code)),
+                                    '行业': str(last.get('industry', '未分类')),
+                                    '现价': round(float(last['close']), 2),
+                                    '今日%': round(float(last['pct_change']), 2),
+                                    '20日%': round(ret_20, 2),
+                                })
+                            df_f2 = pd.DataFrame(f2_rows) if f2_rows else pd.DataFrame()
+                    else:
+                        with st.spinner("应用公式 2 (叠加三策略)..."):
+                            f2_codes = []
+                            for c in df_3['代码'].tolist():
+                                sub_c = df_sub[df_sub['code'] == c].sort_values('date')
+                                if apply_formula_2(sub_c):
+                                    f2_codes.append(c)
+                            df_f2 = df_3[df_3['代码'].isin(f2_codes)].copy() if f2_codes else pd.DataFrame()
                     if not df_f2.empty:
-                        st.subheader("公式 2 (中线 5-10 天 胜率 100%)")
+                        mode_text = "(独立 - 不过三策略)" if f2_independent else "(叠加 - 需过三策略)"
+                        st.subheader(f"公式 2 {mode_text} 5-10 天 胜率 100%")
                         st.success(f"{len(df_f2)} 只通过公式 2 - 5天 +4.88% / 10天 +11.33%")
                         st.dataframe(df_f2, use_container_width=True, hide_index=True)
                     else:
-                        st.info("三策略通过的股未通过公式 2")
+                        st.info("未通过公式 2")
                     st.divider()
             if only_all_three:
                 st.stop()
