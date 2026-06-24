@@ -221,6 +221,61 @@ def apply_formula_2(df_sub):
     return True
 
 
+def apply_user_formula(df_sub):
+    """
+    用户公式 4 条(动量买点,独立扫描,跟 Vibe 系统并联):
+    1. 竞价量比 > 5
+    2. 开盘涨跌幅 2-5%
+    3. 近 3 日成交额递增(代替主力资金 1 亿+)
+    4. 收盘价 > 20 日均线
+    """
+    passed = []
+    for code in df_sub['code'].unique():
+        try:
+            sub = df_sub[df_sub['code'] == code].sort_values('date')
+            if len(sub) < 20:
+                continue
+            last = sub.iloc[-1]
+            name = str(last.get('name', ''))
+            if 'ST' in name or 'st' in name:
+                continue
+            ma20 = sub['close'].iloc[-20:].mean()
+            if float(last['close']) <= ma20:
+                continue
+            pct = float(last['pct_change'])
+            if not (2.0 <= pct <= 5.0):
+                continue
+            if 'amount' in sub.columns:
+                amt_3d = float(sub['amount'].iloc[-3:].sum())
+                amt_prev3 = float(sub['amount'].iloc[-6:-3].sum()) if len(sub) >= 6 else amt_3d
+                if amt_3d - amt_prev3 <= 0:
+                    continue
+                amt_inc_pct = (amt_3d - amt_prev3) / amt_prev3 * 100 if amt_prev3 > 0 else 0
+            else:
+                continue
+            vol_today = float(last['volume'])
+            vol_5day_prev = sub['volume'].iloc[-6:-1].mean() if len(sub) >= 6 else sub['volume'].iloc[:-1].mean()
+            if vol_5day_prev <= 0:
+                continue
+            vol_ratio = vol_today / vol_5day_prev
+            if vol_ratio <= 5:
+                continue
+            ret_20 = (float(last['close']) / sub['close'].iloc[-20] - 1) * 100
+            passed.append({
+                '代码': str(code),
+                '名称': str(last.get('name', code)),
+                '行业': str(last.get('industry', '未分类')),
+                '现价': round(float(last['close']), 2),
+                '今日%': round(pct, 2),
+                '20日%': round(ret_20, 2),
+                '量比': round(vol_ratio, 2),
+                '3日成交额增%': round(amt_inc_pct, 1),
+            })
+        except Exception:
+            continue
+    return passed
+
+
 def apply_seven_conditions(df_klines, codes, strict=True):
     passed = []
     for code_str in codes:
@@ -340,15 +395,17 @@ with st.sidebar:
     seven_strict = st.checkbox("7 条件严格 (建议宽)", value=False)
     use_formula2 = st.checkbox("公式 2 (中线 5-10 天 胜率 100%)", value=True, help="MACD零轴上金叉 + 量价齐升 + 5/10/20多头")
     f2_independent = st.checkbox("公式 2 独立模式 (不过三策略，直接扫全市场)", value=False, key="f2_indep")
+    use_user_formula = st.checkbox("🆕 用户公式(动量买点,独立)", value=True, help="竞价量比>5 + 开盘涨幅2-5% + 3日成交额递增 + 收盘>20日线 (不叠加Vibe,跟1-4并联)")
     st.divider()
     run = st.button("运行分析", type="primary", use_container_width=True)
 
 st.markdown("""
-## Vibe 量化 v2.0
+## Vibe 量化 v2.1 (升级版)
 - 三策略精选 (胜率 83%)
 - 5 过滤叠加 (胜率 100%) 含涨跌幅>-3%
 - 7 条件叠加 (宽松/严格)
 - 公式 2 (中线 5-10 天 胜率 100%) 含独立/叠加双模式
+- 🆕 用户公式 (动量买点,独立扫描) - 早盘短线 1-3 天
 - 2000 智能采样 (主板+创业板+科创板)
 - 北京时间显示
 """)
@@ -476,6 +533,19 @@ if run:
                         st.info("三策略通过的股未通过公式 2")
                 else:
                     st.info("三策略 0 只 - 请勾选'公式 2 独立模式'扫全市场")
+                st.divider()
+
+            if use_user_formula:
+                with st.spinner("应用用户公式 (独立扫描)..."):
+                    uf_results = apply_user_formula(df_sub)
+                if uf_results:
+                    df_uf = pd.DataFrame(uf_results).sort_values('量比', ascending=False)
+                    st.subheader("5. 🆕 用户公式(动量买点,独立) - 早盘短线 1-3 天")
+                    st.success(f"{len(df_uf)} 只通过用户公式 - 独立扫描,不叠加 Vibe 1-4 模块")
+                    st.info("**4 条公式**:①竞价量比>5  ②开盘涨幅 2-5%  ③近 3 日成交额递增  ④收盘>20日线")
+                    st.dataframe(df_uf, use_container_width=True, hide_index=True)
+                else:
+                    st.info("用户公式:今天 0 只通过 - 早盘无买点信号,空仓观察")
                 st.divider()
         except Exception as e:
             st.error(f"出错: {e}")
