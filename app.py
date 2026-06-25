@@ -4,6 +4,7 @@ import pandas as pd
 import os
 import json
 import glob
+import time
 from datetime import datetime, timedelta, timezone
 
 st.set_page_config(page_title="Vibe 量化 v2.0", page_icon="V", layout="wide", initial_sidebar_state="expanded")
@@ -52,6 +53,128 @@ def load_tushare_data():
     except Exception as e:
         st.error(f"加载失败: {e}")
         return None, None
+
+
+# ========== 持仓信号实时计算（Streamlit) ==========
+@st.cache_resource
+def get_tushare_pro():
+    """初始化 Tushare Pro 客户端(Streamlit 资源级缓存)"""
+    token = os.environ.get('TUSHARE_TOKEN')
+    if not token:
+        try:
+            token = st.secrets.get('TUSHARE_TOKEN')
+        except Exception:
+            token = None
+    if not token:
+        return None
+    try:
+        import tushare as ts
+        return ts.pro_api(token)
+    except Exception as e:
+        st.error(f"Tushare 初始化失败: {e}")
+        return None
+
+
+@st.cache_data(ttl=1800)  # 30 分钟缓存
+def calc_holding_signals(holdings_json, days=30):
+    """从 Tushare 实时拉取每只持仓的价格并生成信号。
+    holdings_json: str(JSON序列化的持仓 list)
+    返回: list[dict] 每个元素包含代码/名称/现价/今日%/MA5/MA20/累计%/tips
+    """
+    pro = get_tushare_pro()
+    if pro is None:
+        return []
+    try:
+        holdings = json.loads(holdings_json)
+    except Exception:
+        return []
+    if not holdings:
+        return []
+
+    # 跳过港股/债券
+    tradable = []
+    for h in holdings:
+        code_raw = str(h.get('code', '')).strip()
+        if code_raw.endswith('.HK') or h.get('type') == 'bond' or h.get('currency') == 'HKD':
+            continue
+        tradable.append(h)
+    if not tradable:
+        return []
+
+    today = datetime.now()
+    end_d = today.strftime('%Y%m%d')
+    start_d = (today - timedelta(days=days)).strftime('%Y%m%d')
+
+    signals = []
+    progress = st.progress(0, text='拉取持仓实时信号...')
+    n = len(tradable)
+    for idx, h in enumerate(tradable):
+        code = str(h.get('code', '')).zfill(6)
+        name = h.get('name', code)
+        cost = float(h.get('cost_price', 0)) if h.get('cost_price') else 0
+        group = h.get('group', '')
+
+        if code.startswith(('4', '8')):
+            ts_code = f"{code}.BJ"
+        elif code.startswith(('6', '9')):
+            ts_code = f"{code}.SH"
+        else:
+            ts_code = f"{code}.SZ"
+
+        progress.progress((idx + 0.1) / n, text=f'拉取 {name}({code})...')
+        try:
+            df = pro.daily(ts_code=ts_code, start_date=start_d, end_date=end_d)
+            time.sleep(0.05)  # 限流保护
+            if df is None or df.empty or len(df) < 5:
+                continue
+            df = df.sort_values('trade_date').reset_index(drop=True)
+            last = df.iloc[-1]
+            close = float(last['close'])
+            pct_chg = float(last.get('pct_chg', 0))
+            ma5 = float(df['close'].iloc[-5:].mean())
+            ma20 = float(df['close'].iloc[-20:].mean()) if len(df) >= 20 else None
+            ret_from_cost = ((close - cost) / cost * 100) if cost > 0 else None
+
+            tips = []
+            if pct_chg <= -5:
+                tips.append(("🔴 止损", f"今日暴跌 {pct_chg:.2f}%"))
+            elif pct_chg <= -3:
+                tips.append(("⚠️ 注意", f"今日跌 {pct_chg:.2f}%"))
+            elif pct_chg >= 7:
+                tips.append(("🟢 止盈一半", f"今日大涨 {pct_chg:.2f}%"))
+            elif pct_chg >= 5:
+                tips.append(("🟢 减仓", f"今日涨 {pct_chg:.2f}%"))
+            if close < ma5:
+                tips.append(("⚠️", f"跌破MA5({ma5:.2f})"))
+            if ma20 and close < ma20:
+                tips.append(("🔴", f"跌破MA20({ma20:.2f})"))
+            if ret_from_cost is not None:
+                if ret_from_cost >= 20:
+                    tips.append(("💰 全部止盈", f"累计 {ret_from_cost:+.1f}%"))
+                elif ret_from_cost >= 10:
+                    tips.append(("💰 减仓一半", f"累计 {ret_from_cost:+.1f}%"))
+                elif ret_from_cost <= -10:
+                    tips.append(("💔 止损", f"累计 {ret_from_cost:+.1f}%"))
+            if not tips:
+                tips.append(("✅ 持有", "信号正常"))
+
+            signals.append({
+                'code': code,
+                'name': name,
+                'cost': cost,
+                'close': close,
+                'pct_chg': pct_chg,
+                'ma5': ma5,
+                'ma20': ma20,
+                'ret': ret_from_cost,
+                'group': group,
+                'tips': tips,
+            })
+        except Exception:
+            continue
+
+    progress.empty()
+    return signals
 
 
 def smart_sample(df_stocks, n_stocks):
@@ -349,6 +472,62 @@ with st.sidebar:
                     holdings.pop(i)
                     save_holdings(holdings)
                     st.rerun()
+
+        # === 实时信号面板 ===
+        st.write("--- 📊 实时信号 ---")
+        if get_tushare_pro() is None:
+            st.caption("⚠️ 未配置 Tushare token,实时信号不可用")
+        elif not holdings:
+            st.caption("暂无持仓,添加后启用信号")
+        else:
+            col_r1, col_r2 = st.columns([1, 2])
+            with col_r1:
+                refresh = st.button("🔄 刷新持仓信号", key="refresh_signals")
+            with col_r2:
+                st.caption("缓存 30 分钟,点按钮重新拉取")
+
+            holdings_json = json.dumps(holdings, ensure_ascii=False)
+            signals = calc_holding_signals(holdings_json)
+            if signals:
+                # 预警汇总
+                danger = [s for s in signals if any('🔴' in t[0] or '💔' in t[0] for t in s['tips'])]
+                profit = [s for s in signals if any('💰' in t[0] for t in s['tips'])]
+                c1, c2, c3 = st.columns(3)
+                c1.metric("持仓", f"{len(signals)}只")
+                c2.metric("🔴 止损预警", len(danger))
+                c3.metric("💰 止盈提示", len(profit))
+
+                # 按组分组显示
+                from collections import defaultdict
+                by_group = defaultdict(list)
+                for s in signals:
+                    by_group[s.get('group') or '未分组'].append(s)
+                for gname in ['深亏', '浅亏', '保本', '温和盈利', '高盈利']:
+                    items = by_group.get(gname, [])
+                    if not items:
+                        continue
+                    st.markdown(f"**{gname}仓({len(items)}只)**")
+                    rows = []
+                    for s in items:
+                        tip_text = ' | '.join(f"{t[0]} {t[1]}" for t in s['tips'])
+                        ret = f"{s['ret']:+.1f}%" if s.get('ret') is not None else '-'
+                        rows.append({
+                            '名称': s['name'],
+                            '现价': f"{s['close']:.2f}",
+                            '今日': f"{s['pct_chg']:+.2f}%",
+                            'MA5': f"{s['ma5']:.2f}",
+                            'MA20': f"{s['ma20']:.2f}" if s.get('ma20') else '-',
+                            '累计': ret,
+                            '建议': tip_text,
+                        })
+                    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+                # 港股/债券
+                others = [h for h in holdings if str(h.get('code', '')).endswith('.HK') or h.get('type') == 'bond']
+                if others:
+                    st.caption(f"港股/债券 {len(others)} 只不参与 A 股实时信号")
+            else:
+                st.warning("未能获取到信号,请检查 Tushare 连接")
+
         st.write("--- 添加 ---")
         new_code = st.text_input("代码 (6位)", key="new_code", placeholder="如 600519")
         if st.button("添加", key="add_btn"):
@@ -400,8 +579,8 @@ with st.sidebar:
     st.divider()
     run = st.button("运行分析", type="primary", use_container_width=True)
     st.divider()
-    st.header("📊 每日复盘")
-    view_mode = st.radio("页面模式", ["量化选股", "每日复盘"], index=0, key="view_mode")
+    st.header("📊 页面")
+    view_mode = st.radio("页面模式", ["量化选股", "每日复盘", "📝 我的笔记"], index=0, key="view_mode")
 
 st.markdown("""
 ## Vibe 量化 v2.1 (升级版)
@@ -443,6 +622,80 @@ if view_mode == "每日复盘":
                     file_name=selected,
                     mime="text/markdown"
                 )
+    st.stop()
+
+if view_mode == "📝 我的笔记":
+    st.header("📝 每日手动笔记")
+    st.caption("论坛/股吧/研报/韭研公社等手动信息 → 自动集成到报告")
+    st.info("""
+**使用流程**:
+1. 在下面输入今天的笔记(论坛、研报、新闻摘要)
+2. 点击"复制到剪贴板"
+3. 粘贴到 **`data/my_notes/{日期}.md`** 文件
+4. GitHub Actions 明天 06:00 跑报告时会自动合并
+""")
+
+    notes_dir = 'data/my_notes'
+    os.makedirs(notes_dir, exist_ok=True)
+    today = (datetime.now(timezone.utc) + timedelta(hours=8)).strftime('%Y-%m-%d')
+    notes_file = os.path.join(notes_dir, f'{today}.md')
+
+    default_content = f"""# {today} 手动补充
+
+## 📰 财联社新闻
+- (粘贴今天热点新闻)
+
+## 💬 淘股吧 / 韭研公社
+- (粘贴连板结构、市场情绪)
+
+## 📊 雪球 / 研报
+- (粘贴行业研报、基本面逻辑)
+
+## 🎯 明天操作计划
+- (写下你的计划)
+"""
+
+    if os.path.exists(notes_file):
+        with open(notes_file, 'r', encoding='utf-8') as f:
+            existing = f.read()
+    else:
+        existing = default_content
+
+    notes = st.text_area("📝 笔记内容 (Markdown)", value=existing, height=500)
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        if st.button("💾 保存到本地", use_container_width=True):
+            try:
+                with open(notes_file, 'w', encoding='utf-8') as f:
+                    f.write(notes)
+                st.success(f"✅ 已保存到 {notes_file}")
+                st.info("⚠️ 注意:Streamlit Cloud 重启后文件会丢失,需同步到 GitHub")
+            except Exception as e:
+                st.error(f"保存失败: {e}")
+    with col2:
+        st.download_button(
+            label="⬇️ 下载 .md",
+            data=notes,
+            file_name=f"my_notes_{today}.md",
+            mime="text/markdown",
+            use_container_width=True
+        )
+    with col3:
+        if st.button("📋 复制内容", use_container_width=True):
+            st.code(notes, language="markdown")
+            st.success("上面的代码块可全选复制")
+
+    st.divider()
+    st.caption("""
+**同步到 GitHub 流程**:
+1. 下载或复制上面的 Markdown 内容
+2. 在 GitHub 仓库创建文件:`data/my_notes/{today}.md`
+3. 粘贴内容 → Commit
+4. 明天 06:00 Actions 跑报告时,会自动合并到 "## 十一、手动补充"
+
+**或者**:告诉我笔记内容,我用 API 帮你同步到 GitHub
+""")
     st.stop()
 
 if run:
