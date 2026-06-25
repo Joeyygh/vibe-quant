@@ -178,6 +178,7 @@ def calc_holding_signals(holdings_json, days=30):
 
 
 def smart_sample(df_stocks, n_stocks):
+    """按板块分层采样:主板35% / 创业板35% / 科创板30%(提高科创板+创业板比例)"""
     if n_stocks >= len(df_stocks):
         return df_stocks['code'].tolist()
     main_prefixes = ('000', '001', '002', '600', '601', '603', '605')
@@ -186,13 +187,15 @@ def smart_sample(df_stocks, n_stocks):
     df_main = df_stocks[df_stocks['code'].str.startswith(main_prefixes)]
     df_chinext = df_stocks[df_stocks['code'].str.startswith(chinext)]
     df_star = df_stocks[df_stocks['code'].str.startswith(star)]
-    n_main = int(n_stocks * 0.40)
+    # 调高创业板/科创板比例(原 40/35/25 → 35/35/30)
+    n_main = int(n_stocks * 0.35)
     n_chinext = int(n_stocks * 0.35)
     n_star = n_stocks - n_main - n_chinext
     codes = []
     codes.extend(df_main['code'].head(n_main).tolist())
     codes.extend(df_chinext['code'].head(n_chinext).tolist())
     codes.extend(df_star['code'].head(n_star).tolist())
+    # 如果某些板块不够,从其他板块补足(但不重复)
     if len(codes) < n_stocks:
         existing = set(codes)
         remaining = df_stocks[~df_stocks['code'].isin(existing)]['code'].tolist()
