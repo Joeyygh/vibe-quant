@@ -754,6 +754,13 @@ if view_mode == "📝 我的笔记":
 """)
     st.stop()
 
+# 默认自动跑一次(打开量化选股页面就出结果)
+if 'auto_run_once' not in st.session_state:
+    st.session_state['auto_run_once'] = True
+    run = True
+else:
+    run = run or st.session_state.get('auto_run', False)
+
 if run:
     if df_stocks is None or df_klines is None:
         st.error("数据未加载")
