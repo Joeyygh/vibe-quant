@@ -616,7 +616,7 @@ with st.sidebar:
     scan_mode = st.radio("扫描模式", ["行业筛选", "我的持仓"])
     if scan_mode == "行业筛选":
         selected_industry = st.selectbox("行业", industries_options, index=0)
-        n_stocks = st.slider("扫描数", 50, 5000, 5000, 50, help="主板+创业板+科创板总池 ~5000 只。5000 会覆盖全部可能股")
+        n_stocks = st.slider("扫描数", 50, 3000, 3000, 50, help="全部股 ~5500 只。⚠️ 3000 以上 Streamlit Cloud 可能 OOM")
     else:
         if not holdings:
             st.warning("还没有持仓")
