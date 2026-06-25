@@ -89,39 +89,53 @@ def _is_limit(code, pct):
     return pct >= 9.5
 
 
-def get_yf_data(tickers_dict, label='美股', retries=3):
-    """yfinance 抓数据,带限流重试"""
+def get_yf_data(tickers_dict, label='美股', retries=3, batch_size=3):
+    """yfinance 抓数据,分批拉取避免限流,带重试"""
     result = {}
     tickers_list = list(tickers_dict.keys())
-    print(f"  → 抓取 {label} ({len(tickers_list)} 个)...")
-    for attempt in range(retries):
-        try:
-            data = yf.download(tickers_list, period='5d', progress=False,
-                               group_by='ticker', threads=True)
-            for ticker, name in tickers_dict.items():
-                try:
-                    df = data if len(tickers_list) == 1 else (
-                        data[ticker] if ticker in data.columns.get_level_values(0) else pd.DataFrame())
-                    if df.empty or len(df) < 2:
-                        result[name] = {'error': '数据不足'}
-                        continue
-                    last_close = float(df.iloc[-1]['Close'])
-                    prev_close = float(df.iloc[-2]['Close'])
-                    if pd.isna(last_close) or pd.isna(prev_close) or prev_close == 0:
-                        result[name] = {'error': 'NaN'}
-                        continue
-                    result[name] = {
-                        'close': round(last_close, 2),
-                        'change_pct': round((last_close - prev_close) / prev_close * 100, 2),
-                    }
-                except Exception as e:
-                    result[name] = {'error': str(e)[:30]}
-            return result
-        except Exception as e:
-            print(f"    重试 {attempt+1}/{retries}: {str(e)[:60]}")
-            time.sleep(15)
-    for n in tickers_dict.values():
-        result[n] = {'error': '全部失败'}
+    print(f"  → 抓取 {label} ({len(tickers_list)} 个,分批 size={batch_size})...")
+
+    # 分批:每批 batch_size 个 ticker
+    for batch_start in range(0, len(tickers_list), batch_size):
+        batch = tickers_list[batch_start:batch_start + batch_size]
+        for attempt in range(retries):
+            try:
+                if len(batch) == 1:
+                    data = yf.download(batch[0], period='5d', progress=False)
+                    df_map = {batch[0]: data}
+                else:
+                    data = yf.download(batch, period='5d', progress=False,
+                                       group_by='ticker', threads=False)
+                    df_map = {t: (data[t] if t in data.columns.get_level_values(0) else pd.DataFrame()) for t in batch}
+
+                for ticker in batch:
+                    name = tickers_dict[ticker]
+                    try:
+                        df = df_map.get(ticker, pd.DataFrame())
+                        if df.empty or len(df) < 2:
+                            result[name] = {'error': '数据不足'}
+                            continue
+                        last_close = float(df.iloc[-1]['Close'])
+                        prev_close = float(df.iloc[-2]['Close'])
+                        if pd.isna(last_close) or pd.isna(prev_close) or prev_close == 0:
+                            result[name] = {'error': 'NaN'}
+                            continue
+                        result[name] = {
+                            'close': round(last_close, 2),
+                            'change_pct': round((last_close - prev_close) / prev_close * 100, 2),
+                        }
+                    except Exception as e:
+                        result[name] = {'error': str(e)[:30]}
+                time.sleep(2)
+                break
+            except Exception as e:
+                print(f"  ⚠️ {label} {batch} 拉取失败(尝试 {attempt+1}/{retries}): {str(e)[:80]}")
+                time.sleep(8)
+        else:
+            for ticker in batch:
+                name = tickers_dict[ticker]
+                if name not in result:
+                    result[name] = {'error': '重试后仍失败'}
     return result
 
 
