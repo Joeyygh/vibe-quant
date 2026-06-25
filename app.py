@@ -560,7 +560,7 @@ with st.sidebar:
     scan_mode = st.radio("扫描模式", ["行业筛选", "我的持仓"])
     if scan_mode == "行业筛选":
         selected_industry = st.selectbox("行业", industries_options, index=0)
-        n_stocks = st.slider("扫描数", 10, 2000, 2000, 10)
+        n_stocks = st.slider("扫描数", 50, 5000, 5000, 50)
     else:
         if not holdings:
             st.warning("还没有持仓")
