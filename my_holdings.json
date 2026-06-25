@@ -1,0 +1,9 @@
+[
+  {"code": "002407", "name": "永太科技", "shares": 1000, "cost_price": 18.50},
+  {"code": "002580", "name": "圣阳股份", "shares": 2000, "cost_price": 12.30},
+  {"code": "300304", "name": "云意电气", "shares": 1500, "cost_price": 20.15},
+  {"code": "300401", "name": "花园生物", "shares": 1000, "cost_price": 15.20},
+  {"code": "300420", "name": "五洋自控", "shares": 1000, "cost_price": 6.50},
+  {"code": "002068", "name": "黑猫股份", "shares": 1500, "cost_price": 13.48},
+  {"code": "002600", "name": "领益智造", "shares": 2000, "cost_price": 17.66}
+]
