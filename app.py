@@ -21,12 +21,6 @@ st.markdown("""
         max-width: 90vw !important;
     }
 }
-/* 手机上侧边栏默认展开 */
-@media (max-width: 768px) {
-    [data-testid="stSidebar"] {
-        transform: translateX(0) !important;
-    }
-}
 /* metric 缩小边距 */
 [data-testid="stMetricValue"] {
     font-size: 1.6rem;
