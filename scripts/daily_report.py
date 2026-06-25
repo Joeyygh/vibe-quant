@@ -122,7 +122,9 @@ def get_yf_data(tickers_dict, label='美股', retries=3):
     for n in tickers_dict.values():
         result[n] = {'error': '全部失败'}
     return result
-  # ============== A 股数据 ==============
+
+
+# ============== A 股数据 ==============
 
 def get_a_indices(date_str):
     if not pro:
@@ -154,115 +156,114 @@ def get_limit_count_from_daily(date_str):
         df = pro.daily(trade_date=date_str)
         if df is None or df.empty:
             return None, None
-        df['is_limit_up'] =
-      # ============== 报告生成 ==============
+        df['is_limit_up'] = df.apply(lambda r: _is_limit(r['ts_code'], r.get('pct_chg', 0)), axis=1)
+        df['is_limit_down'] = df.apply(
+            lambda r: (r['ts_code'].startswith(('300', '301', '688')) and r.get('pct_chg', 0) <= -19.5)
+                      or (not r['ts_code'].startswith(('300', '301', '688')) and r.get('pct_chg', 0) <= -9.5),
+            axis=1)
+        return int(df['is_limit_up'].sum()), int(df['is_limit_down'].sum())
+    except Exception as e:
+        print(f"  ⚠️ 涨跌停: {e}")
+        return None, None
 
-def generate_report():
-    target_date = get_target_date()
-    date_str = target_date.replace('-', '')
-    print(f"\n{'='*50}\n开始生成复盘报告 - {target_date}\n{'='*50}\n")
 
-    sections = []
-    sections.append(f"# 📊 A 股每日复盘报告 - {target_date}")
-    sections.append("")
-    sections.append(f"**生成时间**: {now.strftime('%Y-%m-%d %H:%M')} 北京时间")
-    sections.append("**数据源**: Tushare Pro (A 股) + Yahoo Finance (美股/商品)")
-    sections.append("")
-    sections.append("---")
-    sections.append("")
+def get_north_flow(date_str):
+    if not pro:
+        return None, None
+    try:
+        df = pro.moneyflow_hsgt(trade_date=date_str)
+        if df is not None and not df.empty:
+            row = df.iloc[0]
+            north_wan = float(row.get('north_money', 0))
+            south_wan = float(row.get('south_money', 0))
+            return north_wan / 1e4, south_wan / 1e4
+    except Exception as e:
+        print(f"  ⚠️ 北向资金: {e}")
+    return None, None
 
-    # 一、盘面速览
-    sections.append("## 一、A 股盘面速览")
-    sections.append("")
-    indices = get_a_indices(date_str)
-    if indices:
-        sections.append("| 指数 | 收盘 | 涨跌幅 |")
-        sections.append("|------|------|--------|")
-        for idx in indices:
-            sections.append(f"| **{idx['name']}** | {idx['close']:.2f} | {fmt_pct(idx['pct_chg'])} |")
-    else:
-        sections.append("- ⚠️ 大盘指数获取失败")
-    sections.append("")
-    up, down = get_limit_count_from_daily(date_str)
-    if up is not None:
-        sections.append(f"- **涨停**: {up} 家  |  **跌停**: {down} 家")
-    sections.append("")
 
-    # 二、北向 + 两融
-    sections.append("## 二、资金面:北向 + 两融")
-    sections.append("")
-    north, south = get_north_flow(date_str)
-    if north is not None:
-        sections.append(f"- **北向资金**: 净{'流入' if north > 0 else '流出'} **{abs(north):.2f} 亿元**")
-        sections.append(f"- **南向资金**: 净{'流入' if south > 0 else '流出'} {abs(south):.2f} 亿元")
-    sections.append("")
-    margins = get_margin(date_str)
-    if margins:
-        sections.append("### 两融余额")
-        sections.append("")
-        sections.append("| 市场 | 融资余额(亿) | 融券余额(亿) | 融资买入(亿) |")
-        sections.append("|------|------------|------------|------------|")
-        for m in margins:
-            ex = m.get('exchange_id', '?')
-            ex_name = {'SSE': '沪市', 'SZSE': '深市', 'BSE': '北交所'}.get(ex, ex)
-            rzye = float(m.get('rzye', 0)) / 1e8
-            rqye = float(m.get('rqye', 0)) / 1e8
-            rzmre = float(m.get('rzmre', 0)) / 1e8
-            sections.append(f"| {ex_name} | {rzye:,.2f} | {rqye:,.2f} | {rzmre:,.2f} |")
-        sections.append("")
+def get_margin(date_str):
+    if not pro:
+        return []
+    try:
+        df = pro.margin(trade_date=date_str)
+        if df is not None and not df.empty:
+            return df.to_dict('records')
+    except Exception as e:
+        print(f"  ⚠️ 两融: {e}")
+    return []
 
-    # 三、申万行业板块
-    sections.append("## 三、申万一级行业板块")
-    sections.append("")
-    top_up, top_down = get_sector_perf(date_str, top_n=10)
-    if top_up:
-        sections.append("### 🟢 涨幅前 10")
-        sections.append("")
-        sections.append("| 行业 | 涨幅 | 成交额(亿) | 样本数 |")
-        sections.append("|------|------|----------|--------|")
-        for s in top_up:
-            amount_yi = float(s.get('total_amount', 0)) / 1e8
-            sections.append(f"| {s['industry']} | {fmt_pct(s['avg_pct'])} 
-          # ============== 报告生成 ==============
 
-def generate_report():
-    target_date = get_target_date()
-    date_str = target_date.replace('-', '')
-    print(f"\n{'='*50}\n开始生成复盘报告 - {target_date}\n{'='*50}\n")
+def get_sector_perf(date_str, top_n=10):
+    """申万行业板块涨跌(用 daily + stock_basic 自己算)"""
+    if not pro:
+        return [], []
+    try:
+        daily_df = pro.daily(trade_date=date_str)
+        if daily_df is None or daily_df.empty:
+            return [], []
+        basic_df = pro.stock_basic(list_status='L', fields='ts_code,industry')
+        if basic_df is None or basic_df.empty:
+            return [], []
+        df = daily_df.merge(basic_df[['ts_code', 'industry']], on='ts_code', how='left')
+        df = df[df['industry'].notna() & (df['industry'] != '') & (df['industry'] != 'nan') & (df['industry'] != '未分类')]
+        if df.empty:
+            return [], []
+        sector = df.groupby('industry').agg(
+            avg_pct=('pct_chg', 'mean'),
+            total_amount=('amount', 'sum'),
+            stock_count=('ts_code', 'count'),
+        ).reset_index().sort_values('avg_pct', ascending=False)
+        up = sector.head(top_n).to_dict('records')
+        down = sector.tail(top_n)[::-1].to_dict('records')
+        return up, down
+    except Exception as e:
+        print(f"  ⚠️ 板块涨跌: {e}")
+        return [], []
 
-    sections = []
-    sections.append(f"# 📊 A 股每日复盘报告 - {target_date}")
-    sections.append("")
-    sections.append(f"**生成时间**: {now.strftime('%Y-%m-%d %H:%M')} 北京时间")
-    sections.append("**数据源**: Tushare Pro (A 股) + Yahoo Finance (美股/商品)")
-    sections.append("")
-    sections.append("---")
-    sections.append("")
 
-    # 一、盘面速览
-    sections.append("## 一、A 股盘面速览")
-    sections.append("")
-    indices = get_a_indices(date_str)
-    if indices:
-        sections.append("| 指数 | 收盘 | 涨跌幅 |")
-        sections.append("|------|------|--------|")
-        for idx in indices:
-            sections.append(f"| **{idx['name']}** | {idx['close']:.2f} | {fmt_pct(idx['pct_chg'])} |")
-    else:
-        sections.append("- ⚠️ 大盘指数获取失败")
-    sections.append("")
-    up, down = get_limit_count_from_daily(date_str)
-    if up is not None:
-        sections.append(f"- **涨停**: {up} 家  |  **跌停**: {down} 家")
-    sections.append("")
+def get_top_list(date_str, top_n=15):
+    if not pro:
+        return []
+    try:
+        df = pro.top_list(trade_date=date_str)
+        if df is not None and not df.empty:
+            return df.head(top_n).to_dict('records')
+    except Exception as e:
+        print(f"  ⚠️ 龙虎榜: {e}")
+    return []
 
-    # 二、北向 + 两融
-    sections.append("## 二、资金面:北向 + 两融")
-    sections.append("")
-    north, south = get_north_flow(date_str)
-    if north is not None:
-        sections.append(f"- **北向资金**: 净{'流入' if north > 0 else '流出'} **{abs(north):.2f} 亿元**")
-                        lambda c: name_map.get(c, ['-', '-'])[0] if c in name_map else '-')
+
+def get_block_trade(date_str, top_n=15):
+    if not pro:
+        return []
+    try:
+        df = pro.block_trade(trade_date=date_str)
+        if df is not None and not df.empty:
+            return df.head(top_n).to_dict('records')
+    except Exception as e:
+        print(f"  ⚠️ 大宗交易: {e}")
+    return []
+
+
+def get_top_moneyflow(date_str, top_n=20):
+    """个股资金流(超大单+大单净流入前 N)"""
+    if not pro:
+        return []
+    try:
+        df = pro.moneyflow(trade_date=date_str)
+        if df is not None and not df.empty:
+            for col in ['buy_lg_amount', 'buy_elg_amount', 'sell_lg_amount', 'sell_elg_amount']:
+                if col not in df.columns:
+                    df[col] = 0
+            df['net_main'] = (
+                df['buy_lg_amount'].fillna(0) + df['buy_elg_amount'].fillna(0)
+                - df['sell_lg_amount'].fillna(0) - df['sell_elg_amount'].fillna(0)
+            )
+            name_map = _get_name_map()
+            df_top = df.nlargest(top_n, 'net_main')[['ts_code', 'net_main']].copy()
+            df_top['name'] = df_top['ts_code'].map(
+                lambda c: name_map.get(c, ['-', '-'])[0] if c in name_map else '-')
             df_top['pct_change'] = 0
             try:
                 daily_df = pro.daily(trade_date=date_str, fields='ts_code,pct_chg')
@@ -335,7 +336,7 @@ def calc_consecutive_limit(date_str):
         return sorted(results, key=lambda x: -x['consecutive'])[:10]
     except Exception as e:
         print(f"  ⚠️ 连板: {e}")
-    return []
+        return []
 
 
 # ============== 报告生成 ==============
@@ -392,8 +393,6 @@ def generate_report():
             rqye = float(m.get('rqye', 0)) / 1e8
             rzmre = float(m.get('rzmre', 0)) / 1e8
             sections.append(f"| {ex_name} | {rzye:,.2f} | {rqye:,.2f} | {rzmre:,.2f} |")
-        sections.append("")
-                  sections.append(f"| {ex_name} | {rzye:,.2f} | {rqye:,.2f} | {rzmre:,.2f} |")
         sections.append("")
 
     # 三、申万行业板块
