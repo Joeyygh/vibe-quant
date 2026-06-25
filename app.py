@@ -8,25 +8,6 @@ import time
 from datetime import datetime, timedelta, timezone
 
 st.set_page_config(page_title="Vibe 量化 v2.0", page_icon="V", layout="wide", initial_sidebar_state="expanded")
-st.markdown("""
-<style>
-/* 侧边栏加宽 - 手机也能看清 */
-[data-testid="stSidebar"] {
-    min-width: 420px !important;
-    max-width: 480px !important;
-}
-@media (max-width: 768px) {
-    [data-testid="stSidebar"][aria-expanded="true"] {
-        min-width: 90vw !important;
-        max-width: 90vw !important;
-    }
-}
-/* metric 缩小边距 */
-[data-testid="stMetricValue"] {
-    font-size: 1.6rem;
-}
-</style>
-""", unsafe_allow_html=True)
 st.title("Vibe 股票量化分析 v2.0")
 beijing_now = (datetime.now(timezone.utc) + timedelta(hours=8)).strftime('%Y-%m-%d %H:%M')
 st.markdown(f"**{beijing_now} (北京时间)** | 数据源：Tushare 真实数据")
@@ -516,67 +497,30 @@ with st.sidebar:
                 c2.metric("🔴 止损预警", len(danger))
                 c3.metric("💰 止盈提示", len(profit))
 
-                # 按组分组显示 - 手机友好版
+                # 按组分组显示
                 from collections import defaultdict
                 by_group = defaultdict(list)
                 for s in signals:
                     by_group[s.get('group') or '未分组'].append(s)
-
-                # 提取最重要的提示作为“操作”列
-                def _top_action(tips):
-                    for emoji_key in ['🔴', '💔', '💰', '🟢', '⚠️']:
-                        for t in tips:
-                            if emoji_key in t[0]:
-                                return f"{t[0]} {t[1]}"
-                    return tips[-1][0] + ' ' + tips[-1][1] if tips else '✅'
-
-                # 止损预警优先显示
-                danger_groups = [('深亏', '深亏仓'), ('浅亏', '浅亏仓')]
-                other_groups = [('保本', '保本仓'), ('温和盈利', '温和盈利仓'), ('高盈利', '高盈利仓')]
-
-                for gkey, gname in danger_groups:
-                    items = by_group.get(gkey, [])
+                for gname in ['深亏', '浅亏', '保本', '温和盈利', '高盈利']:
+                    items = by_group.get(gname, [])
                     if not items:
                         continue
-                    danger_items = [s for s in items if any('🔴' in t[0] or '💔' in t[0] for t in s['tips'])]
-                    if not danger_items:
-                        continue
-                    with st.expander(f"🔴 {gname}预警 ({len(danger_items)}只) - 点开看详情", expanded=True):
-                        for s in danger_items:
-                            action = _top_action(s['tips'])
-                            ret = f"{s['ret']:+.1f}%" if s.get('ret') is not None else '-'
-                            st.markdown(f"**{s['name']}** {s['close']:.2f} ({s['pct_chg']:+.2f}%) 累计 {ret}")
-                            st.caption(f"→ {action}")
-
-                for gkey, gname in other_groups:
-                    items = by_group.get(gkey, [])
-                    if not items:
-                        continue
-                    profit_items = [s for s in items if any('💰' in t[0] for t in s['tips'])]
-                    watch_items = [s for s in items if any('🟢' in t[0] for t in s['tips']) and not any('💰' in t[0] for t in s['tips'])]
-                    normal_items = [s for s in items if not any('💰' in t[0] or '🟢' in t[0] for t in s['tips'])]
-
-                    with st.expander(f"{'💰' if gkey == '高盈利' else '📊'} {gname}({len(items)}只)", expanded=(gkey == '高盈利')):
-                        if profit_items:
-                            st.markdown(f"**💰 止盈提示 {len(profit_items)} 只**")
-                            for s in profit_items:
-                                action = _top_action(s['tips'])
-                                ret = f"{s['ret']:+.1f}%" if s.get('ret') is not None else '-'
-                                st.markdown(f"**{s['name']}** {s['close']:.2f} ({s['pct_chg']:+.2f}%) 累计 {ret}")
-                                st.caption(f"→ {action}")
-                            st.divider()
-                        if watch_items:
-                            st.markdown(f"**🟢 减仓提示 {len(watch_items)} 只**")
-                            for s in watch_items:
-                                action = _top_action(s['tips'])
-                                ret = f"{s['ret']:+.1f}%" if s.get('ret') is not None else '-'
-                                st.markdown(f"**{s['name']}** {s['close']:.2f} ({s['pct_chg']:+.2f}%) 累计 {ret}")
-                                st.caption(f"→ {action}")
-                            st.divider()
-                        if normal_items:
-                            st.markdown(f"**✅ 持有 {len(normal_items)} 只**")
-                            names = ', '.join(f"{s['name']}({s['pct_chg']:+.1f}%)" for s in normal_items)
-                            st.caption(names)
+                    st.markdown(f"**{gname}仓({len(items)}只)**")
+                    rows = []
+                    for s in items:
+                        tip_text = ' | '.join(f"{t[0]} {t[1]}" for t in s['tips'])
+                        ret = f"{s['ret']:+.1f}%" if s.get('ret') is not None else '-'
+                        rows.append({
+                            '名称': s['name'],
+                            '现价': f"{s['close']:.2f}",
+                            '今日': f"{s['pct_chg']:+.2f}%",
+                            'MA5': f"{s['ma5']:.2f}",
+                            'MA20': f"{s['ma20']:.2f}" if s.get('ma20') else '-',
+                            '累计': ret,
+                            '建议': tip_text,
+                        })
+                    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
                 # 港股/债券
                 others = [h for h in holdings if str(h.get('code', '')).endswith('.HK') or h.get('type') == 'bond']
                 if others:
@@ -616,7 +560,7 @@ with st.sidebar:
     scan_mode = st.radio("扫描模式", ["行业筛选", "我的持仓"])
     if scan_mode == "行业筛选":
         selected_industry = st.selectbox("行业", industries_options, index=0)
-        n_stocks = st.slider("扫描数", 50, 3000, 3000, 50, help="全部股 ~5500 只。⚠️ 3000 以上 Streamlit Cloud 可能 OOM")
+        n_stocks = st.slider("扫描数", 10, 2000, 2000, 10)
     else:
         if not holdings:
             st.warning("还没有持仓")
@@ -753,13 +697,6 @@ if view_mode == "📝 我的笔记":
 **或者**:告诉我笔记内容,我用 API 帮你同步到 GitHub
 """)
     st.stop()
-
-# 默认自动跑一次(打开量化选股页面就出结果)
-if 'auto_run_once' not in st.session_state:
-    st.session_state['auto_run_once'] = True
-    run = True
-else:
-    run = run or st.session_state.get('auto_run', False)
 
 if run:
     if df_stocks is None or df_klines is None:
