@@ -361,10 +361,17 @@ def get_holding_signals(target_date, date_str):
 
     signals = []
     for h in holdings:
-        code = h.get('code', '').zfill(6)
-        name = h.get('name', code)
+        code_raw = str(h.get('code', '')).strip()
+        name = h.get('name', code_raw)
         shares = h.get('shares', 0)
         cost = float(h.get('cost_price', 0)) if h.get('cost_price') else 0
+        group = h.get('group', '')
+
+        # 跳过港股(暂不支持)、债券
+        if code_raw.endswith('.HK') or h.get('type') == 'bond' or h.get('currency') == 'HKD':
+            continue
+
+        code = code_raw.zfill(6)
 
         if code.startswith(('4', '8')):
             ts_code = f"{code}.BJ"
@@ -435,6 +442,7 @@ def get_holding_signals(target_date, date_str):
                 'ma20': ma20,
                 'ret': ret_from_cost,
                 'tips': tips,
+                'group': group,
             })
         except Exception as e:
             continue
@@ -684,25 +692,69 @@ def generate_report():
     # 持仓卖出信号
     print("\n🔔 计算持仓卖出信号...")
     holdings = get_holding_signals(target_date, date_str)
+    sections.append("## 十三、持仓卖出信号")
+    sections.append("")
     if holdings:
-        sections.append("## 十三、持仓卖出信号")
+        sections.append("> 基于 `my_holdings.json` 自动计算,包含止损/止盈/突破/趋势建议。股价为最新收盘价(6.25)。")
         sections.append("")
-        sections.append("> 基于 `my_holdings.json` 自动计算,包含止损/止盈/突破/趋势建议。")
-        sections.append("")
-        sections.append("| 代码 | 名称 | 现价 | 今日% | MA5 | MA20 | 累计% | 建议 |")
-        sections.append("|------|------|------|------|------|------|------|------|")
+        # 按分组组织
+        from collections import defaultdict
+        by_group = defaultdict(list)
         for s in holdings:
-            tips_str = "<br>".join(s['tips'])
-            ret = f"{s['ret']:+.1f}%" if s['ret'] is not None else "-"
-            ma5 = f"{s['ma5']:.2f}"
-            ma20 = f"{s['ma20']:.2f}" if s['ma20'] is not None else "-"
-            sections.append(f"| {s['code']} | {s['name']} | {s['close']:.2f} | {s['pct_chg']:+.2f}% | {ma5} | {ma20} | {ret} | {tips_str} |")
-        sections.append("")
-    else:
-        sections.append("## 十三、持仓卖出信号")
-        sections.append("")
-        sections.append("> 未配置持仓或 Tushare 未启用。编辑 `my_holdings.json` 添加持仓后,该章节自动启用。")
-        sections.append("")
+            by_group[s.get('group', '未分组')].append(s)
+        group_order = ['深亏', '浅亏', '保本', '温和盈利', '高盈利']
+        for gname in group_order:
+            if gname not in by_group:
+                continue
+            signals_g = by_group[gname]
+            sections.append(f"### {gname}仓({len(signals_g)}只)")
+            sections.append("")
+            sections.append("| 代码 | 名称 | 现价 | 今日% | MA5 | MA20 | 累计% | 建议 |")
+            sections.append("|------|------|------|------|------|------|------|------|")
+            for s in signals_g:
+                tips_str = "<br>".join(s['tips'])
+                ret = f"{s['ret']:+.1f}%" if s['ret'] is not None else "-"
+                ma5 = f"{s['ma5']:.2f}"
+                ma20 = f"{s['ma20']:.2f}" if s['ma20'] is not None else "-"
+                sections.append(f"| {s['code']} | {s['name']} | {s['close']:.2f} | {s['pct_chg']:+.2f}% | {ma5} | {ma20} | {ret} | {tips_str} |")
+            sections.append("")
+
+    # 港股/债券/已清仓(从原始文件读,不调 Tushare)
+    repo_root_h = os.path.dirname(os.path.abspath(os.path.join(os.path.dirname(__file__))) if False else 'scripts/daily_report.py')
+    repo_root_h = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    raw_holdings_file = os.path.join(repo_root_h, 'my_holdings.json')
+    if os.path.exists(raw_holdings_file):
+        with open(raw_holdings_file, 'r', encoding='utf-8') as f:
+            raw_all = json.load(f)
+        other_items = [h for h in raw_all if str(h.get('code', '')).endswith('.HK') or h.get('type') == 'bond' or h.get('currency') == 'HKD']
+        if other_items:
+            sections.append("### 港股/债券(不参与 A 股信号)")
+            sections.append("")
+            sections.append("| 代码 | 名称 | 股数 | 成本价 | 备注 |")
+            sections.append("|------|------|------|------|------|")
+            for h in other_items:
+                code = h.get('code', '')
+                name = h.get('name', code)
+                shares = h.get('shares', 0)
+                cost = h.get('cost_price', 0)
+                currency = h.get('currency', 'CNY')
+                htype = h.get('type', '港股' if currency == 'HKD' else '其他')
+                sections.append(f"| {code} | {name} | {shares} | {cost} {currency} | {htype} |")
+            sections.append("")
+
+    # 已清仓
+    closed_file = os.path.join(repo_root_h, 'closed_holdings.json')
+    if os.path.exists(closed_file):
+        with open(closed_file, 'r', encoding='utf-8') as f:
+            closed_list = json.load(f)
+        if closed_list:
+            sections.append("### 已清仓(历史盈利)")
+            sections.append("")
+            sections.append("| 代码 | 名称 | 盈利% | 备注 |")
+            sections.append("|------|------|------|------|")
+            for h in closed_list:
+                sections.append(f"| {h.get('code', '')} | {h.get('name', '')} | {h.get('profit_pct', 0):.2f}% | {h.get('note', '')} |")
+            sections.append("")
 
     sections.append("---")
     sections.append("")
