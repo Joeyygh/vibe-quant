@@ -26,6 +26,12 @@ jobs:
         run: |
           pip install tushare pandas pyarrow yfinance numpy
 
+      - name: Fetch news & announcements
+        env:
+          TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
+        run: |
+          python scripts/fetch_news.py
+
       - name: Generate daily report
         env:
           TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
