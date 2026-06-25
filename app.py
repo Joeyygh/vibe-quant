@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 import os
 import json
+import glob
 from datetime import datetime, timedelta, timezone
 
 st.set_page_config(page_title="Vibe 量化 v2.0", page_icon="V", layout="wide", initial_sidebar_state="expanded")
@@ -398,6 +399,9 @@ with st.sidebar:
     use_user_formula = st.checkbox("🆕 用户公式(动量买点,独立)", value=True, help="竞价量比>5 + 开盘涨幅2-5% + 3日成交额递增 + 收盘>20日线 (不叠加Vibe,跟1-4并联)")
     st.divider()
     run = st.button("运行分析", type="primary", use_container_width=True)
+    st.divider()
+    st.header("📊 每日复盘")
+    view_mode = st.radio("页面模式", ["量化选股", "每日复盘"], index=0, key="view_mode")
 
 st.markdown("""
 ## Vibe 量化 v2.1 (升级版)
@@ -409,6 +413,37 @@ st.markdown("""
 - 2000 智能采样 (主板+创业板+科创板)
 - 北京时间显示
 """)
+
+if view_mode == "每日复盘":
+    st.header("📊 每日复盘报告")
+    st.caption("由 GitHub Actions 每天 06:00(美股收盘后)自动生成")
+
+    reports_dir = 'reports'
+    if not os.path.exists(reports_dir):
+        st.warning("reports/ 目录不存在,等待 GitHub Actions 首次生成")
+    else:
+        report_files = sorted(glob.glob(f'{reports_dir}/*.md'), reverse=True)
+        if not report_files:
+            st.info("暂无报告 - 等待 GitHub Actions 生成")
+        else:
+            report_names = [os.path.basename(f) for f in report_files]
+            selected = st.selectbox("选择报告日期", report_names)
+            if selected:
+                file_path = os.path.join(reports_dir, selected)
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                st.divider()
+                st.markdown(content)
+                st.divider()
+                st.caption(f"📄 {file_path} ({len(content)} 字符)")
+
+                st.download_button(
+                    label="⬇️ 下载报告 (.md)",
+                    data=content,
+                    file_name=selected,
+                    mime="text/markdown"
+                )
+    st.stop()
 
 if run:
     if df_stocks is None or df_klines is None:
