@@ -546,10 +546,42 @@ def generate_report():
         sections.append(f"- 📈 北向资金净流入 {north:.0f} 亿 → 关注外资重仓蓝筹")
     sections.append("")
 
+    # 十一、自动新闻(从 data/news/{date}.md 读取)
+    news_file = f'data/news/{target_date}.md'
+    if os.path.exists(news_file):
+        with open(news_file, 'r', encoding='utf-8') as f:
+            news_content = f.read().strip()
+        if news_content:
+            sections.append("## 十一、自动新闻(东方财富公告 + 研报)")
+            sections.append("")
+            sections.append(news_content.split('\n', 1)[1] if '\n' in news_content else news_content)
+            sections.append("")
+
+    # 十二、手动补充(从 data/my_notes/{date}.md 读取)
+    notes_dir = 'data/my_notes'
+    notes_file = os.path.join(notes_dir, f'{target_date}.md')
+    if os.path.exists(notes_file):
+        with open(notes_file, 'r', encoding='utf-8') as f:
+            user_notes = f.read().strip()
+        if user_notes:
+            sections.append("## 十二、手动补充(论坛/股吧/研报)")
+            sections.append("")
+            sections.append(user_notes)
+            sections.append("")
+    else:
+        sections.append("## 十二、手动补充(论坛/股吧/研报)")
+        sections.append("")
+        sections.append("> 暂无手动补充。在 Streamlit 页面的 **📝 我的笔记** Tab 添加,或编辑 `data/my_notes/{date}.md` 文件。")
+        sections.append("")
+        sections.append("**建议浏览清单**(早上 5-10 分钟):")
+        sections.append("- 💬 淘股吧/韭研公社:连板结构、市场情绪")
+        sections.append("- 📊 雪球:中长线基本面、行业研报")
+        sections.append("")
+
     sections.append("---")
     sections.append("")
     sections.append("**报告生成**: GitHub Actions 北京时间 06:00 自动")
-    sections.append("**自动覆盖**: Tushare 官方数据 + 美股 + 商品")
+    sections.append("**自动覆盖**: Tushare 官方数据 + 美股 + 商品 + 东方财富公告研报")
     sections.append("**手动补充**: 论坛/股吧/研报/韭研公社/淘股吧")
     sections.append("")
 
