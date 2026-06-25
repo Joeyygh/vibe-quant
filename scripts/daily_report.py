@@ -15,6 +15,7 @@ A 股每日复盘报告生成器 v2.0 (增强版)
 """
 import os
 import sys
+import json
 import time
 from datetime import datetime, timedelta, timezone
 
@@ -339,6 +340,108 @@ def calc_consecutive_limit(date_str):
         return []
 
 
+def get_holding_signals(target_date, date_str):
+    """读持仓文件 + 计算卖出信号"""
+    if not pro:
+        return []
+    holdings_file = 'my_holdings.json'
+    if not os.path.exists(holdings_file):
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        repo_root = os.path.dirname(script_dir)
+        alt_path = os.path.join(repo_root, 'my_holdings.json')
+        if os.path.exists(alt_path):
+            holdings_file = alt_path
+        else:
+            return []
+    try:
+        with open(holdings_file, 'r', encoding='utf-8') as f:
+            holdings = json.load(f)
+    except Exception:
+        return []
+
+    signals = []
+    for h in holdings:
+        code = h.get('code', '').zfill(6)
+        name = h.get('name', code)
+        shares = h.get('shares', 0)
+        cost = float(h.get('cost_price', 0)) if h.get('cost_price') else 0
+
+        if code.startswith(('4', '8')):
+            ts_code = f"{code}.BJ"
+        elif code.startswith(('6', '9')):
+            ts_code = f"{code}.SH"
+        else:
+            ts_code = f"{code}.SZ"
+
+        try:
+            start_d = (datetime.strptime(target_date, '%Y-%m-%d') - timedelta(days=30)).strftime('%Y%m%d')
+            df = pro.daily(ts_code=ts_code, start_date=start_d, end_date=date_str)
+            if df is None or df.empty or len(df) < 5:
+                continue
+            # pro.daily 返回倒序(最新在第一行),我们排成正序,取最后一行=最新
+            df = df.sort_values('trade_date').reset_index(drop=True)
+            last = df.iloc[-1]
+            close = float(last['close'])
+            pct_chg = float(last.get('pct_chg', 0))
+            ma5 = float(df['close'].iloc[-5:].mean())
+            ma10 = float(df['close'].iloc[-10:].mean()) if len(df) >= 10 else None
+            ma20 = float(df['close'].iloc[-20:].mean()) if len(df) >= 20 else None
+            ret_from_cost = ((close - cost) / cost * 100) if cost > 0 else None
+
+            tips = []
+
+            if pct_chg <= -5:
+                tips.append(f"🔴 今日暴跌 {pct_chg:.2f}%,考虑止损")
+            elif pct_chg <= -3:
+                tips.append(f"⚠️ 今日跌 {pct_chg:.2f}%,注意")
+            elif pct_chg >= 7:
+                tips.append(f"🟢 今日大涨 {pct_chg:.2f}%,建议止盈一半")
+            elif pct_chg >= 5:
+                tips.append(f"🟢 今日涨 {pct_chg:.2f}%,可减仓")
+
+            if close < ma5:
+                tips.append(f"⚠️ 跌破 5 日线({ma5:.2f})")
+            if ma10 and close < ma10:
+                tips.append(f"⚠️ 跌破 10 日线({ma10:.2f})")
+            if ma20 and close < ma20:
+                tips.append(f"🔴 跌破 20 日线({ma20:.2f}),趋势破位")
+
+            if len(df) >= 3:
+                last_3 = df['pct_chg'].iloc[-3:].astype(float)
+                if (last_3 < 0).all():
+                    tips.append(f"⚠️ 连续 3 日下跌")
+                elif (last_3 > 0).all():
+                    tips.append(f"🟢 连续 3 日上涨")
+
+            if ret_from_cost is not None:
+                if ret_from_cost >= 20:
+                    tips.append(f"💰 累计盈利 {ret_from_cost:.1f}%,建议全部止盈")
+                elif ret_from_cost >= 10:
+                    tips.append(f"💰 累计盈利 {ret_from_cost:.1f}%,建议减仓一半")
+                elif ret_from_cost <= -10:
+                    tips.append(f"💔 累计亏损 {ret_from_cost:.1f}%,考虑止损")
+
+            if not tips:
+                tips.append("✅ 持有(信号正常)")
+
+            signals.append({
+                'code': code,
+                'name': name,
+                'shares': shares,
+                'cost': cost,
+                'close': close,
+                'pct_chg': pct_chg,
+                'ma5': ma5,
+                'ma20': ma20,
+                'ret': ret_from_cost,
+                'tips': tips,
+            })
+        except Exception as e:
+            continue
+
+    return signals
+
+
 # ============== 报告生成 ==============
 
 def generate_report():
@@ -576,6 +679,29 @@ def generate_report():
         sections.append("**建议浏览清单**(早上 5-10 分钟):")
         sections.append("- 💬 淘股吧/韭研公社:连板结构、市场情绪")
         sections.append("- 📊 雪球:中长线基本面、行业研报")
+        sections.append("")
+
+    # 持仓卖出信号
+    print("\n🔔 计算持仓卖出信号...")
+    holdings = get_holding_signals(target_date, date_str)
+    if holdings:
+        sections.append("## 十三、持仓卖出信号")
+        sections.append("")
+        sections.append("> 基于 `my_holdings.json` 自动计算,包含止损/止盈/突破/趋势建议。")
+        sections.append("")
+        sections.append("| 代码 | 名称 | 现价 | 今日% | MA5 | MA20 | 累计% | 建议 |")
+        sections.append("|------|------|------|------|------|------|------|------|")
+        for s in holdings:
+            tips_str = "<br>".join(s['tips'])
+            ret = f"{s['ret']:+.1f}%" if s['ret'] is not None else "-"
+            ma5 = f"{s['ma5']:.2f}"
+            ma20 = f"{s['ma20']:.2f}" if s['ma20'] is not None else "-"
+            sections.append(f"| {s['code']} | {s['name']} | {s['close']:.2f} | {s['pct_chg']:+.2f}% | {ma5} | {ma20} | {ret} | {tips_str} |")
+        sections.append("")
+    else:
+        sections.append("## 十三、持仓卖出信号")
+        sections.append("")
+        sections.append("> 未配置持仓或 Tushare 未启用。编辑 `my_holdings.json` 添加持仓后,该章节自动启用。")
         sections.append("")
 
     sections.append("---")
