@@ -514,10 +514,8 @@ with st.sidebar:
                         rows.append({
                             '名称': s['name'],
                             '现价': f"{s['close']:.2f}",
-                            '今日': f"{s['pct_chg']:+.2f}%",
-                            'MA5': f"{s['ma5']:.2f}",
-                            'MA20': f"{s['ma20']:.2f}" if s.get('ma20') else '-',
-                            '累计': ret,
+                            '今日%': f"{s['pct_chg']:+.2f}%",
+                            '累计%': ret,
                             '建议': tip_text,
                         })
                     st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
