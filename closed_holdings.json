@@ -109,5 +109,15 @@
     "profit_pct": 22.0,
     "note": "6.26 实际成交",
     "currency": "CNY"
+  },
+  {
+    "code": "603906",
+    "name": "龙蟠科技",
+    "cost_price": 26.13,
+    "sell_price": 27.19,
+    "shares": 200,
+    "profit_pct": 4.06,
+    "note": "6.26 实际成交",
+    "currency": "CNY"
   }
 ]
