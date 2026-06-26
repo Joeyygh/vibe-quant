@@ -625,10 +625,12 @@ with st.sidebar:
             with col_r1:
                 refresh = st.button("🔄 刷新持仓信号", key="refresh_signals")
             with col_r2:
-                st.caption("缓存 30 分钟,点按钮重新拉取")
+                st.caption("点按钮拉取 39 只持仓(需 30 秒)")
 
-            holdings_json = json.dumps(holdings, ensure_ascii=False)
-            signals = calc_holding_signals(holdings_json)
+            signals = []
+            if refresh:
+                holdings_json = json.dumps(holdings, ensure_ascii=False)
+                signals = calc_holding_signals(holdings_json)
             if signals:
                 # 预警汇总
                 danger = [s for s in signals if any('🔴' in t[0] or '💔' in t[0] for t in s['tips'])]
