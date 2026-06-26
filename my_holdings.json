@@ -91,13 +91,6 @@
     "group": "浅亏"
   },
   {
-    "code": "300302",
-    "name": "同有科技",
-    "shares": 200,
-    "cost_price": 61.425,
-    "group": "浅亏"
-  },
-  {
     "code": "600760",
     "name": "中航沈飞",
     "shares": 200,
@@ -128,7 +121,7 @@
   {
     "code": "000811",
     "name": "冰轮环境",
-    "shares": 200,
+    "shares": 100,
     "cost_price": 50.945,
     "group": "温和盈利"
   },
@@ -203,14 +196,6 @@
     "group": "温和盈利"
   },
   {
-    "code": "0981.HK",
-    "name": "中芯国际HK",
-    "shares": 500,
-    "cost_price": 75.166,
-    "currency": "HKD",
-    "group": "高盈利"
-  },
-  {
     "code": "300420",
     "name": "五洋自控",
     "shares": 1700,
@@ -220,15 +205,8 @@
   {
     "code": "002068",
     "name": "黑猫股份",
-    "shares": 700,
+    "shares": 500,
     "cost_price": 11.926,
-    "group": "高盈利"
-  },
-  {
-    "code": "002083",
-    "name": "孚日股份",
-    "shares": 1000,
-    "cost_price": 10.013,
     "group": "高盈利"
   },
   {
@@ -246,16 +224,9 @@
     "group": "高盈利"
   },
   {
-    "code": "300401",
-    "name": "花园生物",
-    "shares": 300,
-    "cost_price": 20.085,
-    "group": "高盈利"
-  },
-  {
     "code": "002929",
     "name": "润建股份",
-    "shares": 300,
+    "shares": 100,
     "cost_price": 66.23,
     "group": "高盈利"
   },
@@ -264,13 +235,6 @@
     "name": "沪电股份",
     "shares": 100,
     "cost_price": 148.02,
-    "group": "高盈利"
-  },
-  {
-    "code": "000510",
-    "name": "新金路",
-    "shares": 100,
-    "cost_price": 17.419,
     "group": "高盈利"
   },
   {
@@ -288,5 +252,26 @@
     "cost_price": 100.0,
     "group": "债券",
     "type": "bond"
+  },
+  {
+    "code": "002202",
+    "name": "金风科技",
+    "shares": 900,
+    "cost_price": 23.256,
+    "group": "未分组"
+  },
+  {
+    "code": "002558",
+    "name": "巨人网络",
+    "shares": 500,
+    "cost_price": 27.838,
+    "group": "未分组"
+  },
+  {
+    "code": "002335",
+    "name": "科华数据",
+    "shares": 700,
+    "cost_price": 43.897,
+    "group": "未分组"
   }
 ]
