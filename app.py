@@ -490,19 +490,25 @@ with st.sidebar:
                     st.caption(f"成本 {cost} {ccy} × {shares} 股")
                     with st.form(key=f"edit_form_{i}"):
                         ec1, ec2, ec3 = st.columns(3)
-                        new_cost = ec1.number_input("成本价", min_value=0.0, value=float(cost), step=0.01, key=f"cost_{i}")
-                        new_shares = ec2.number_input("股数", min_value=0, value=int(shares), step=100, key=f"sh_{i}")
+                        # 用 text_input + parse 避免 number_input 默认值 bug
+                        new_cost_str = ec1.text_input("成本价", value=f"{float(cost):.2f}", key=f"cost_{i}")
+                        new_shares_str = ec2.text_input("股数", value=str(int(shares)), key=f"sh_{i}")
                         group_opts = ['深亏', '浅亏', '保本', '温和盈利', '高盈利', '未分组']
                         cur_idx = group_opts.index(grp) if grp in group_opts else 5
                         new_grp = ec3.selectbox("分组", group_opts, index=cur_idx, key=f"grp_{i}")
                         bc1, bc2 = st.columns(2)
                         if bc1.form_submit_button("💾 保存", use_container_width=True):
-                            holdings[i]['cost_price'] = new_cost
-                            holdings[i]['shares'] = new_shares
-                            holdings[i]['group'] = new_grp
-                            save_holdings(holdings)
-                            st.success("已保存")
-                            st.rerun()
+                            try:
+                                new_cost_v = float(new_cost_str)
+                                new_shares_v = int(new_shares_str)
+                                holdings[i]['cost_price'] = new_cost_v
+                                holdings[i]['shares'] = new_shares_v
+                                holdings[i]['group'] = new_grp
+                                save_holdings(holdings)
+                                st.success("已保存")
+                                st.rerun()
+                            except ValueError:
+                                st.error("成本价/股数必须是数字")
                         if bc2.form_submit_button("📤 标记卖出", use_container_width=True):
                             st.session_state[f'sell_idx'] = i
                             st.rerun()
