@@ -29,9 +29,50 @@ def save_holdings(holdings):
     try:
         with open(HOLDINGS_FILE, 'w', encoding='utf-8') as f:
             json.dump(holdings, f, ensure_ascii=False, indent=2)
+        # 自动推 GitHub(可选,失败不影响本地)
+        try:
+            with open(HOLDINGS_FILE, 'rb') as fh:
+                push_to_github(fh.read(), 'update my_holdings.json from app')
+        except Exception:
+            pass
         return True
     except Exception:
         return False
+
+
+def push_to_github(content_bytes, message='update my_holdings.json'):
+    """推文件到 GitHub(需要 GITHUB_TOKEN secret)"""
+    try:
+        import base64, urllib.request
+        token = os.environ.get('GITHUB_TOKEN')
+        if not token:
+            try:
+                token = st.secrets.get('GITHUB_TOKEN')
+            except Exception:
+                token = None
+        if not token:
+            return False, '未配置 GITHUB_TOKEN'
+        # 拿 SHA
+        url = f"https://api.github.com/repos/Joeyygh/vibe-quant/contents/my_holdings.json?ref=main"
+        req = urllib.request.Request(url, headers={"Authorization": f"token {token}", "User-Agent": "vibe-quant-app"})
+        sha = None
+        try:
+            with urllib.request.urlopen(req) as r:
+                sha = json.loads(r.read())["sha"]
+        except Exception:
+            pass
+        # PUT
+        b64 = base64.b64encode(content_bytes).decode()
+        url = f"https://api.github.com/repos/Joeyygh/vibe-quant/contents/my_holdings.json"
+        data = {"message": message, "branch": "main", "content": b64}
+        if sha:
+            data["sha"] = sha
+        req = urllib.request.Request(url, data=json.dumps(data).encode(),
+            headers={"Authorization": f"token {token}", "Content-Type": "application/json", "User-Agent": "vibe-quant-app"}, method="PUT")
+        with urllib.request.urlopen(req) as r:
+            return True, "已推送到 GitHub"
+    except Exception as e:
+        return False, str(e)[:60]
 
 
 def load_tushare_data():
@@ -549,6 +590,16 @@ with st.sidebar:
                                         holdings[i]['shares'] = shares - sell_shares
                                     save_holdings(holdings)
                                     st.success(f"已记录卖出:盈利 {profit_pct:+.2f}%")
+                                    # 推送到 GitHub
+                                    try:
+                                        with open(HOLDINGS_FILE, 'rb') as fh:
+                                            ok, msg = push_to_github(fh.read(), f'sell {code} {name} {profit_pct:+.2f}%')
+                                        if ok:
+                                            st.caption(f"☁️ {msg}")
+                                        else:
+                                            st.caption(f"⚠️ 本地已存,GitHub 同步失败: {msg}")
+                                    except Exception as e:
+                                        st.caption(f"⚠️ 推送异常: {e}")
                                     st.session_state.pop(f'sell_idx', None)
                                     st.rerun()
                             if sc2.form_submit_button("取消", use_container_width=True):
