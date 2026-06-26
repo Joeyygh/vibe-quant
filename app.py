@@ -40,7 +40,7 @@ def save_holdings(holdings):
         return False
 
 
-def push_to_github(content_bytes, message='update my_holdings.json'):
+def push_to_github(content_bytes, message='update my_holdings.json', filename='my_holdings.json'):
     """推文件到 GitHub(需要 GITHUB_TOKEN secret)"""
     try:
         import base64, urllib.request
@@ -53,7 +53,7 @@ def push_to_github(content_bytes, message='update my_holdings.json'):
         if not token:
             return False, '未配置 GITHUB_TOKEN'
         # 拿 SHA
-        url = f"https://api.github.com/repos/Joeyygh/vibe-quant/contents/my_holdings.json?ref=main"
+        url = f"https://api.github.com/repos/Joeyygh/vibe-quant/contents/{filename}?ref=main"
         req = urllib.request.Request(url, headers={"Authorization": f"token {token}", "User-Agent": "vibe-quant-app"})
         sha = None
         try:
@@ -63,7 +63,7 @@ def push_to_github(content_bytes, message='update my_holdings.json'):
             pass
         # PUT
         b64 = base64.b64encode(content_bytes).decode()
-        url = f"https://api.github.com/repos/Joeyygh/vibe-quant/contents/my_holdings.json"
+        url = f"https://api.github.com/repos/Joeyygh/vibe-quant/contents/{filename}"
         data = {"message": message, "branch": "main", "content": b64}
         if sha:
             data["sha"] = sha
@@ -590,14 +590,16 @@ with st.sidebar:
                                         holdings[i]['shares'] = shares - sell_shares
                                     save_holdings(holdings)
                                     st.success(f"已记录卖出:盈利 {profit_pct:+.2f}%")
-                                    # 推送到 GitHub
+                                    # 推送到 GitHub (两个文件)
                                     try:
+                                        with open(closed_file, 'rb') as fh:
+                                            ok1, msg1 = push_to_github(fh.read(), f'sell {code} {name} {profit_pct:+.2f}%', 'closed_holdings.json')
                                         with open(HOLDINGS_FILE, 'rb') as fh:
-                                            ok, msg = push_to_github(fh.read(), f'sell {code} {name} {profit_pct:+.2f}%')
-                                        if ok:
-                                            st.caption(f"☁️ {msg}")
+                                            ok2, msg2 = push_to_github(fh.read(), f'update holdings after sell {code}', 'my_holdings.json')
+                                        if ok1 and ok2:
+                                            st.caption("☁️ 已同步 GitHub")
                                         else:
-                                            st.caption(f"⚠️ 本地已存,GitHub 同步失败: {msg}")
+                                            st.caption(f"⚠️ GitHub 同步: {msg1} / {msg2}")
                                     except Exception as e:
                                         st.caption(f"⚠️ 推送异常: {e}")
                                     st.session_state.pop(f'sell_idx', None)
