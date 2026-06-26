@@ -469,12 +469,91 @@ with st.sidebar:
         st.write(f"当前持仓: {len(holdings)} 只")
         if holdings:
             for i, h in enumerate(holdings):
-                col1, col2 = st.columns([3, 1])
-                col1.write(f"{h.get('code', '')} {h.get('name', '')}")
-                if col2.button("X", key=f"del_{i}"):
-                    holdings.pop(i)
-                    save_holdings(holdings)
-                    st.rerun()
+                code = h.get('code', '')
+                name = h.get('name', code)
+                cost = h.get('cost_price', 0) or 0
+                shares = h.get('shares', 0) or 0
+                grp = h.get('group', '未分组')
+                ccy = h.get('currency', 'CNY')
+                # 跳过港股/债券
+                if str(code).endswith('.HK') or h.get('type') == 'bond':
+                    c1, c2 = st.columns([4, 1])
+                    c1.write(f"**{name}**(港股/债券)")
+                    if c2.button("🗑", key=f"del_{i}"):
+                        holdings.pop(i)
+                        save_holdings(holdings)
+                        st.rerun()
+                    continue
+
+                # 持仓股:点开看详情 + 编辑/卖出
+                with st.expander(f"{code} {name} | {grp}", expanded=False):
+                    st.caption(f"成本 {cost} {ccy} × {shares} 股")
+                    with st.form(key=f"edit_form_{i}"):
+                        ec1, ec2, ec3 = st.columns(3)
+                        new_cost = ec1.number_input("成本价", min_value=0.0, value=float(cost), step=0.01, key=f"cost_{i}")
+                        new_shares = ec2.number_input("股数", min_value=0, value=int(shares), step=100, key=f"sh_{i}")
+                        group_opts = ['深亏', '浅亏', '保本', '温和盈利', '高盈利', '未分组']
+                        cur_idx = group_opts.index(grp) if grp in group_opts else 5
+                        new_grp = ec3.selectbox("分组", group_opts, index=cur_idx, key=f"grp_{i}")
+                        bc1, bc2 = st.columns(2)
+                        if bc1.form_submit_button("💾 保存", use_container_width=True):
+                            holdings[i]['cost_price'] = new_cost
+                            holdings[i]['shares'] = new_shares
+                            holdings[i]['group'] = new_grp
+                            save_holdings(holdings)
+                            st.success("已保存")
+                            st.rerun()
+                        if bc2.form_submit_button("📤 标记卖出", use_container_width=True):
+                            st.session_state[f'sell_idx'] = i
+                            st.rerun()
+
+                    # 卖出表单
+                    if st.session_state.get(f'sell_idx') == i:
+                        with st.form(key=f"sell_form_{i}"):
+                            st.write(f"**卖出 {name}({code})**")
+                            sell_price = st.number_input("卖出价", min_value=0.0, value=0.0, step=0.01)
+                            sell_shares = st.number_input("卖出股数", min_value=0, value=int(shares), step=100)
+                            sc1, sc2 = st.columns(2)
+                            if sc1.form_submit_button("✅ 确认卖出", use_container_width=True):
+                                if sell_price > 0 and sell_shares > 0:
+                                    # 移到 closed_holdings.json
+                                    closed_file = 'closed_holdings.json'
+                                    closed = []
+                                    if os.path.exists(closed_file):
+                                        try:
+                                            with open(closed_file, 'r', encoding='utf-8') as f:
+                                                closed = json.load(f)
+                                        except Exception:
+                                            closed = []
+                                    cost_total = cost * sell_shares
+                                    sell_total = sell_price * sell_shares
+                                    profit_pct = (sell_price - cost) / cost * 100 if cost > 0 else 0
+                                    closed.append({
+                                        'code': code, 'name': name,
+                                        'cost_price': cost, 'sell_price': sell_price,
+                                        'shares': sell_shares, 'profit_pct': round(profit_pct, 2),
+                                        'note': f'6.26 标记卖出',
+                                    })
+                                    with open(closed_file, 'w', encoding='utf-8') as f:
+                                        json.dump(closed, f, ensure_ascii=False, indent=2)
+                                    # 从持仓里减
+                                    if sell_shares >= shares:
+                                        holdings.pop(i)
+                                    else:
+                                        holdings[i]['shares'] = shares - sell_shares
+                                    save_holdings(holdings)
+                                    st.success(f"已记录卖出:盈利 {profit_pct:+.2f}%")
+                                    st.session_state.pop(f'sell_idx', None)
+                                    st.rerun()
+                            if sc2.form_submit_button("取消", use_container_width=True):
+                                st.session_state.pop(f'sell_idx', None)
+                                st.rerun()
+
+                    # 删除按钮
+                    if st.button("🗑 删除该持仓", key=f"rm_{i}"):
+                        holdings.pop(i)
+                        save_holdings(holdings)
+                        st.rerun()
 
         # === 实时信号面板 ===
         st.write("--- 📊 实时信号 ---")
@@ -530,18 +609,34 @@ with st.sidebar:
                 st.warning("未能获取到信号,请检查 Tushare 连接")
 
         st.write("--- 添加 ---")
-        new_code = st.text_input("代码 (6位)", key="new_code", placeholder="如 600519")
-        if st.button("添加", key="add_btn"):
-            new_code = new_code.strip()
-            if len(new_code) == 6 and new_code.isdigit() and df_stocks is not None:
-                match = df_stocks[df_stocks['code'] == new_code]
-                if not match.empty:
-                    name = match.iloc[0]['name']
-                    if not any(h.get('code') == new_code for h in holdings):
-                        holdings.append({'code': new_code, 'name': name})
-                        save_holdings(holdings)
-                        st.success(f"已添加 {new_code} {name}")
-                        st.rerun()
+        with st.form(key="add_form"):
+            ac1, ac2, ac3, ac4 = st.columns(4)
+            new_code = ac1.text_input("代码", placeholder="6位如 600519")
+            new_cost = ac2.number_input("成本价", min_value=0.0, value=0.0, step=0.01)
+            new_shares_v = ac3.number_input("股数", min_value=0, value=0, step=100)
+            new_grp_v = ac4.selectbox("分组", ['深亏', '浅亏', '保本', '温和盈利', '高盈利', '未分组'], index=5)
+            if st.form_submit_button("➕ 添加持仓", use_container_width=True):
+                nc = new_code.strip()
+                if len(nc) == 6 and nc.isdigit() and df_stocks is not None:
+                    match = df_stocks[df_stocks['code'] == nc]
+                    if not match.empty:
+                        name = match.iloc[0]['name']
+                        if not any(h.get('code') == nc for h in holdings):
+                            holdings.append({
+                                'code': nc, 'name': name,
+                                'cost_price': float(new_cost),
+                                'shares': int(new_shares_v),
+                                'group': new_grp_v,
+                            })
+                            save_holdings(holdings)
+                            st.success(f"已添加 {nc} {name} (成本 {new_cost} × {new_shares_v} 股)")
+                            st.rerun()
+                        else:
+                            st.warning(f"{nc} 已在持仓中")
+                    else:
+                        st.error(f"未找到代码 {nc}")
+                else:
+                    st.error("代码必须是 6 位数字")
         st.write("--- 批量导入 ---")
         bulk_text = st.text_area("每行一个代码", height=100)
         if st.button("批量导入", key="bulk_btn"):
