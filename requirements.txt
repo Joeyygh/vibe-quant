@@ -12,3 +12,4 @@ schedule>=1.2.0
 requests>=2.31.0
 tqdm>=4.66.0
 tushare>=1.4.0
+# 2026-06-30: force rebuild for data refresh
