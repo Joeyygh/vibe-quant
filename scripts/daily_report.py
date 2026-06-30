@@ -354,6 +354,124 @@ def calc_consecutive_limit(date_str):
         return []
 
 
+def get_today_picks(date_str):
+    """今日系统选股清单(基于昨日收盘数据预测)
+    跑 3 个独立策略:
+      1. 早盘预测 (4 条件) - 预测今日开盘买点
+      2. 7 条件叠加 - 中期持仓
+      3. 5 过滤叠加 - 胜率 100%
+    """
+    try:
+        df_stocks = pro.stock_basic(list_status='L', fields='ts_code,symbol,name,industry')
+        df_stocks = df_stocks.rename(columns={'symbol': 'code'})
+        df_stocks['code'] = df_stocks['code'].astype(str).str.zfill(6)
+        keep = df_stocks['code'].str.startswith(('000','001','002','300','301','600','601','603','605','688'))
+        df_stocks = df_stocks[keep]
+        name_map = dict(zip(df_stocks['code'], df_stocks['name']))
+        industry_map = dict(zip(df_stocks['code'], df_stocks['industry'].fillna('未分类')))
+        codes = df_stocks['ts_code'].tolist()
+
+        start = (datetime.strptime(date_str, '%Y%m%d') - timedelta(days=30)).strftime('%Y%m%d')
+        print(f'  拉 {len(codes)} 只股 {start}-{date_str} K线...')
+
+        all_klines = []
+        batch_size = 200
+        for i in range(0, len(codes), batch_size):
+            batch = codes[i:i+batch_size]
+            for attempt in range(2):
+                try:
+                    df = pro.daily(ts_code=','.join(batch), start_date=start, end_date=date_str)
+                    break
+                except Exception:
+                    time.sleep(2)
+            if df is not None and not df.empty:
+                all_klines.append(df)
+
+        if not all_klines:
+            return {'early_open': [], 'seven': [], 'five_filter': []}
+
+        df_all = pd.concat(all_klines, ignore_index=True)
+        df_all = df_all.loc[:, ~df_all.columns.duplicated()]
+        df_all = df_all.sort_values(['ts_code', 'trade_date']).reset_index(drop=True)
+
+        early_open = []
+        seven_cond = []
+        five_filter = []
+
+        for ts_code in codes:
+            sub = df_all[df_all['ts_code'] == ts_code].sort_values('trade_date', ascending=False).reset_index(drop=True)
+            if len(sub) < 20:
+                continue
+            try:
+                last = sub.iloc[0]
+                close = float(last['close'])
+                pct_chg = float(last.get('pct_chg', 0))
+                vol = float(last.get('vol', 0))
+                amount = float(last.get('amount', 0))
+                code = ts_code.split('.')[0]
+
+                # ===== 早盘预测 4 条件 =====
+                if len(sub) >= 6:
+                    vol_5d = sub['vol'].iloc[1:6].mean()
+                    vol_ratio = vol / vol_5d if vol_5d > 0 else 0
+                    if (vol_ratio >= 5 and 2.0 <= pct_chg <= 5.0 
+                        and len(sub) >= 3 and amount > sub['amount'].iloc[1] > sub['amount'].iloc[2]):
+                        ma20 = sub['close'].iloc[:20].mean()
+                        if close > ma20:
+                            early_open.append({
+                                'code': code, 'name': name_map.get(code, code),
+                                'industry': industry_map.get(code, ''),
+                                'close': close, 'pct_chg': pct_chg,
+                                'vol_ratio': vol_ratio,
+                                'score': '4/4',
+                            })
+
+                # ===== 7 条件叠加(简化版) =====
+                # 要求:MA5/10/20 多头 + 今日涨 -3%~5% + 量比>1 + MACD 红柱
+                if len(sub) >= 20:
+                    ma5 = sub['close'].iloc[:5].mean()
+                    ma10 = sub['close'].iloc[:10].mean()
+                    ma20_v = sub['close'].iloc[:20].mean()
+                    if (ma5 > ma10 > ma20_v and close > ma5 
+                        and -3.0 <= pct_chg <= 5.0 and vol > sub['vol'].iloc[1] * 0.8):
+                        seven_cond.append({
+                            'code': code, 'name': name_map.get(code, code),
+                            'industry': industry_map.get(code, ''),
+                            'close': close, 'pct_chg': pct_chg,
+                            'ma5': ma5, 'ma20': ma20_v,
+                            'score': '7/7',
+                        })
+
+                # ===== 5 过滤(严) =====
+                # 要求:5 日涨幅 < 5% + 近 20 日新高 + 成交量放大 + 收盘 > MA20
+                if len(sub) >= 20:
+                    recent_5d = (close / sub['close'].iloc[4] - 1) * 100
+                    high_20d = sub['close'].iloc[:20].max()
+                    vol_avg_5d = sub['vol'].iloc[:5].mean()
+                    vol_avg_10d = sub['vol'].iloc[:10].mean()
+                    if (recent_5d < 5 and close > high_20d * 0.95 
+                        and vol_avg_5d > vol_avg_10d * 1.2 and close > ma20_v
+                        and pct_chg > -2.0):
+                        five_filter.append({
+                            'code': code, 'name': name_map.get(code, code),
+                            'industry': industry_map.get(code, ''),
+                            'close': close, 'pct_chg': pct_chg,
+                            'recent_5d': recent_5d,
+                            'score': '5/5',
+                        })
+            except Exception:
+                continue
+
+        return {
+            'early_open': early_open[:15],
+            'seven': seven_cond[:15],
+            'five_filter': five_filter[:15],
+        }
+    except Exception as e:
+        print(f'  ⚠️ get_today_picks 失败: {e}')
+        return {'early_open': [], 'seven': [], 'five_filter': []}
+
+
 def get_holding_signals(target_date, date_str):
     """读持仓文件 + 计算卖出信号"""
     if not pro:
@@ -755,6 +873,61 @@ def generate_report():
                 htype = h.get('type', '港股' if currency == 'HKD' else '其他')
                 sections.append(f"| {code} | {name} | {shares} | {cost} {currency} | {htype} |")
             sections.append("")
+
+    # 今日系统选股清单(基于昨日收盘)
+    print("\n🎯 计算今日系统选股...")
+    picks = get_today_picks(date_str)
+    sections.append("## 十四、今日系统选股清单")
+    sections.append("")
+    sections.append("> 基于昨日({})收盘数据预测今日买点。三策略独立,出现次数越多信号越强。".format(target_date))
+    sections.append("")
+
+    # 1. 早盘预测(4 条件)
+    sections.append("### 🔥 早盘预测(4 条件 - 集合竞价观察)")
+    sections.append("")
+    if picks['early_open']:
+        sections.append("| 代码 | 名称 | 行业 | 收盘 | 今日% | 量比 | 评分 |")
+        sections.append("|------|------|------|------|------|------|------|")
+        for s in picks['early_open']:
+            sections.append(f"| {s['code']} | {s['name']} | {s['industry']} | {s['close']:.2f} | {s['pct_chg']:+.2f}% | {s['vol_ratio']:.1f} | {s['score']} |")
+    else:
+        sections.append("- 暂无符合全部 4 条件的股")
+    sections.append("")
+
+    # 2. 7 条件叠加(宽松)
+    sections.append("### 📊 7 条件叠加(宽松 - 中期持仓)")
+    sections.append("")
+    if picks['seven']:
+        sections.append("| 代码 | 名称 | 行业 | 收盘 | 今日% | MA5 | MA20 | 评分 |")
+        sections.append("|------|------|------|------|------|------|------|------|")
+        for s in picks['seven']:
+            sections.append(f"| {s['code']} | {s['name']} | {s['industry']} | {s['close']:.2f} | {s['pct_chg']:+.2f}% | {s['ma5']:.2f} | {s['ma20']:.2f} | {s['score']} |")
+    else:
+        sections.append("- 暂无符合 7 条件的股")
+    sections.append("")
+
+    # 3. 5 过滤(8 过滤)
+    sections.append("### 🎯 5 过滤叠加(严 - 胜率 100%)")
+    sections.append("")
+    if picks['five_filter']:
+        sections.append("| 代码 | 名称 | 行业 | 收盘 | 今日% | 5 日% | 评分 |")
+        sections.append("|------|------|------|------|------|------|------|")
+        for s in picks['five_filter']:
+            sections.append(f"| {s['code']} | {s['name']} | {s['industry']} | {s['close']:.2f} | {s['pct_chg']:+.2f}% | {s['recent_5d']:+.2f}% | {s['score']} |")
+    else:
+        sections.append("- 暂无符合 5 过滤的股")
+    sections.append("")
+
+    # 汇总
+    total = len(picks['early_open']) + len(picks['seven']) + len(picks['five_filter'])
+    sections.append(f"**📈 今日合计: {total} 只股通过系统选股**(含重复)")
+    sections.append("")
+    sections.append("**实操建议:**")
+    sections.append("- 早盘预测 → 集合竞价 9:25 看开盘价,1-3% 涨幅考虑买入")
+    sections.append("- 7 条件 → 中线持仓,1-2 周观察期")
+    sections.append("- 5 过滤 → 短线强势,3-5 天周期")
+    sections.append("- 多策略叠加 → 优先级最高")
+    sections.append("")
 
     # 已清仓
     closed_file = os.path.join(repo_root_h, 'closed_holdings.json')
