@@ -12,15 +12,6 @@
     "note": "已清仓"
   },
   {
-    "code": "300401",
-    "name": "花园生物",
-    "cost_price": 20.085,
-    "sell_price": 22.1,
-    "shares": 300,
-    "profit_pct": 10.03,
-    "note": "6.26 卖出 300 股(剩 300)"
-  },
-  {
     "code": "0981.HK",
     "name": "中芯国际HK",
     "cost_price": 75.166,
@@ -37,8 +28,7 @@
     "sell_price": 21.975,
     "shares": 600,
     "profit_pct": 9.41,
-    "note": "6.26 实际成交",
-    "currency": "CNY"
+    "note": "6.26 实际成交"
   },
   {
     "code": "002929",
@@ -47,68 +37,7 @@
     "sell_price": 66.4,
     "shares": 200,
     "profit_pct": 0.26,
-    "note": "6.26 实际成交",
-    "currency": "CNY"
-  },
-  {
-    "code": "603906",
-    "name": "龙蟠科技",
-    "cost_price": 0,
-    "sell_price": 27.19,
-    "shares": 200,
-    "profit_pct": 0,
-    "note": "6.26 实际成交",
-    "currency": "CNY"
-  },
-  {
-    "code": "002083",
-    "name": "孚日股份",
-    "cost_price": 10.013,
-    "sell_price": 11.405,
-    "shares": 1000,
-    "profit_pct": 13.9,
-    "note": "6.26 实际成交",
-    "currency": "CNY"
-  },
-  {
-    "code": "000811",
-    "name": "冰轮环境",
-    "cost_price": 50.945,
-    "sell_price": 53.86,
-    "shares": 100,
-    "profit_pct": 5.72,
-    "note": "6.26 实际成交",
-    "currency": "CNY"
-  },
-  {
-    "code": "300302",
-    "name": "同有科技",
-    "cost_price": 61.425,
-    "sell_price": 55.78,
-    "shares": 200,
-    "profit_pct": -9.19,
-    "note": "6.26 实际成交",
-    "currency": "CNY"
-  },
-  {
-    "code": "000510",
-    "name": "新金路",
-    "cost_price": 17.419,
-    "sell_price": 25.25,
-    "shares": 100,
-    "profit_pct": 44.96,
-    "note": "6.26 实际成交",
-    "currency": "CNY"
-  },
-  {
-    "code": "002068",
-    "name": "黑猫股份",
-    "cost_price": 11.926,
-    "sell_price": 14.55,
-    "shares": 200,
-    "profit_pct": 22.0,
-    "note": "6.26 实际成交",
-    "currency": "CNY"
+    "note": "6.26 实际成交"
   },
   {
     "code": "603906",
@@ -117,7 +46,60 @@
     "sell_price": 27.19,
     "shares": 200,
     "profit_pct": 4.06,
-    "note": "6.26 实际成交",
-    "currency": "CNY"
+    "note": "6.26 实际成交"
+  },
+  {
+    "code": "002083",
+    "name": "孚日股份",
+    "cost_price": 10.013,
+    "sell_price": 11.405,
+    "shares": 1000,
+    "profit_pct": 13.9,
+    "note": "6.26 实际成交"
+  },
+  {
+    "code": "000811",
+    "name": "冰轮环境",
+    "cost_price": 50.945,
+    "sell_price": 53.86,
+    "shares": 100,
+    "profit_pct": 5.72,
+    "note": "6.26 实际成交"
+  },
+  {
+    "code": "300302",
+    "name": "同有科技",
+    "cost_price": 61.425,
+    "sell_price": 55.78,
+    "shares": 200,
+    "profit_pct": -9.19,
+    "note": "6.26 实际成交"
+  },
+  {
+    "code": "000510",
+    "name": "新金路",
+    "cost_price": 17.419,
+    "sell_price": 25.25,
+    "shares": 100,
+    "profit_pct": 44.96,
+    "note": "6.26 实际成交"
+  },
+  {
+    "code": "002068",
+    "name": "黑猫股份",
+    "cost_price": 11.926,
+    "sell_price": 14.55,
+    "shares": 200,
+    "profit_pct": 22.0,
+    "note": "6.26 实际成交"
+  },
+  {
+    "code": "002580",
+    "name": "圣阳股份",
+    "cost_price": 24.119,
+    "sell_price": 20.16,
+    "shares": 200,
+    "profit_pct": -16.45,
+    "note": "已割肉"
   }
 ]
