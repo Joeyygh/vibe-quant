@@ -10,7 +10,7 @@ from datetime import datetime, timedelta, timezone
 st.set_page_config(page_title="Vibe 量化 v2.0", page_icon="V", layout="wide", initial_sidebar_state="expanded")
 st.title("Vibe 股票量化分析 v2.0")
 beijing_now = (datetime.now(timezone.utc) + timedelta(hours=8)).strftime('%Y-%m-%d %H:%M')
-st.markdown(f"**{beijing_now} (北京时间)** | 数据源：Tushare 真实数据")
+st.markdown(f"**{beijing_now} (北京时间)** | 数据源：Tushare 真实数据 | 数据更新：2026-06-29")
 
 HOLDINGS_FILE = 'my_holdings.json'
 
