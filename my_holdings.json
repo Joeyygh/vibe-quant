@@ -1,37 +1,135 @@
 [
   {
-    "code": "603007",
-    "name": "顺景科技",
-    "shares": 1900,
-    "cost_price": 6.533,
-    "group": "深亏"
+    "code": "688503",
+    "name": "聚和材料",
+    "shares": 200,
+    "cost_price": 115.634,
+    "group": "高盈利"
   },
   {
-    "code": "603991",
-    "name": "领先股份",
-    "shares": 100,
-    "cost_price": 136.461,
-    "group": "深亏"
+    "code": "002129",
+    "name": "TCL中环",
+    "shares": 1100,
+    "cost_price": 10.477,
+    "group": "高盈利"
+  },
+  {
+    "code": "000620",
+    "name": "盈新发展",
+    "shares": 3700,
+    "cost_price": 3.117,
+    "group": "高盈利"
   },
   {
     "code": "300024",
     "name": "机器人",
     "shares": 700,
     "cost_price": 17.517,
-    "group": "深亏"
-  },
-  {
-    "code": "688159",
-    "name": "有方科技",
-    "shares": 400,
-    "cost_price": 48.341,
-    "group": "深亏"
+    "group": "高盈利"
   },
   {
     "code": "603687",
     "name": "大胜达",
     "shares": 700,
     "cost_price": 18.823,
+    "group": "高盈利"
+  },
+  {
+    "code": "002962",
+    "name": "五方光电",
+    "shares": 700,
+    "cost_price": 21.493,
+    "group": "温和盈利"
+  },
+  {
+    "code": "002384",
+    "name": "东山精密",
+    "shares": 100,
+    "cost_price": 259.354,
+    "group": "温和盈利"
+  },
+  {
+    "code": "603399",
+    "name": "永杉锂业",
+    "shares": 500,
+    "cost_price": 21.91,
+    "group": "温和盈利"
+  },
+  {
+    "code": "002600",
+    "name": "领益智造",
+    "shares": 600,
+    "cost_price": 17.278,
+    "group": "温和盈利"
+  },
+  {
+    "code": "603991",
+    "name": "领先股份",
+    "shares": 100,
+    "cost_price": 136.461,
+    "group": "温和盈利"
+  },
+  {
+    "code": "002463",
+    "name": "沪电股份",
+    "shares": 100,
+    "cost_price": 148.02,
+    "group": "温和盈利"
+  },
+  {
+    "code": "002929",
+    "name": "润建股份",
+    "shares": 100,
+    "cost_price": 66.056,
+    "group": "温和盈利"
+  },
+  {
+    "code": "688449",
+    "name": "联芸科技",
+    "shares": 200,
+    "cost_price": 82.586,
+    "group": "温和盈利"
+  },
+  {
+    "code": "300234",
+    "name": "开尔新材",
+    "shares": 2000,
+    "cost_price": 11.226,
+    "group": "温和盈利"
+  },
+  {
+    "code": "600999",
+    "name": "招商证券",
+    "shares": 800,
+    "cost_price": 20.006,
+    "group": "温和盈利"
+  },
+  {
+    "code": "300398",
+    "name": "飞凯材料",
+    "shares": 100,
+    "cost_price": 53.96,
+    "group": "温和盈利"
+  },
+  {
+    "code": "688270",
+    "name": "ST臻镭",
+    "shares": 245,
+    "cost_price": 77.873,
+    "group": "温和盈利"
+  },
+  {
+    "code": "002202",
+    "name": "金风科技",
+    "shares": 900,
+    "cost_price": 23.289,
+    "group": "温和盈利"
+  },
+  {
+    "code": "600498",
+    "name": "烽火通信",
+    "shares": 600,
+    "cost_price": 84.008,
     "group": "深亏"
   },
   {
@@ -42,25 +140,18 @@
     "group": "深亏"
   },
   {
-    "code": "000620",
-    "name": "盈新发展",
-    "shares": 3700,
-    "cost_price": 3.117,
-    "group": "浅亏"
+    "code": "002326",
+    "name": "永太科技",
+    "shares": 700,
+    "cost_price": 26.432,
+    "group": "深亏"
   },
   {
-    "code": "300438",
-    "name": "鹏辉能源",
-    "shares": 100,
-    "cost_price": 84.12,
-    "group": "浅亏"
-  },
-  {
-    "code": "300398",
-    "name": "飞凯材料",
-    "shares": 200,
-    "cost_price": 57.03,
-    "group": "浅亏"
+    "code": "688159",
+    "name": "有方科技",
+    "shares": 400,
+    "cost_price": 48.341,
+    "group": "深亏"
   },
   {
     "code": "002734",
@@ -70,10 +161,17 @@
     "group": "浅亏"
   },
   {
-    "code": "002129",
-    "name": "TCL中环",
-    "shares": 1100,
-    "cost_price": 10.477,
+    "code": "000967",
+    "name": "盈峰环境",
+    "shares": 1000,
+    "cost_price": 11.806,
+    "group": "深亏"
+  },
+  {
+    "code": "002335",
+    "name": "科华数据",
+    "shares": 700,
+    "cost_price": 43.933,
     "group": "浅亏"
   },
   {
@@ -88,6 +186,20 @@
     "name": "鲁抗医药",
     "shares": 1400,
     "cost_price": 7.492,
+    "group": "深亏"
+  },
+  {
+    "code": "603007",
+    "name": "顺景科技",
+    "shares": 1900,
+    "cost_price": 6.533,
+    "group": "浅亏"
+  },
+  {
+    "code": "300304",
+    "name": "云意电气",
+    "shares": 400,
+    "cost_price": 19.202,
     "group": "浅亏"
   },
   {
@@ -98,144 +210,67 @@
     "group": "浅亏"
   },
   {
+    "code": "300832",
+    "name": "新产业",
+    "shares": 200,
+    "cost_price": 44.235,
+    "group": "浅亏"
+  },
+  {
+    "code": "002470",
+    "name": "金正大",
+    "shares": 3700,
+    "cost_price": 2.151,
+    "group": "浅亏"
+  },
+  {
     "code": "600601",
     "name": "方正科技",
     "shares": 800,
     "cost_price": 14.148,
-    "group": "保本"
+    "group": "浅亏"
   },
   {
-    "code": "000967",
-    "name": "盈峰环境",
-    "shares": 1000,
-    "cost_price": 11.806,
-    "group": "保本"
-  },
-  {
-    "code": "600999",
-    "name": "招商证券",
+    "code": "300533",
+    "name": "冰川网络",
     "shares": 800,
-    "cost_price": 20.006,
-    "group": "温和盈利"
-  },
-  {
-    "code": "000811",
-    "name": "冰轮环境",
-    "shares": 100,
-    "cost_price": 50.945,
-    "group": "温和盈利"
-  },
-  {
-    "code": "601066",
-    "name": "中信建投",
-    "shares": 900,
-    "cost_price": 29.09,
-    "group": "温和盈利"
-  },
-  {
-    "code": "603399",
-    "name": "永杉锂业",
-    "shares": 500,
-    "cost_price": 21.91,
-    "group": "温和盈利"
-  },
-  {
-    "code": "600498",
-    "name": "烽火通信",
-    "shares": 600,
-    "cost_price": 84.008,
-    "group": "温和盈利"
-  },
-  {
-    "code": "002600",
-    "name": "领益智造",
-    "shares": 600,
-    "cost_price": 17.278,
-    "group": "温和盈利"
+    "cost_price": 16.694,
+    "group": "浅亏"
   },
   {
     "code": "301282",
     "name": "金禄电子",
     "shares": 600,
     "cost_price": 29.774,
-    "group": "温和盈利"
+    "group": "浅亏"
   },
   {
-    "code": "300234",
-    "name": "开尔新材",
-    "shares": 2000,
-    "cost_price": 11.226,
-    "group": "温和盈利"
+    "code": "300438",
+    "name": "鹏辉能源",
+    "shares": 100,
+    "cost_price": 84.12,
+    "group": "浅亏"
   },
   {
-    "code": "002580",
-    "name": "圣阳股份",
+    "code": "002521",
+    "name": "齐峰新材",
+    "shares": 1200,
+    "cost_price": 7.327,
+    "group": "浅亏"
+  },
+  {
+    "code": "603063",
+    "name": "禾望电气",
     "shares": 200,
-    "cost_price": 24.084,
-    "group": "温和盈利"
+    "cost_price": 53.116,
+    "group": "浅亏"
   },
   {
-    "code": "688449",
-    "name": "联芸科技",
-    "shares": 200,
-    "cost_price": 82.586,
-    "group": "温和盈利"
-  },
-  {
-    "code": "300304",
-    "name": "云意电气",
-    "shares": 400,
-    "cost_price": 19.202,
-    "group": "温和盈利"
-  },
-  {
-    "code": "002326",
-    "name": "永太科技",
-    "shares": 1000,
-    "cost_price": 25.439,
-    "group": "温和盈利"
-  },
-  {
-    "code": "300420",
-    "name": "五洋自控",
-    "shares": 1700,
-    "cost_price": 7.714,
-    "group": "高盈利"
-  },
-  {
-    "code": "002068",
-    "name": "黑猫股份",
-    "shares": 500,
-    "cost_price": 11.926,
-    "group": "高盈利"
-  },
-  {
-    "code": "002384",
-    "name": "东山精密",
-    "shares": 100,
-    "cost_price": 259.354,
-    "group": "高盈利"
-  },
-  {
-    "code": "600888",
-    "name": "新疆众和",
-    "shares": 800,
-    "cost_price": 14.224,
-    "group": "高盈利"
-  },
-  {
-    "code": "002929",
-    "name": "润建股份",
-    "shares": 100,
-    "cost_price": 66.23,
-    "group": "高盈利"
-  },
-  {
-    "code": "002463",
-    "name": "沪电股份",
-    "shares": 100,
-    "cost_price": 148.02,
-    "group": "高盈利"
+    "code": "002558",
+    "name": "巨人网络",
+    "shares": 900,
+    "cost_price": 27.588,
+    "group": "浅亏"
   },
   {
     "code": "豪26发债",
@@ -252,26 +287,5 @@
     "cost_price": 100.0,
     "group": "债券",
     "type": "bond"
-  },
-  {
-    "code": "002202",
-    "name": "金风科技",
-    "shares": 900,
-    "cost_price": 23.256,
-    "group": "未分组"
-  },
-  {
-    "code": "002558",
-    "name": "巨人网络",
-    "shares": 500,
-    "cost_price": 27.838,
-    "group": "未分组"
-  },
-  {
-    "code": "002335",
-    "name": "科华数据",
-    "shares": 700,
-    "cost_price": 43.897,
-    "group": "未分组"
   }
 ]
