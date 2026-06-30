@@ -100,6 +100,16 @@ if df_today is not None and not df_today.empty:
     df_today = df_today.rename(columns={'pct_chg': 'pct_change', 'vol': 'volume'})
     df_today.to_csv('data/today_quote.csv', index=False, encoding='utf-8-sig')
     print(f"  ✅ today_quote.csv: {len(df_today)} 条")
+    
+    # 填充 stock_list.csv 的 price/pct_change (用今日收盘价)
+    price_map = dict(zip(df_today['code'], df_today['close']))
+    pct_map = dict(zip(df_today['code'], df_today['pct_change']))
+    df_basic['price'] = df_basic['code'].map(price_map).fillna(0.0)
+    df_basic['pct_change'] = df_basic['code'].map(pct_map).fillna(0.0)
+    df_basic[['code', 'name', 'industry', 'price', 'pct_change', 'market_cap_yi']].to_csv(
+        'data/stock_list.csv', index=False, encoding='utf-8-sig'
+    )
+    print(f"  ✅ stock_list.csv 已用 {len(price_map)} 只今日价格填充")
 
 with open('data/last_update.txt', 'w') as f:
     f.write(datetime.now().isoformat())
