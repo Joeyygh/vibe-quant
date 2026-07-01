@@ -3,13 +3,13 @@
     "code": "300655",
     "name": "晶瑞电材",
     "profit_pct": 10.978,
-    "note": "已清仓"
+    "note": "历史清仓"
   },
   {
     "code": "300571",
     "name": "平治信息",
     "profit_pct": 3.961,
-    "note": "已清仓"
+    "note": "历史清仓"
   },
   {
     "code": "0981.HK",
@@ -100,6 +100,51 @@
     "sell_price": 20.16,
     "shares": 200,
     "profit_pct": -16.45,
-    "note": "已割肉"
+    "note": "6.29 清仓"
+  },
+  {
+    "code": "688503",
+    "name": "聚和材料",
+    "cost_price": 115.736,
+    "sell_price": 130.8,
+    "shares": 200,
+    "profit_pct": 10.54,
+    "note": "7.1 清仓 +2438"
+  },
+  {
+    "code": "300438",
+    "name": "鹏辉能源",
+    "cost_price": 84.208,
+    "sell_price": 79.63,
+    "shares": 100,
+    "profit_pct": -8.96,
+    "note": "7.1 清仓 -754"
+  },
+  {
+    "code": "600789",
+    "name": "鲁抗医药",
+    "cost_price": 7.502,
+    "sell_price": 6.89,
+    "shares": 1400,
+    "profit_pct": -13.29,
+    "note": "7.1 清仓 -1395"
+  },
+  {
+    "code": "002460",
+    "name": "赣锋锂业",
+    "cost_price": 71.094,
+    "sell_price": 65.92,
+    "shares": 700,
+    "profit_pct": -9.8,
+    "note": "7.1 清仓 -4878"
+  },
+  {
+    "code": "300398",
+    "name": "飞凯材料",
+    "cost_price": 53.96,
+    "sell_price": 64.26,
+    "shares": 100,
+    "profit_pct": 19.1,
+    "note": "7.1 估计清仓(用户未提)"
   }
 ]
