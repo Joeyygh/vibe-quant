@@ -458,6 +458,45 @@ def apply_user_formula(df_sub):
     return passed
 
 
+def _render_compact_picks(df):
+    """紧凑显示股票列表(去掉行业、行距紧凑、手机友好)"""
+    if df is None or df.empty:
+        return
+    # 选定列(不显示行业、波动率冗余)
+    wanted = ['代码', '名称', '现价', '今日%', '20日%', '综合分']
+    cols = [c for c in wanted if c in df.columns]
+    if not cols:
+        cols = list(df.columns)
+    sub = df[cols].copy()
+
+    # 格式化
+    def _fmt(v):
+        if isinstance(v, float):
+            if abs(v) >= 1000:
+                return f"{v:.0f}"
+            return f"{v:.2f}"
+        return str(v)
+
+    # 用 markdown 表格(紧凑)
+    header = '| ' + ' | '.join(cols) + ' |'
+    sep = '|' + '|'.join(['---'] * len(cols)) + '|'
+    body = []
+    for _, row in sub.iterrows():
+        cells = []
+        for c in cols:
+            v = row[c]
+            txt = _fmt(v)
+            # 颜色高亮:涨绿跌红
+            if c in ('今日%', '20日%', '综合分'):
+                if isinstance(v, (int, float)) and v > 0:
+                    txt = f"🟢{txt}"
+                elif isinstance(v, (int, float)) and v < 0:
+                    txt = f"🔴{txt}"
+            cells.append(txt)
+        body.append('| ' + ' | '.join(cells) + ' |')
+    st.markdown('\n'.join([header, sep] + body))
+
+
 def apply_seven_conditions(df_klines, codes, strict=True):
     passed = []
     for code_str in codes:
@@ -912,8 +951,8 @@ if run:
             codes_3, df_3 = results['all_three']
 
             if not df_3.empty:
-                st.header("1. 三策略精选 (最强)")
-                st.dataframe(df_3, use_container_width=True, hide_index=True)
+                st.markdown(f"### 1. 三策略精选 ({len(df_3)} 只)")
+                _render_compact_picks(df_3)
             else:
                 st.warning("三策略精选 0 只通过")
 
@@ -926,12 +965,10 @@ if run:
                             extra_codes.append(c)
                     df_extra = df_3[df_3['代码'].isin(extra_codes)].copy() if extra_codes else pd.DataFrame()
                 if not df_extra.empty:
-                    st.subheader("2. 5 过滤叠加 (胜率 100%)")
-                    st.success(f"{len(df_extra)} 只通过全部 8 过滤 (三策略 + 5 过滤)")
-                    st.dataframe(df_extra, use_container_width=True, hide_index=True)
+                    st.markdown(f"### 2. 5 过滤叠加 ({len(df_extra)} 只)")
+                    _render_compact_picks(df_extra)
                 else:
                     st.info("三策略通过的股未通过 5 过滤")
-                st.divider()
 
             if not df_3.empty:
                 with st.spinner("应用 7 条件..."):
@@ -939,12 +976,10 @@ if run:
                     df_7 = df_3[df_3['代码'].isin(seven_codes)].copy() if seven_codes else pd.DataFrame()
                 mode_label = "严格" if seven_strict else "宽松"
                 if not df_7.empty:
-                    st.subheader(f"3. 7 条件叠加 ({mode_label}, 最严)")
-                    st.success(f"{len(df_7)} 只同时通过 ({mode_label}模式)")
-                    st.dataframe(df_7, use_container_width=True, hide_index=True)
+                    st.markdown(f"### 3. 7 条件叠加/{mode_label} ({len(df_7)} 只)")
+                    _render_compact_picks(df_7)
                 else:
-                    st.info(f"三策略通过的股未通过 7 条件({mode_label}模式) - 试试切换模式")
-                st.divider()
+                    st.info(f"三策略通过的股未通过 7 条件({mode_label}模式)")
 
             if use_formula2:
                 if f2_independent:
