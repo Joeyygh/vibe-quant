@@ -703,18 +703,12 @@ with st.sidebar:
                     if not items:
                         continue
                     st.markdown(f"**{gname}仓({len(items)}只)**")
-                    rows = []
+                    lines = []
                     for s in items:
-                        tip_text = ' | '.join(f"{t[0]} {t[1]}" for t in s['tips'])
                         ret = f"{s['ret']:+.1f}%" if s.get('ret') is not None else '-'
-                        rows.append({
-                            '名称': s['name'],
-                            '现价': f"{s['close']:.2f}",
-                            '今日%': f"{s['pct_chg']:+.2f}%",
-                            '累计%': ret,
-                            '建议': tip_text,
-                        })
-                    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+                        tips = ' / '.join(f"{t[0]}{t[1]}" for t in s['tips'])
+                        lines.append(f"**{s['name']}** {s['close']:.2f} 累计{ret}　**{tips}**")
+                    st.markdown('<br>'.join(lines), unsafe_allow_html=True)
                 # 港股/债券
                 others = [h for h in holdings if str(h.get('code', '')).endswith('.HK') or h.get('type') == 'bond']
                 if others:
