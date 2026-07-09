@@ -10,7 +10,21 @@ from datetime import datetime, timedelta, timezone
 st.set_page_config(page_title="Vibe 量化 v2.0", page_icon="V", layout="wide", initial_sidebar_state="expanded")
 st.title("Vibe 股票量化分析 v2.0")
 beijing_now = (datetime.now(timezone.utc) + timedelta(hours=8)).strftime('%Y-%m-%d %H:%M')
-st.markdown(f"**{beijing_now} (北京时间)** | 数据源：Tushare 真实数据 | 数据更新：2026-06-29")
+# 动态读 last_update.txt
+_update_str = "未知"
+for _path in ['data/last_update.txt', '../data/last_update.txt', './last_update.txt']:
+    if os.path.exists(_path):
+        try:
+            with open(_path, 'r') as _f:
+                _raw = _f.read().strip()
+            # 转 UTC 为北京时间
+            _dt = datetime.fromisoformat(_raw)
+            _bj = _dt.astimezone(timezone(timedelta(hours=8)))
+            _update_str = _bj.strftime('%Y-%m-%d %H:%M')
+        except Exception:
+            _update_str = _raw[:16].replace('T', ' ')
+        break
+st.markdown(f"**{beijing_now} (北京时间)** | 数据源：Tushare 真实数据 | 数据更新：**{_update_str}**")
 
 HOLDINGS_FILE = 'my_holdings.json'
 
