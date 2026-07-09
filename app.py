@@ -1006,9 +1006,9 @@ if run:
                             })
                         df_f2 = pd.DataFrame(f2_rows) if f2_rows else pd.DataFrame()
                     if not df_f2.empty:
-                        st.subheader("4. 公式 2 (独立 - 不过三策略) 5-10 天 胜率 100%")
-                        st.success(f"{len(df_f2)} 只通过公式 2 - 5天 +4.88% / 10天 +11.33%")
-                        st.dataframe(df_f2, use_container_width=True, hide_index=True)
+                        st.markdown(f"### 4. 公式 2 (独立 - 不过三策略) ({len(df_f2)} 只)")
+                        st.success(f"5天 +4.88% / 10天 +11.33% 胜率 100%")
+                        _render_compact_picks(df_f2)
                     else:
                         st.warning("公式 2 独立模式：今天全市场 0 只通过 - 不买就是赚，等明天")
                 elif not df_3.empty:
@@ -1020,9 +1020,9 @@ if run:
                                 f2_codes.append(c)
                             df_f2 = df_3[df_3['代码'].isin(f2_codes)].copy() if f2_codes else pd.DataFrame()
                     if not df_f2.empty:
-                        st.subheader("4. 公式 2 (叠加 - 需过三策略) 5-10 天 胜率 100%")
-                        st.success(f"{len(df_f2)} 只通过公式 2 - 5天 +4.88% / 10天 +11.33%")
-                        st.dataframe(df_f2, use_container_width=True, hide_index=True)
+                        st.markdown(f"### 4. 公式 2 (叠加 - 需过三策略) ({len(df_f2)} 只)")
+                        st.success(f"5天 +4.88% / 10天 +11.33% 胜率 100%")
+                        _render_compact_picks(df_f2)
                     else:
                         st.info("三策略通过的股未通过公式 2")
                 else:
@@ -1034,10 +1034,10 @@ if run:
                     uf_results = apply_user_formula(df_sub)
                 if uf_results:
                     df_uf = pd.DataFrame(uf_results).sort_values('量比', ascending=False)
-                    st.subheader("5. 🆕 用户公式(动量买点,独立) - 早盘短线 1-3 天")
-                    st.success(f"{len(df_uf)} 只通过用户公式 - 独立扫描,不叠加 Vibe 1-4 模块")
-                    st.info("**4 条公式**:①竞价量比>5  ②开盘涨幅 2-5%  ③近 3 日成交额递增  ④收盘>20日线")
-                    st.dataframe(df_uf, use_container_width=True, hide_index=True)
+                    st.markdown(f"### 5. 🆕 用户公式 (动量买点,独立) ({len(df_uf)} 只)")
+                    st.success("独立扫描,不叠加 Vibe 1-4 模块")
+                    st.caption("4 条公式: ①竞价量比>5 ②开盘涨幅 2-5% ③近 3 日成交额递增 ④收盘>20日线")
+                    _render_compact_picks(df_uf)
                 else:
                     st.info("用户公式:今天 0 只通过 - 早盘无买点信号,空仓观察")
                 st.divider()
