@@ -463,6 +463,9 @@ def get_today_picks(date_str):
                         continue  # 跳过近 5 日有大阴线
 
                     recent_5d = (close / sub['close'].iloc[4] - 1) * 100
+                    if recent_5d > 20:
+                        continue  # 跳过 5 日暴涨超 20%
+
                     high_20d = sub['close'].iloc[:20].max()
                     vol_avg_5d = sub['vol'].iloc[:5].mean()
                     vol_avg_10d = sub['vol'].iloc[:10].mean()
