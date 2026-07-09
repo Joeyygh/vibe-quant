@@ -348,7 +348,7 @@ def apply_extra_filters(df_sub):
     if float(diff_line.iloc[-1]) <= 0:
         return False
     pct = float(last['pct_change'])
-    if pct >= 9.5 or pct < -3.0:
+    if pct >= 9.0 or pct < -3.0:
         return False
     return True
 
