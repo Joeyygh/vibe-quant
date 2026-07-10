@@ -861,14 +861,13 @@ def generate_report():
             signals_g = by_group[gname]
             sections.append(f"### {gname}仓({len(signals_g)}只)")
             sections.append("")
-            sections.append("| 代码 | 名称 | 现价 | 今日% | MA5 | MA20 | 累计% | 建议 |")
-            sections.append("|------|------|------|------|------|------|------|------|")
+            # 精简格式:代码/名称/现价/累计/建议(横排)
+            sections.append("| 名称 | 现价 | 累计% | 建议 |")
+            sections.append("|------|------|------|------|")
             for s in signals_g:
-                tips_str = "<br>".join(s['tips'])
+                tips_str = " / ".join(s['tips'])
                 ret = f"{s['ret']:+.1f}%" if s['ret'] is not None else "-"
-                ma5 = f"{s['ma5']:.2f}"
-                ma20 = f"{s['ma20']:.2f}" if s['ma20'] is not None else "-"
-                sections.append(f"| {s['code']} | {s['name']} | {s['close']:.2f} | {s['pct_chg']:+.2f}% | {ma5} | {ma20} | {ret} | {tips_str} |")
+                sections.append(f"| **{s['name']}** | {s['close']:.2f} | {ret} | {tips_str} |")
             sections.append("")
 
     # 港股/债券/已清仓(从原始文件读,不调 Tushare)
