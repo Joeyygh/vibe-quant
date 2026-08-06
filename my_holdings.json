@@ -1,7 +1,7 @@
 {
-  "version": "2.1",
-  "update_time": "2026-08-06 16:00",
-  "note": "持仓更新: 8/6 收盘后,43只持仓+3只清仓",
+  "version": "2.2",
+  "update_time": "2026-08-06 16:05",
+  "note": "持仓更新: 8/6 收盘, 43只持仓+5条清仓 (含海特高新)",
   "holdings": [
     {
       "code": "600563",
@@ -367,17 +367,6 @@
       "group": "shallow_loss"
     },
     {
-      "code": "002023",
-      "name": "海特高新",
-      "shares": 600,
-      "cost": 10.61,
-      "current": 10.42,
-      "market_value": 6252.0,
-      "profit": -114.0,
-      "profit_pct": -1.791,
-      "group": "shallow_loss"
-    },
-    {
       "code": "002901",
       "name": "大博医疗",
       "shares": 300,
@@ -532,6 +521,19 @@
       "profit_pct": 0.094,
       "close_date": "2026-08-06",
       "note": "减仓: 400→200"
+    },
+    {
+      "code": "002023",
+      "name": "海特高新",
+      "shares": 0,
+      "cost": 10.61,
+      "current": 10.42,
+      "market_value": 6252.0,
+      "profit": -114.0,
+      "profit_pct": -1.791,
+      "group": "shallow_loss",
+      "close_date": "2026-08-06",
+      "note": "清仓 600→0"
     }
   ]
 }
