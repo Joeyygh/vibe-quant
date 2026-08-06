@@ -33,8 +33,26 @@ def load_holdings():
     if os.path.exists(HOLDINGS_FILE):
         try:
             with open(HOLDINGS_FILE, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except Exception:
+                raw = json.load(f)
+            # 兼容两种结构: 1) list of dict (老格式)  2) {"holdings": [...], "closed_holdings": [...]} (新格式)
+            if isinstance(raw, dict):
+                holdings = raw.get('holdings', [])
+            else:
+                holdings = raw
+            # 字段归一化: 兼容 cost / cost_price 两种命名
+            normalized = []
+            for h in holdings:
+                if not isinstance(h, dict):
+                    continue
+                nh = dict(h)
+                # cost -> cost_price
+                if 'cost_price' not in nh and 'cost' in nh:
+                    nh['cost_price'] = nh.pop('cost')
+                # current 字段保留
+                normalized.append(nh)
+            return normalized
+        except Exception as e:
+            print(f"load_holdings 失败: {e}")
             return []
     return []
 
