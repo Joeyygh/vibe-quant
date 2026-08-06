@@ -1,482 +1,482 @@
 {
-  "version": "2.3",
-  "update_time": "2026-08-06 16:02",
-  "note": "持仓更新: 标记今日买入 海特高新002023 + 科伦药业002422",
+  "version": "2.4",
+  "update_time": "2026-08-06 20:55",
+  "note": "字段修正: cost → cost_price (兼容 app.py) | 43只持仓 + 5条清仓",
   "holdings": [
     {
       "code": "600563",
       "name": "法拉电子",
       "shares": 100,
-      "cost": 140.101,
       "current": 137.22,
       "market_value": 13722.0,
       "profit": -288.14,
       "profit_pct": -2.056,
-      "group": "shallow_loss"
+      "group": "shallow_loss",
+      "cost_price": 140.101
     },
     {
       "code": "603408",
       "name": "建霖家居",
       "shares": 1500,
-      "cost": 10.779,
       "current": 10.54,
       "market_value": 15810.0,
       "profit": -358.16,
       "profit_pct": -2.217,
-      "group": "shallow_loss"
+      "group": "shallow_loss",
+      "cost_price": 10.779
     },
     {
       "code": "002558",
       "name": "巨人网络",
       "shares": 400,
-      "cost": 30.273,
       "current": 29.26,
       "market_value": 11704.0,
       "profit": -405.0,
       "profit_pct": -3.346,
-      "group": "shallow_loss"
+      "group": "shallow_loss",
+      "cost_price": 30.273
     },
     {
       "code": "300470",
       "name": "中密控股",
       "shares": 400,
-      "cost": 30.49,
       "current": 29.44,
       "market_value": 11776.0,
       "profit": -420.0,
       "profit_pct": -3.444,
-      "group": "shallow_loss"
+      "group": "shallow_loss",
+      "cost_price": 30.49
     },
     {
       "code": "002521",
       "name": "齐峰新材",
       "shares": 1200,
-      "cost": 7.327,
       "current": 6.9,
       "market_value": 8280.0,
       "profit": -512.0,
       "profit_pct": -5.828,
-      "group": "shallow_loss"
+      "group": "shallow_loss",
+      "cost_price": 7.327
     },
     {
       "code": "000756",
       "name": "新华制药",
       "shares": 1200,
-      "cost": 14.747,
       "current": 14.29,
       "market_value": 17148.0,
       "profit": -548.0,
       "profit_pct": -3.099,
-      "group": "shallow_loss"
+      "group": "shallow_loss",
+      "cost_price": 14.747
     },
     {
       "code": "002470",
       "name": "金正大",
       "shares": 3700,
-      "cost": 2.151,
       "current": 1.95,
       "market_value": 7215.0,
       "profit": -745.0,
       "profit_pct": -9.344,
-      "group": "shallow_loss"
+      "group": "shallow_loss",
+      "cost_price": 2.151
     },
     {
       "code": "300533",
       "name": "冰川网络",
       "shares": 600,
-      "cost": 16.563,
       "current": 15.29,
       "market_value": 9174.0,
       "profit": -763.71,
       "profit_pct": -7.686,
-      "group": "shallow_loss"
+      "group": "shallow_loss",
+      "cost_price": 16.563
     },
     {
       "code": "600143",
       "name": "金发科技",
       "shares": 800,
-      "cost": 17.153,
       "current": 16.15,
       "market_value": 12920.0,
       "profit": -802.15,
       "profit_pct": -5.847,
-      "group": "shallow_loss"
+      "group": "shallow_loss",
+      "cost_price": 17.153
     },
     {
       "code": "600601",
       "name": "方正科技",
       "shares": 800,
-      "cost": 14.148,
       "current": 11.7,
       "market_value": 9360.0,
       "profit": -1958.1,
       "profit_pct": -17.303,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 14.148
     },
     {
       "code": "002734",
       "name": "利民股份",
       "shares": 900,
-      "cost": 18.626,
       "current": 16.15,
       "market_value": 14535.0,
       "profit": -2228.0,
       "profit_pct": -13.293,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 18.626
     },
     {
       "code": "002402",
       "name": "和而泰",
       "shares": 400,
-      "cost": 27.073,
       "current": 21.33,
       "market_value": 8532.0,
       "profit": -2297.0,
       "profit_pct": -21.213,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 27.073
     },
     {
       "code": "000967",
       "name": "盈峰环境",
       "shares": 1000,
-      "cost": 11.676,
       "current": 9.37,
       "market_value": 9370.0,
       "profit": -2306.0,
       "profit_pct": -19.75,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 11.676
     },
     {
       "code": "600667",
       "name": "太极实业",
       "shares": 300,
-      "cost": 27.627,
       "current": 19.17,
       "market_value": 5751.0,
       "profit": -2537.08,
       "profit_pct": -30.611,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 27.627
     },
     {
       "code": "002600",
       "name": "领益智造",
       "shares": 600,
-      "cost": 17.278,
       "current": 12.74,
       "market_value": 7644.0,
       "profit": -2723.0,
       "profit_pct": -26.265,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 17.278
     },
     {
       "code": "002843",
       "name": "泰嘉股份",
       "shares": 400,
-      "cost": 23.713,
       "current": 16.36,
       "market_value": 6544.0,
       "profit": -2941.0,
       "profit_pct": -31.008,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 23.713
     },
     {
       "code": "300304",
       "name": "云意电气",
       "shares": 400,
-      "cost": 19.202,
       "current": 11.54,
       "market_value": 4616.0,
       "profit": -3064.97,
       "profit_pct": -39.902,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 19.202
     },
     {
       "code": "002463",
       "name": "沪电股份",
       "shares": 100,
-      "cost": 148.02,
       "current": 117.2,
       "market_value": 11720.0,
       "profit": -3082.0,
       "profit_pct": -20.822,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 148.02
     },
     {
       "code": "603399",
       "name": "永杉锂业",
       "shares": 500,
-      "cost": 21.91,
       "current": 15.69,
       "market_value": 7845.0,
       "profit": -3110.11,
       "profit_pct": -28.389,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 21.91
     },
     {
       "code": "603007",
       "name": "顺景科技",
       "shares": 1900,
-      "cost": 6.533,
       "current": 4.83,
       "market_value": 9177.0,
       "profit": -3235.11,
       "profit_pct": -26.068,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 6.533
     },
     {
       "code": "301282",
       "name": "金禄电子",
       "shares": 600,
-      "cost": 29.774,
       "current": 23.12,
       "market_value": 13872.0,
       "profit": -3992.33,
       "profit_pct": -22.348,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 29.774
     },
     {
       "code": "300234",
       "name": "开尔新材",
       "shares": 2000,
-      "cost": 11.226,
       "current": 9.17,
       "market_value": 18340.0,
       "profit": -4112.0,
       "profit_pct": -18.315,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 11.226
     },
     {
       "code": "603063",
       "name": "禾望电气",
       "shares": 200,
-      "cost": 53.116,
       "current": 32.07,
       "market_value": 6414.0,
       "profit": -4209.1,
       "profit_pct": -39.623,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 53.116
     },
     {
       "code": "603011",
       "name": "合锻智能",
       "shares": 300,
-      "cost": 34.937,
       "current": 20.62,
       "market_value": 6186.0,
       "profit": -4295.1,
       "profit_pct": -40.979,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 34.937
     },
     {
       "code": "600172",
       "name": "黄河旋风",
       "shares": 600,
-      "cost": 19.152,
       "current": 11.74,
       "market_value": 7044.0,
       "profit": -4447.12,
       "profit_pct": -38.701,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 19.152
     },
     {
       "code": "688669",
       "name": "聚石化学",
       "shares": 200,
-      "cost": 87.226,
       "current": 63.36,
       "market_value": 12672.0,
       "profit": -4773.17,
       "profit_pct": -27.361,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 87.226
     },
     {
       "code": "601138",
       "name": "工业富联",
       "shares": 200,
-      "cost": 63.711,
       "current": 68.27,
       "market_value": 13654.0,
       "profit": 911.88,
       "profit_pct": 7.156,
-      "group": "high_profit"
+      "group": "high_profit",
+      "cost_price": 63.711
     },
     {
       "code": "600531",
       "name": "豫光金铅",
       "shares": 300,
-      "cost": 11.849,
       "current": 12.97,
       "market_value": 3891.0,
       "profit": 336.3,
       "profit_pct": 9.461,
-      "group": "high_profit"
+      "group": "high_profit",
+      "cost_price": 11.849
     },
     {
       "code": "300436",
       "name": "广生堂",
       "shares": 300,
-      "cost": 91.864,
       "current": 92.73,
       "market_value": 27819.0,
       "profit": 259.73,
       "profit_pct": 0.943,
-      "group": "high_profit"
+      "group": "high_profit",
+      "cost_price": 91.864
     },
     {
       "code": "000831",
       "name": "中国稀土",
       "shares": 100,
-      "cost": 50.66,
       "current": 51.99,
       "market_value": 5199.0,
       "profit": 133.0,
       "profit_pct": 2.625,
-      "group": "high_profit"
+      "group": "high_profit",
+      "cost_price": 50.66
     },
     {
       "code": "002422",
       "name": "科伦药业",
       "shares": 200,
-      "cost": 42.47,
       "current": 42.51,
       "market_value": 8502.0,
       "profit": 8.0,
       "profit_pct": 0.094,
       "group": "high_profit",
       "buy_date": "2026-08-06",
-      "note": "今日买入200股, 或从400减仓至200"
+      "note": "今日买入200股, 或从400减仓至200",
+      "cost_price": 42.47
     },
     {
       "code": "600111",
       "name": "北方稀土",
       "shares": 100,
-      "cost": 41.9,
       "current": 41.91,
       "market_value": 4191.0,
       "profit": 0.96,
       "profit_pct": 0.024,
-      "group": "high_profit"
+      "group": "high_profit",
+      "cost_price": 41.9
     },
     {
       "code": "300383",
       "name": "光环新网",
       "shares": 500,
-      "cost": 13.72,
       "current": 13.65,
       "market_value": 6825.0,
       "profit": -35.0,
       "profit_pct": -0.51,
-      "group": "shallow_loss"
+      "group": "shallow_loss",
+      "cost_price": 13.72
     },
     {
       "code": "002901",
       "name": "大博医疗",
       "shares": 300,
-      "cost": 44.217,
       "current": 43.28,
       "market_value": 12984.0,
       "profit": -281.0,
       "profit_pct": -2.119,
-      "group": "shallow_loss"
+      "group": "shallow_loss",
+      "cost_price": 44.217
     },
     {
       "code": "002326",
       "name": "永太科技",
       "shares": 700,
-      "cost": 26.432,
       "current": 19.31,
       "market_value": 13517.0,
       "profit": -4985.47,
       "profit_pct": -26.945,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 26.432
     },
     {
       "code": "688449",
       "name": "联芸科技",
       "shares": 200,
-      "cost": 82.586,
       "current": 56.62,
       "market_value": 11324.0,
       "profit": -5193.17,
       "profit_pct": -31.441,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 82.586
     },
     {
       "code": "002962",
       "name": "五方光电",
       "shares": 700,
-      "cost": 21.493,
       "current": 13.15,
       "market_value": 9205.0,
       "profit": -5840.0,
       "profit_pct": -38.817,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 21.493
     },
     {
       "code": "688159",
       "name": "有方科技",
       "shares": 400,
-      "cost": 48.341,
       "current": 33.4,
       "market_value": 13360.0,
       "profit": -5976.2,
       "profit_pct": -30.908,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 48.341
     },
     {
       "code": "002384",
       "name": "东山精密",
       "shares": 100,
-      "cost": 259.354,
       "current": 187.68,
       "market_value": 18768.0,
       "profit": -7167.4,
       "profit_pct": -27.636,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 259.354
     },
     {
       "code": "002335",
       "name": "科华数据",
       "shares": 700,
-      "cost": 43.933,
       "current": 30.99,
       "market_value": 21693.0,
       "profit": -9060.0,
       "profit_pct": -29.461,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 43.933
     },
     {
       "code": "688056",
       "name": "莱伯泰科",
       "shares": 400,
-      "cost": 66.206,
       "current": 42.25,
       "market_value": 16900.0,
       "profit": -9582.26,
       "profit_pct": -36.184,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 66.206
     },
     {
       "code": "688323",
       "name": "瑞华泰",
       "shares": 400,
-      "cost": 56.301,
       "current": 27.05,
       "market_value": 10820.0,
       "profit": -11700.22,
       "profit_pct": -51.955,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 56.301
     },
     {
       "code": "600498",
       "name": "烽火通信",
       "shares": 600,
-      "cost": 83.911,
       "current": 37.79,
       "market_value": 22674.0,
       "profit": -27672.3,
       "profit_pct": -54.964,
-      "group": "deep_loss"
+      "group": "deep_loss",
+      "cost_price": 83.911
     }
   ],
   "closed_holdings": [
@@ -484,52 +484,51 @@
       "code": "600468",
       "name": "百利电气",
       "shares": 0,
-      "cost": 2.962,
       "current": 6.45,
       "profit": 701.62,
       "profit_pct": 118.441,
       "close_date": "2026-08-06",
-      "note": "全仓清仓,盈利118%"
+      "note": "全仓清仓,盈利118%",
+      "cost_price": 2.962
     },
     {
       "code": "300571",
       "name": "平治信息",
       "shares": 0,
-      "cost": 33.017,
       "current": 34.57,
       "profit": 526.78,
       "profit_pct": 5.318,
       "close_date": "2026-08-06",
-      "note": "清仓"
+      "note": "清仓",
+      "cost_price": 33.017
     },
     {
       "code": "003025",
       "name": "依顿电子",
       "shares": 0,
-      "cost": 9.287,
       "current": 9.86,
       "profit": 479.4,
       "profit_pct": 5.735,
       "close_date": "2026-08-06",
-      "note": "清仓"
+      "note": "清仓",
+      "cost_price": 9.287
     },
     {
       "code": "002422",
       "name": "科伦药业",
       "shares": 200,
-      "cost": 42.47,
       "current": 42.51,
       "profit": 8.0,
       "profit_pct": 0.094,
       "close_date": "2026-08-06",
       "note": "今日减仓 400→200 (200股今日卖出)",
-      "buy_date": "2026-08-06"
+      "buy_date": "2026-08-06",
+      "cost_price": 42.47
     },
     {
       "code": "002023",
       "name": "海特高新",
       "shares": 0,
-      "cost": 10.61,
       "current": 10.42,
       "market_value": 6252.0,
       "profit": -114.0,
@@ -537,7 +536,8 @@
       "group": "shallow_loss",
       "close_date": "2026-08-06",
       "note": "今日买入, 当日清仓 600→0",
-      "buy_date": "2026-08-06"
+      "buy_date": "2026-08-06",
+      "cost_price": 10.61
     }
   ]
 }
