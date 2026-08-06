@@ -274,7 +274,24 @@ def compute_signals(df_klines, top_n=20):
                 trend_set.add(code)
             ret_20 = (df['close'].iloc[-1] / df['close'].iloc[-20] - 1) * 100
             vol = df['pct_change'].std()
-            score = 50 + ret_20 * 1.5 - vol * 2
+            # === 🛡️ 动量天花板保护 (2026-08-06 新增, 避免追高) ===
+            # 1) 20日涨幅 > 80%: 视为高位, 大幅减分 (避免接盘翻倍股)
+            # 2) 20日涨幅 > 50%: 适度减分 (温和提示)
+            # 3) 今日涨幅 > 7%: 当日追高减分
+            # 4) 乖离率 (现价/MA5-1) > 15%: 超买减分
+            overbought_penalty = 0
+            if ret_20 > 80:
+                overbought_penalty = 30
+            elif ret_20 > 50:
+                overbought_penalty = 15
+            pct_today = float(last.get('pct_change', 0))
+            if pct_today > 7:
+                overbought_penalty += 10
+            ma5 = df['close'].iloc[-5:].mean()
+            bias_5 = (float(last['close']) / ma5 - 1) * 100 if ma5 > 0 else 0
+            if bias_5 > 15:
+                overbought_penalty += 10
+            score = 50 + ret_20 * 1.5 - vol * 2 - overbought_penalty
             factor_list.append((code, score))
             ind = str(last.get('industry', '未分类'))
             industry_groups.setdefault(ind, []).append((code, ret_20))
@@ -299,7 +316,25 @@ def compute_signals(df_klines, top_n=20):
             last = df_sub.iloc[-1]
             ret_20 = (last['close'] / df_sub['close'].iloc[-20] - 1) * 100
             vol = df_sub['pct_change'].std()
-            score = 50 + ret_20 * 1.5 - vol * 2
+            # 复盘用: 标注超买程度
+            overbought_penalty = 0
+            warnings = []
+            if ret_20 > 80:
+                overbought_penalty = 30
+                warnings.append('🔥20日>80%')
+            elif ret_20 > 50:
+                overbought_penalty = 15
+                warnings.append('⚠️20日>50%')
+            pct_today = float(last.get('pct_change', 0))
+            if pct_today > 7:
+                overbought_penalty += 10
+                warnings.append('⚡今日>7%')
+            ma5 = df_sub['close'].iloc[-5:].mean()
+            bias_5 = (float(last['close']) / ma5 - 1) * 100 if ma5 > 0 else 0
+            if bias_5 > 15:
+                overbought_penalty += 10
+                warnings.append('📈乖离>15%')
+            score = 50 + ret_20 * 1.5 - vol * 2 - overbought_penalty
             rows.append({
                 '代码': str(code),
                 '名称': str(last.get('name', code)),
@@ -309,6 +344,7 @@ def compute_signals(df_klines, top_n=20):
                 '20日%': round(ret_20, 2),
                 '波动率': round(vol, 2),
                 '综合分': round(score, 2),
+                '风险标签': ' / '.join(warnings) if warnings else '✅正常',
             })
         return pd.DataFrame(rows).sort_values('综合分', ascending=False) if rows else pd.DataFrame()
 
@@ -463,7 +499,7 @@ def _render_compact_picks(df):
     if df is None or df.empty:
         return
     # 选定列(不显示行业、波动率冗余)
-    wanted = ['代码', '名称', '现价', '今日%', '20日%', '综合分']
+    wanted = ['代码', '名称', '现价', '今日%', '20日%', '综合分', '风险标签']
     cols = [c for c in wanted if c in df.columns]
     if not cols:
         cols = list(df.columns)
