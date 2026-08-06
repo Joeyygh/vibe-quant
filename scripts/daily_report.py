@@ -426,14 +426,17 @@ def get_today_picks(date_str):
                                 'score': '4/4',
                             })
 
-                # ===== 7 条件叠加(简化版) =====
+                # ===== 7 条件叠加(简化版 · 2026-08-06 加动量保护) =====
                 # 要求:MA5/10/20 多头 + 今日涨 -3%~5% + 量比>1 + MACD 红柱
+                # 🛡️ 新增: 20日涨幅 < 80% (避免追高翻倍股)
                 if len(sub) >= 20:
                     ma5 = sub['close'].iloc[:5].mean()
                     ma10 = sub['close'].iloc[:10].mean()
                     ma20_v = sub['close'].iloc[:20].mean()
-                    if (ma5 > ma10 > ma20_v and close > ma5 
-                        and -3.0 <= pct_chg <= 5.0 and vol > sub['vol'].iloc[1] * 0.8):
+                    ret_20d_v = (close / sub['close'].iloc[19] - 1) * 100
+                    if (ma5 > ma10 > ma20_v and close > ma5
+                        and -3.0 <= pct_chg <= 5.0 and vol > sub['vol'].iloc[1] * 0.8
+                        and ret_20d_v < 80.0):  # 🛡️ 动量天花板
                         seven_cond.append({
                             'code': code, 'name': name_map.get(code, code),
                             'industry': industry_map.get(code, ''),
@@ -442,11 +445,13 @@ def get_today_picks(date_str):
                             'score': '7/7',
                         })
 
-                # ===== 5 过滤(严 · 修订版 2026-07-09) =====
+                # ===== 5 过滤(严 · 修订版 2026-07-09 / 2026-08-06 加强) =====
                 # 硬过滤:
                 #   - 排除 ST / *ST(代码名带 ST)
                 #   - 排除今日涨幅 ≥ 9%(防追涨)
                 #   - 排除近 5 日单日跌幅 ≥ 15%(防出货/巨震)
+                #   - 排除 20 日涨幅 ≥ 80% (2026-08-06 新增, 防止高位接盘翻倍股)
+                #   - 排除 5 日涨幅 ≥ 20% (原有, 防止短期过热)
                 # 形态过滤:
                 #   - 5 日涨幅 < 5% + 近 20 日新高 + 成交量放大 + 收盘 > MA20
                 if len(sub) >= 20:
@@ -465,6 +470,12 @@ def get_today_picks(date_str):
                     recent_5d = (close / sub['close'].iloc[4] - 1) * 100
                     if recent_5d > 20:
                         continue  # 跳过 5 日暴涨超 20%
+
+                    # 🛡️ 动量天花板 (2026-08-06 新增)
+                    # 20日涨幅 ≥ 80% 的票, 次日接盘风险高
+                    ret_20d = (close / sub['close'].iloc[19] - 1) * 100
+                    if ret_20d >= 80.0:
+                        continue  # 跳过 20 日翻倍股
 
                     high_20d = sub['close'].iloc[:20].max()
                     vol_avg_5d = sub['vol'].iloc[:5].mean()
