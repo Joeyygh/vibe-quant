@@ -1,7 +1,7 @@
 {
   "date": "2026-08-07",
-  "update_time": "15:35",
-  "version": "1.1-A+C",
+  "update_time": "15:42",
+  "version": "1.2-A+C-dynamic",
   "weights": {
     "theme": 30,
     "money": 25,
@@ -16,13 +16,13 @@
   "market_view": "震荡偏强, 关注磷化铟/黄金/半导体材料主线, 黄金股受美股金价突破 4270 美元利好催化",
   "summary": {
     "theme_picks": 5,
-    "quant_picks": 3,
-    "intersection": 0,
-    "total": 8
+    "quant_picks": 4,
+    "intersection": 2,
+    "total": 9
   },
   "picks": [
     {
-      "rank": 0,
+      "rank": 1,
       "code": "002428",
       "name": "云南锗业",
       "score": 96,
@@ -47,7 +47,7 @@
       "tag": "🔥 仅精选"
     },
     {
-      "rank": 1,
+      "rank": 2,
       "code": "603078",
       "name": "江化微",
       "score": 87,
@@ -68,10 +68,10 @@
       "stop": "跌破 5日线",
       "risk_level": "中",
       "source": "theme",
-      "tag": "🔥 仅精选"
+      "tag": "🎯 双引擎"
     },
     {
-      "rank": 2,
+      "rank": 3,
       "code": "601138",
       "name": "工业富联",
       "score": 85,
@@ -93,10 +93,10 @@
       "stop": "62 (-9%)",
       "risk_level": "中",
       "source": "theme",
-      "tag": "🔥 仅精选"
+      "tag": "🎯 双引擎"
     },
     {
-      "rank": 3,
+      "rank": 4,
       "code": "600531",
       "name": "豫光金铅",
       "score": 77,
@@ -120,7 +120,7 @@
       "tag": "🔥 仅精选"
     },
     {
-      "rank": 4,
+      "rank": 5,
       "code": "002971",
       "name": "和远气体",
       "score": 77,
@@ -146,7 +146,79 @@
   ],
   "quant_picks": [
     {
-      "rank": 6,
+      "rank": 0,
+      "code": "603078",
+      "name": "江化微",
+      "score": 87,
+      "score_breakdown": {
+        "theme": 30,
+        "money": 18,
+        "tech": 15,
+        "event": 24
+      },
+      "themes": [
+        "电子化学品",
+        "湿电子化学品",
+        "形态突破"
+      ],
+      "thesis": "5 企推 + 量化都选, 半导体材料, 交集",
+      "entry": "MA5 7%",
+      "target": "突破 2连板高点",
+      "stop": "跌破 5日线",
+      "risk_level": "中",
+      "source": "quant",
+      "tag": "🎯 双引擎"
+    },
+    {
+      "rank": 0,
+      "code": "601138",
+      "name": "工业富联",
+      "score": 85,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 16,
+        "tech": 15,
+        "event": 30
+      },
+      "themes": [
+        "AI算力",
+        "服务器",
+        "形态突破"
+      ],
+      "thesis": "AI 服务器龙头, 5 企推+量化都选, 交集",
+      "entry": "现价 68.27",
+      "target": "MA60",
+      "stop": "跌破 MA20",
+      "risk_level": "中",
+      "source": "quant",
+      "tag": "🎯 双引擎"
+    },
+    {
+      "rank": 0,
+      "code": "603399",
+      "name": "永杉锂业",
+      "score": 71,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 8,
+        "tech": 15,
+        "event": 24
+      },
+      "themes": [
+        "锂电",
+        "超跌",
+        "形态"
+      ],
+      "thesis": "锂电 + 政策催化 + 形态突破",
+      "entry": "现价",
+      "target": "MA60",
+      "stop": "跌破 MA20",
+      "risk_level": "中",
+      "source": "quant",
+      "tag": "📊 仅量化"
+    },
+    {
+      "rank": 0,
       "code": "002137",
       "name": "实益达",
       "score": 65,
@@ -161,70 +233,19 @@
         "半导体",
         "形态突破"
       ],
-      "thesis": "PCB + 半导体, 形态突破 MA20, 2 连板后温和整理, 量化选股 V2.2 形态评分高",
-      "entry": "现价附近, MA5 5.5% 支撑",
-      "target": "突破前高 +10%",
-      "stop": "跌破 MA20 -5%",
-      "risk_level": "中",
-      "source": "quant",
-      "tag": "📊 仅量化"
-    },
-    {
-      "rank": 6,
-      "code": "002558",
-      "name": "巨人网络",
-      "score": 61,
-      "score_breakdown": {
-        "theme": 24,
-        "money": 8,
-        "tech": 15,
-        "event": 14
-      },
-      "themes": [
-        "游戏",
-        "AI应用",
-        "形态突破"
-      ],
-      "thesis": "游戏 + AI 应用, 形态突破, 量化 V2.2 选股, 与 5 企推题材互补",
-      "entry": "MA5 支撑附近",
-      "target": "突破 30 元",
+      "thesis": "PCB + 半导体, 形态突破 MA20, 2连板后温和整理",
+      "entry": "现价附近",
+      "target": "突破前高",
       "stop": "跌破 MA20",
       "risk_level": "中",
       "source": "quant",
       "tag": "📊 仅量化"
-    },
-    {
-      "rank": 6,
-      "code": "300470",
-      "name": "中密控股",
-      "score": 55,
-      "score_breakdown": {
-        "theme": 24,
-        "money": 8,
-        "tech": 15,
-        "event": 8
-      },
-      "themes": [
-        "机械",
-        "工业",
-        "稳健"
-      ],
-      "thesis": "工业机械龙头, 量化 V2.2 选股, 低波动稳健标的",
-      "entry": "MA5 附近",
-      "target": "MA60 压力位",
-      "stop": "跌破 MA20",
-      "risk_level": "低",
-      "source": "quant",
-      "tag": "📊 仅量化"
     }
   ],
-  "intersection": [],
-  "filtered_out": [
-    {
-      "code": "688549",
-      "name": "中巨芯",
-      "reason": "今日涨停 + 20日已50% (高位接力, 风险大)"
-    }
+  "intersection": [
+    "603078",
+    "601138"
   ],
+  "filtered_out": [],
   "risk_warning": "本榜单基于 8/6 复盘数据 + 美股映射, 仅作参考, 不构成投资建议. 投资有风险, 入市需谨慎."
 }
