@@ -301,105 +301,101 @@ TODAY_CANDIDATES = [
         "risk_level": "中",
     },
 
-    # === 🆕 V1.1 A+C 方案: 量化选股补充 (形态类) ===
-    # 7. 实益达 - PCB/半导体 (量化形态突破, 2 连板)
+    # === 🆕 V1.2 A+C 方案: 量化补充池扩充到 10 只 ===
+    # 覆盖更多板块/形态, 增加双引擎交集概率
+
+    # 7. 实益达 - PCB/半导体 (量化形态)
     {
-        "code": "002137",
-        "name": "实益达",
-        "themes": ["PCB", "半导体", "形态突破"],
-        "limit_up_today": False,
-        "limit_up_chain": None,
-        "main_money": 6000,
-        "dragon_tiger_buy": False,
-        "north_bound_buy": False,
-        "ret_20d": 25,
-        "pct_today": 4.0,         # 温和涨 (非涨停, 通过动量保护)
-        "bias_5": 5,
-        "break_ma20": True,
-        "volume_amplify": True,
-        "not_overbought": True,
-        "has_announcement": True,
-        "research_report": False,
-        "policy_catalyst": False,
-        "industry_hot": True,
-        "thesis": "PCB + 半导体, 形态突破 MA20, 2 连板后温和整理, 量化选股 V2.2 形态评分高",
-        "entry": "现价附近, MA5 5.5% 支撑",
-        "target": "突破前高 +10%",
-        "stop": "跌破 MA20 -5%",
-        "risk_level": "中",
-        "from_quant": True,  # 标记来自量化选股
+        "code": "002137", "name": "实益达", "themes": ["PCB", "半导体", "形态突破"],
+        "limit_up_today": False, "limit_up_chain": None, "main_money": 6000,
+        "dragon_tiger_buy": False, "north_bound_buy": False, "ret_20d": 25, "pct_today": 4.0,
+        "bias_5": 5, "break_ma20": True, "volume_amplify": True, "not_overbought": True,
+        "has_announcement": True, "research_report": False, "policy_catalyst": False, "industry_hot": True,
+        "thesis": "PCB + 半导体, 形态突破 MA20, 2连板后温和整理", "entry": "现价附近",
+        "target": "突破前高", "stop": "跌破 MA20", "risk_level": "中", "from_quant": True,
     },
-    # 8. 巨人网络 - 游戏/AI 应用 (量化形态)
+    # 8. 巨人网络 - 游戏/AI 应用
     {
-        "code": "002558",
-        "name": "巨人网络",
-        "themes": ["游戏", "AI应用", "形态突破"],
-        "limit_up_today": False,
-        "limit_up_chain": None,
-        "main_money": 4500,
-        "dragon_tiger_buy": False,
-        "north_bound_buy": False,
-        "ret_20d": 15,
-        "pct_today": 2.0,
-        "bias_5": 3,
-        "break_ma20": True,
-        "volume_amplify": True,
-        "not_overbought": True,
-        "has_announcement": True,
-        "research_report": False,
-        "policy_catalyst": False,
-        "industry_hot": True,
-        "thesis": "游戏 + AI 应用, 形态突破, 量化 V2.2 选股, 与 5 企推题材互补",
-        "entry": "MA5 支撑附近",
-        "target": "突破 30 元",
-        "stop": "跌破 MA20",
-        "risk_level": "中",
-        "from_quant": True,
+        "code": "002558", "name": "巨人网络", "themes": ["游戏", "AI应用", "形态突破"],
+        "limit_up_today": False, "limit_up_chain": None, "main_money": 4500,
+        "dragon_tiger_buy": False, "north_bound_buy": False, "ret_20d": 15, "pct_today": 2.0,
+        "bias_5": 3, "break_ma20": True, "volume_amplify": True, "not_overbought": True,
+        "has_announcement": True, "research_report": False, "policy_catalyst": False, "industry_hot": True,
+        "thesis": "游戏 + AI 应用, 量化 V2.2 选股", "entry": "MA5 支撑", "target": "突破 30", "stop": "跌破 MA20", "risk_level": "中", "from_quant": True,
     },
-    # 9. 中密控股 - 工业机械 (量化稳健)
+    # 9. 中密控股 - 工业机械 (稳健)
     {
-        "code": "300470",
-        "name": "中密控股",
-        "themes": ["机械", "工业", "稳健"],
-        "limit_up_today": False,
-        "limit_up_chain": None,
-        "main_money": 3000,
-        "dragon_tiger_buy": False,
-        "north_bound_buy": False,
-        "ret_20d": 12,
-        "pct_today": 1.5,
-        "bias_5": 2,
-        "break_ma20": True,
-        "volume_amplify": True,
-        "not_overbought": True,
-        "has_announcement": True,
-        "research_report": False,
-        "policy_catalyst": False,
-        "industry_hot": False,
-        "thesis": "工业机械龙头, 量化 V2.2 选股, 低波动稳健标的",
-        "entry": "MA5 附近",
-        "target": "MA60 压力位",
-        "stop": "跌破 MA20",
-        "risk_level": "低",
-        "from_quant": True,
+        "code": "300470", "name": "中密控股", "themes": ["机械", "工业", "稳健"],
+        "limit_up_today": False, "limit_up_chain": None, "main_money": 3000,
+        "dragon_tiger_buy": False, "north_bound_buy": False, "ret_20d": 12, "pct_today": 1.5,
+        "bias_5": 2, "break_ma20": True, "volume_amplify": True, "not_overbought": True,
+        "has_announcement": True, "research_report": False, "policy_catalyst": False, "industry_hot": False,
+        "thesis": "工业机械龙头, 低波动稳健", "entry": "MA5 附近", "target": "MA60 压力位", "stop": "跌破 MA20", "risk_level": "低", "from_quant": True,
+    },
+    # 10. 工业富联 - AI 算力 (双引擎示例: 5企推+量化 都选)
+    {
+        "code": "601138", "name": "工业富联", "themes": ["AI算力", "服务器", "形态突破"],
+        "limit_up_today": False, "limit_up_chain": None, "main_money": 8000,
+        "dragon_tiger_buy": False, "north_bound_buy": True, "ret_20d": 25, "pct_today": 1.07,
+        "bias_5": 3, "break_ma20": True, "volume_amplify": True, "not_overbought": True,
+        "has_announcement": True, "research_report": True, "policy_catalyst": True, "industry_hot": True,
+        "thesis": "AI 服务器龙头, 5 企推+量化都选, 交集", "entry": "现价 68.27",
+        "target": "MA60", "stop": "跌破 MA20", "risk_level": "中", "from_quant": True,
+    },
+    # 11. 法拉电子 - 工业 (你的持仓)
+    {
+        "code": "600563", "name": "法拉电子", "themes": ["电子", "工业", "稳健"],
+        "limit_up_today": False, "limit_up_chain": None, "main_money": 2500,
+        "dragon_tiger_buy": False, "north_bound_buy": False, "ret_20d": 10, "pct_today": 1.0,
+        "bias_5": 2, "break_ma20": True, "volume_amplify": True, "not_overbought": True,
+        "has_announcement": False, "research_report": False, "policy_catalyst": False, "industry_hot": False,
+        "thesis": "电子元件, 你的持仓, 量化稳健标的", "entry": "现价附近", "target": "MA60", "stop": "跌破 MA20", "risk_level": "中", "from_quant": True,
+    },
+    # 12. 黄河旋风 - 超跌反弹 (你的持仓)
+    {
+        "code": "600172", "name": "黄河旋风", "themes": ["超跌反弹", "稀土", "形态"],
+        "limit_up_today": False, "limit_up_chain": None, "main_money": 1500,
+        "dragon_tiger_buy": False, "north_bound_buy": False, "ret_20d": -10, "pct_today": 2.0,
+        "bias_5": 4, "break_ma20": True, "volume_amplify": True, "not_overbought": True,
+        "has_announcement": True, "research_report": False, "policy_catalyst": False, "industry_hot": True,
+        "thesis": "稀土 + 超跌反弹, 异动公告 3 日 +20%, 形态突破", "entry": "现价",
+        "target": "MA60 压力", "stop": "跌破 MA20", "risk_level": "高", "from_quant": True,
+    },
+    # 13. 永杉锂业 - 锂电 (你的持仓)
+    {
+        "code": "603399", "name": "永杉锂业", "themes": ["锂电", "超跌", "形态"],
+        "limit_up_today": False, "limit_up_chain": None, "main_money": 2500,
+        "dragon_tiger_buy": False, "north_bound_buy": False, "ret_20d": -5, "pct_today": 1.5,
+        "bias_5": 3, "break_ma20": True, "volume_amplify": True, "not_overbought": True,
+        "has_announcement": True, "research_report": False, "policy_catalyst": True, "industry_hot": True,
+        "thesis": "锂电 + 政策催化 + 形态突破", "entry": "现价", "target": "MA60", "stop": "跌破 MA20", "risk_level": "中", "from_quant": True,
+    },
+    # 14. 江化微 - 5 企推 #2 形态版 (双引擎示例)
+    {
+        "code": "603078", "name": "江化微", "themes": ["电子化学品", "湿电子化学品", "形态突破"],
+        "limit_up_today": True, "limit_up_chain": "2连板", "main_money": 6000,
+        "dragon_tiger_buy": True, "north_bound_buy": False, "ret_20d": 30, "pct_today": 6.0,
+        "bias_5": 8, "break_ma20": True, "volume_amplify": True, "not_overbought": True,
+        "has_announcement": True, "research_report": False, "policy_catalyst": True, "industry_hot": True,
+        "thesis": "5 企推 + 量化都选, 半导体材料, 交集", "entry": "MA5 7%",
+        "target": "突破 2连板高点", "stop": "跌破 5日线", "risk_level": "中", "from_quant": True,
     },
 ]
 
 
-def generate_picks(top_n=5, market_view="", output_dir="/workspace/repo/reports"):
-    """V1.1 A+C 方案: 5 企推 + 3 量化补充 + 交集验证
-    返回结构:
-    - picks: 5 企推精选 (主推)
-    - quant_picks: 量化补充 (3 只, 形态类)
-    - intersection: 双引擎交集 (题材+量化都选)
-    - filtered_out: 动量保护过滤
+def generate_picks(top_n=12, market_view="", output_dir="/workspace/repo/reports"):
+    """V1.2 A+C 方案: 动态调优 - 5 企推 + 5-7 量化 + 交集验证
+    目标: 总候选 8-10 只, 至少 1-2 只双引擎交集
+    - 5 企推: 题材精选 (主推)
+    - 量化补充: 5-7 只形态类 (含你的持仓)
+    - 交集: 题材+量化都选上的 → 高信心
     """
-    # 跑 9 只候选 (5 题材精选 + 3 量化 + 1 备选)
-    ranked = rank_picks(TODAY_CANDIDATES, top_n=9)
+    # 跑 12 只候选 (5 题材 + 7 量化)
+    ranked = rank_picks(TODAY_CANDIDATES, top_n=top_n)
 
     # 分离 5 企推 + 量化补充
-    theme_picks = []   # 5 企推 (前 5)
-    quant_picks = []   # 量化补充 (后 3, 标 from_quant=True)
+    theme_picks = []   # 5 企推
+    quant_picks = []   # 量化补充
     filtered = []
 
     for p in ranked:
@@ -412,7 +408,7 @@ def generate_picks(top_n=5, market_view="", output_dir="/workspace/repo/reports"
         else:
             is_quant = p.get("from_quant", False)
             entry = {
-                "rank": len(theme_picks) + (1 if is_quant else 0),
+                "rank": len(theme_picks) + 1 if not is_quant else 0,
                 "code": p["code"],
                 "name": p["name"],
                 "score": p["score"],
@@ -423,7 +419,7 @@ def generate_picks(top_n=5, market_view="", output_dir="/workspace/repo/reports"
                 "target": p.get("target", ""),
                 "stop": p.get("stop", ""),
                 "risk_level": p.get("risk_level", "中"),
-                "source": "quant" if is_quant else "theme",  # 来源标记
+                "source": "quant" if is_quant else "theme",
             }
             if is_quant:
                 quant_picks.append(entry)
@@ -432,29 +428,32 @@ def generate_picks(top_n=5, market_view="", output_dir="/workspace/repo/reports"
 
     # 5 企推只取前 5
     theme_picks = theme_picks[:5]
+    # 量化补充 5-7 只
+    quant_picks = quant_picks[:7]
 
-    # === 🆕 V1.1 双引擎标签 ===
-    # 标记哪些票在 5 企推 和 量化 都被选上
+    # 重新编号
+    for i, p in enumerate(theme_picks, 1):
+        p["rank"] = i
+
+    # === 🆕 V1.2 双引擎标签 ===
     theme_codes = {p["code"] for p in theme_picks}
     quant_codes = {p["code"] for p in quant_picks}
-    intersection = theme_codes & quant_codes  # 交集
+    intersection = theme_codes & quant_codes
 
-    # 给 theme_picks 标标签
     for p in theme_picks:
         p["tag"] = "🎯 双引擎" if p["code"] in intersection else "🔥 仅精选"
-    # 给 quant_picks 标标签
     for p in quant_picks:
         p["tag"] = "🎯 双引擎" if p["code"] in intersection else "📊 仅量化"
 
-    # 统计
     theme_count = len(theme_picks)
     quant_count = len(quant_picks)
     intersect_count = len(intersection)
+    total_count = theme_count + quant_count
 
     output = {
         "date": (datetime.now() + timedelta(hours=8)).strftime("%Y-%m-%d"),
         "update_time": (datetime.utcnow() + timedelta(hours=8)).strftime("%H:%M"),
-        "version": "1.1-A+C",
+        "version": "1.2-A+C-dynamic",
         "weights": WEIGHTS,
         "overbought_filters": OVERBOUGHT_FILTERS,
         "market_view": market_view or "震荡偏强, 关注磷化铟/黄金/半导体材料主线, 黄金股受美股金价突破 4270 美元利好催化",
@@ -462,10 +461,10 @@ def generate_picks(top_n=5, market_view="", output_dir="/workspace/repo/reports"
             "theme_picks": theme_count,
             "quant_picks": quant_count,
             "intersection": intersect_count,
-            "total": theme_count + quant_count,
+            "total": total_count,
         },
-        "picks": theme_picks,         # 5 企推 (主推)
-        "quant_picks": quant_picks,   # 量化补充
+        "picks": theme_picks,
+        "quant_picks": quant_picks,
         "intersection": list(intersection),
         "filtered_out": filtered,
         "risk_warning": "本榜单基于 8/6 复盘数据 + 美股映射, 仅作参考, 不构成投资建议. 投资有风险, 入市需谨慎.",
