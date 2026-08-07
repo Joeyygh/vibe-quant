@@ -905,7 +905,7 @@ with st.sidebar:
     run = st.button("运行分析", type="primary", use_container_width=True)
     st.divider()
     st.header("📊 页面")
-    view_mode = st.radio("页面模式", ["量化选股", "🎯 今日精选", "每日复盘", "📝 我的笔记"], index=0, key="view_mode")
+    view_mode = st.radio("页面模式", ["量化选股", "🎯 今日精选", "🎯 双引擎", "每日复盘", "📝 我的笔记"], index=0, key="view_mode")
 
 st.markdown("""
 ## Vibe 量化 v2.1 (升级版)
@@ -999,6 +999,77 @@ if view_mode == "🎯 今日精选":
 
         # 风险提示
         st.caption(picks_data.get("risk_warning", "⚠️ 仅供参考, 不构成投资建议"))
+
+    st.stop()
+
+
+if view_mode == "🎯 双引擎":
+    st.header("🎯 双引擎选股 (V1.1 A+C)")
+    st.caption("📊 题材精选 (5 企推) + 量化形态 (V2.2) 双重验证 | 🎯 交集 = 高信心")
+
+    picks_file = 'reports/today_picks.json'
+    if not os.path.exists(picks_file):
+        st.error(f"❌ {picks_file} 不存在")
+    else:
+        with open(picks_file, 'r', encoding='utf-8') as f:
+            picks_data = json.load(f)
+
+        # 顶部信息
+        col1, col2, col3, col4 = st.columns(4)
+        summary = picks_data.get("summary", {})
+        col1.metric("5 企推", summary.get("theme_picks", 0))
+        col2.metric("量化补充", summary.get("quant_picks", 0))
+        col3.metric("🎯 双引擎", summary.get("intersection", 0))
+        col4.metric("总候选", summary.get("total", 0))
+
+        st.divider()
+
+        # 交集优先
+        intersection = picks_data.get("intersection", [])
+        if intersection:
+            st.success(f"🎯 **双引擎交集** ({len(intersection)} 只): {', '.join(intersection)}")
+            st.markdown("**🎯 双引擎 = 题材 + 形态 双重确认, 高信心, 可加仓**")
+        else:
+            st.info("ℹ️ 今日无双引擎交集 (题材股偏强, 形态股偏稳, 天然交集少)")
+
+        st.divider()
+
+        # 5 企推精选
+        st.subheader("🔥 5 企推精选 (主推)")
+        for p in picks_data.get("picks", []):
+            risk_color = {"低": "🟢", "中低": "🟢", "中": "🟡", "中高": "🟠", "高": "🔴"}.get(p.get("risk_level", "中"), "🟡")
+            with st.container():
+                tag = p.get("tag", "🔥 仅精选")
+                st.markdown(f"### {tag} #{p['rank']} {p['code']} {p['name']}  (得分: {p['score']})")
+                st.markdown(f"**🎯 主题**: {' | '.join(p.get('themes', []))}")
+                st.markdown(f"**💡 逻辑**: {p.get('thesis', '—')}")
+                cols = st.columns(4)
+                cols[0].markdown(f"**入场**\n\n{p.get('entry', '—')}")
+                cols[1].markdown(f"**目标**\n\n{p.get('target', '—')}")
+                cols[2].markdown(f"**止损**\n\n{p.get('stop', '—')}")
+                cols[3].markdown(f"**风险**\n\n{risk_color} {p.get('risk_level', '中')}")
+                st.divider()
+
+        # 量化补充
+        quant_picks = picks_data.get("quant_picks", [])
+        if quant_picks:
+            st.subheader("📊 量化补充 (V2.2 形态)")
+            st.caption("形态突破但题材热度不够, 稳健标的, 观察")
+            for p in quant_picks:
+                risk_color = {"低": "🟢", "中低": "🟢", "中": "🟡", "中高": "🟠", "高": "🔴"}.get(p.get("risk_level", "中"), "🟡")
+                with st.container():
+                    tag = p.get("tag", "📊 仅量化")
+                    st.markdown(f"### {tag} {p['code']} {p['name']}  (得分: {p['score']})")
+                    st.markdown(f"**🎯 主题**: {' | '.join(p.get('themes', []))}")
+                    st.markdown(f"**💡 逻辑**: {p.get('thesis', '—')}")
+                    cols = st.columns(4)
+                    cols[0].markdown(f"**入场**\n\n{p.get('entry', '—')}")
+                    cols[1].markdown(f"**目标**\n\n{p.get('target', '—')}")
+                    cols[2].markdown(f"**止损**\n\n{p.get('stop', '—')}")
+                    cols[3].markdown(f"**风险**\n\n{risk_color} {p.get('risk_level', '中')}")
+                    st.divider()
+
+        st.caption(picks_data.get("risk_warning", "⚠️ 仅供参考"))
 
     st.stop()
 
