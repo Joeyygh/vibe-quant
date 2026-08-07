@@ -1,7 +1,7 @@
 {
-  "version": "2.4",
-  "update_time": "2026-08-06 20:55",
-  "note": "字段修正: cost → cost_price (兼容 app.py) | 43只持仓 + 5条清仓",
+  "version": "2.5",
+  "update_time": "2026-08-07 15:15",
+  "note": "8/7 调仓: 卖5只(3100股) + 买7只(2400股)",
   "holdings": [
     {
       "code": "600563",
@@ -46,17 +46,6 @@
       "profit_pct": -3.444,
       "group": "shallow_loss",
       "cost_price": 30.49
-    },
-    {
-      "code": "002521",
-      "name": "齐峰新材",
-      "shares": 1200,
-      "current": 6.9,
-      "market_value": 8280.0,
-      "profit": -512.0,
-      "profit_pct": -5.828,
-      "group": "shallow_loss",
-      "cost_price": 7.327
     },
     {
       "code": "000756",
@@ -136,17 +125,6 @@
       "cost_price": 27.073
     },
     {
-      "code": "000967",
-      "name": "盈峰环境",
-      "shares": 1000,
-      "current": 9.37,
-      "market_value": 9370.0,
-      "profit": -2306.0,
-      "profit_pct": -19.75,
-      "group": "deep_loss",
-      "cost_price": 11.676
-    },
-    {
       "code": "600667",
       "name": "太极实业",
       "shares": 300,
@@ -178,17 +156,6 @@
       "profit_pct": -31.008,
       "group": "deep_loss",
       "cost_price": 23.713
-    },
-    {
-      "code": "300304",
-      "name": "云意电气",
-      "shares": 400,
-      "current": 11.54,
-      "market_value": 4616.0,
-      "profit": -3064.97,
-      "profit_pct": -39.902,
-      "group": "deep_loss",
-      "cost_price": 19.202
     },
     {
       "code": "002463",
@@ -244,28 +211,6 @@
       "profit_pct": -18.315,
       "group": "deep_loss",
       "cost_price": 11.226
-    },
-    {
-      "code": "603063",
-      "name": "禾望电气",
-      "shares": 200,
-      "current": 32.07,
-      "market_value": 6414.0,
-      "profit": -4209.1,
-      "profit_pct": -39.623,
-      "group": "deep_loss",
-      "cost_price": 53.116
-    },
-    {
-      "code": "603011",
-      "name": "合锻智能",
-      "shares": 300,
-      "current": 20.62,
-      "market_value": 6186.0,
-      "profit": -4295.1,
-      "profit_pct": -40.979,
-      "group": "deep_loss",
-      "cost_price": 34.937
     },
     {
       "code": "600172",
@@ -477,6 +422,97 @@
       "profit_pct": -54.964,
       "group": "deep_loss",
       "cost_price": 83.911
+    },
+    {
+      "code": "300786",
+      "name": "国林科技",
+      "shares": 300,
+      "cost_price": 15.8,
+      "current": 15.8,
+      "market_value": 4740.0,
+      "profit": 0.0,
+      "profit_pct": 0.0,
+      "group": "shallow_loss",
+      "buy_date": "2026-08-07",
+      "note": "今日新买入 300股 @ 15.8 (5 企推 Top 2)"
+    },
+    {
+      "code": "300801",
+      "name": "奕益达",
+      "shares": 900,
+      "cost_price": 7.967,
+      "current": 7.967,
+      "market_value": 7170.3,
+      "profit": 0.0,
+      "profit_pct": 0.0,
+      "group": "shallow_loss",
+      "buy_date": "2026-08-07",
+      "note": "今日新买入 900股 @ 7.967 (5 企推 Top 2)"
+    },
+    {
+      "code": "002134",
+      "name": "天津普林",
+      "shares": 300,
+      "cost_price": 22.38,
+      "current": 22.38,
+      "market_value": 6714.0,
+      "profit": 0.0,
+      "profit_pct": 0.0,
+      "group": "shallow_loss",
+      "buy_date": "2026-08-07",
+      "note": "今日新买入 300股 @ 22.38 (5 企推 Top 2)"
+    },
+    {
+      "code": "300302",
+      "name": "同有科技",
+      "shares": 100,
+      "cost_price": 30.9,
+      "current": 30.9,
+      "market_value": 3090.0,
+      "profit": 0.0,
+      "profit_pct": 0.0,
+      "group": "shallow_loss",
+      "buy_date": "2026-08-07",
+      "note": "今日新买入 100股 @ 30.9 (5 企推 Top 2)"
+    },
+    {
+      "code": "300131",
+      "name": "英唐智控",
+      "shares": 300,
+      "cost_price": 15.13,
+      "current": 15.13,
+      "market_value": 4539.0,
+      "profit": 0.0,
+      "profit_pct": 0.0,
+      "group": "shallow_loss",
+      "buy_date": "2026-08-07",
+      "note": "今日新买入 300股 @ 15.13 (5 企推 Top 2)"
+    },
+    {
+      "code": "688182",
+      "name": "灿勤科技",
+      "shares": 300,
+      "cost_price": 26.89,
+      "current": 26.89,
+      "market_value": 8067.0,
+      "profit": 0.0,
+      "profit_pct": 0.0,
+      "group": "shallow_loss",
+      "buy_date": "2026-08-07",
+      "note": "今日新买入 300股 @ 26.89 (5 企推 Top 2)"
+    },
+    {
+      "code": "603078",
+      "name": "江化微",
+      "shares": 200,
+      "cost_price": 35.41,
+      "current": 35.41,
+      "market_value": 7082.0,
+      "profit": 0.0,
+      "profit_pct": 0.0,
+      "group": "shallow_loss",
+      "buy_date": "2026-08-07",
+      "note": "今日新买入 200股 @ 35.41 (5 企推 Top 2)"
     }
   ],
   "closed_holdings": [
@@ -538,6 +574,71 @@
       "note": "今日买入, 当日清仓 600→0",
       "buy_date": "2026-08-06",
       "cost_price": 10.61
+    },
+    {
+      "code": "002521",
+      "name": "齐峰新材",
+      "shares": 0,
+      "current": 6.84,
+      "market_value": 8280.0,
+      "profit": -584.4,
+      "profit_pct": -6.65,
+      "group": "shallow_loss",
+      "cost_price": 7.327,
+      "close_date": "2026-08-07",
+      "note": "今日全部清仓 (成交价 6.84)"
+    },
+    {
+      "code": "000967",
+      "name": "盈峰环境",
+      "shares": 0,
+      "current": 9.24,
+      "market_value": 9370.0,
+      "profit": -2436.0,
+      "profit_pct": -20.86,
+      "group": "deep_loss",
+      "cost_price": 11.676,
+      "close_date": "2026-08-07",
+      "note": "今日全部清仓 (成交价 9.24)"
+    },
+    {
+      "code": "300304",
+      "name": "云意电气",
+      "shares": 0,
+      "current": 11.46,
+      "market_value": 4616.0,
+      "profit": -3096.8,
+      "profit_pct": -40.32,
+      "group": "deep_loss",
+      "cost_price": 19.202,
+      "close_date": "2026-08-07",
+      "note": "今日全部清仓 (成交价 11.46)"
+    },
+    {
+      "code": "603063",
+      "name": "禾望电气",
+      "shares": 0,
+      "current": 32.0,
+      "market_value": 6414.0,
+      "profit": -4223.2,
+      "profit_pct": -39.75,
+      "group": "deep_loss",
+      "cost_price": 53.116,
+      "close_date": "2026-08-07",
+      "note": "今日全部清仓 (成交价 32.0)"
+    },
+    {
+      "code": "603011",
+      "name": "合锻智能",
+      "shares": 0,
+      "current": 20.34,
+      "market_value": 6186.0,
+      "profit": -4379.1,
+      "profit_pct": -41.78,
+      "group": "deep_loss",
+      "cost_price": 34.937,
+      "close_date": "2026-08-07",
+      "note": "今日全部清仓 (成交价 20.34)"
     }
   ]
 }
