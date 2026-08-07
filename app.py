@@ -280,6 +280,55 @@ def compute_signals(df_klines, top_n=20):
     trend_set = set()
     factor_list = []
     industry_groups = {}
+
+    # === 🆕 V2.2 (2026-08-07): 题材热度 + 事件催化 评分 ===
+    # 板块联动加成: 当股票在当日热点板块 → +10 分
+    # 资金强度: 成交额放量 + 主力净流入 → +8 分
+    # 事件催化: 涨停/异动 → +5 分
+    # 优先抓 Tushare 真实数据, 缺失则用 K 线推算
+    try:
+        import tushare as ts
+        pro = ts.pro_api(os.environ.get('TUSHARE_TOKEN') or st.secrets.get('TUSHARE_TOKEN', ''))
+        # 当日涨停 (>=9.5%)
+        today_limit_up = set()
+        # 当日大涨 (>=5%)
+        today_big_up = set()
+        # 主力净流入 TOP
+        main_money_top = set()
+        try:
+            today_str = datetime.now().strftime('%Y%m%d')
+            df_today = pro.daily(trade_date=today_str, fields='ts_code,close,pct_chg,amount')
+            if df_today is not None and not df_today.empty:
+                for _, r in df_today.iterrows():
+                    code6 = r['ts_code'].split('.')[0]
+                    if float(r.get('pct_chg', 0)) >= 9.5:
+                        today_limit_up.add(code6)
+                    elif float(r.get('pct_chg', 0)) >= 5.0:
+                        today_big_up.add(code6)
+        except Exception:
+            pass
+        # 主力净流入 (用龙虎榜或资金流)
+        try:
+            df_money = pro.moneyflow(trade_date=today_str, fields='ts_code,net_mf_amount')
+            if df_money is not None and not df_money.empty:
+                top_money = df_money.nlargest(100, 'net_mf_amount')
+                main_money_top = set(r['ts_code'].split('.')[0] for _, r in top_money.iterrows())
+        except Exception:
+            pass
+    except Exception:
+        today_limit_up = set()
+        today_big_up = set()
+        main_money_top = set()
+
+    # 当日热点板块 (用 industry 平均涨幅推算)
+    hot_industries = set()
+    try:
+        ind_perf = df_klines.groupby('industry')['pct_change'].mean().sort_values(ascending=False)
+        # 取涨幅 TOP 5 板块
+        hot_industries = set(ind_perf.head(5).index.tolist())
+    except Exception:
+        pass
+
     for code in df_klines['code'].unique():
         try:
             df = df_klines[df_klines['code'] == code].sort_values('date')
@@ -293,10 +342,6 @@ def compute_signals(df_klines, top_n=20):
             ret_20 = (df['close'].iloc[-1] / df['close'].iloc[-20] - 1) * 100
             vol = df['pct_change'].std()
             # === 🛡️ 动量天花板保护 (2026-08-06 新增, 避免追高) ===
-            # 1) 20日涨幅 > 80%: 视为高位, 大幅减分 (避免接盘翻倍股)
-            # 2) 20日涨幅 > 50%: 适度减分 (温和提示)
-            # 3) 今日涨幅 > 7%: 当日追高减分
-            # 4) 乖离率 (现价/MA5-1) > 15%: 超买减分
             overbought_penalty = 0
             if ret_20 > 80:
                 overbought_penalty = 30
@@ -309,9 +354,31 @@ def compute_signals(df_klines, top_n=20):
             bias_5 = (float(last['close']) / ma5 - 1) * 100 if ma5 > 0 else 0
             if bias_5 > 15:
                 overbought_penalty += 10
-            score = 50 + ret_20 * 1.5 - vol * 2 - overbought_penalty
-            factor_list.append((code, score))
+            # === 🆕 V2.2: 题材热度 + 资金强度 + 事件催化 (2026-08-07) ===
+            theme_bonus = 0
+            money_bonus = 0
+            event_bonus = 0
+            # 1) 题材热度: 板块当日涨幅 TOP 5 → +10
             ind = str(last.get('industry', '未分类'))
+            if ind in hot_industries and ind != 'nan' and ind != '':
+                theme_bonus += 10
+            # 2) 资金强度: 主力净流入 TOP 100 → +8, 当日成交额 > 5 亿 → +5
+            code_str = str(code).zfill(6)
+            if code_str in main_money_top:
+                money_bonus += 8
+            amount = float(last.get('amount', 0))
+            if amount > 5e8:  # 5 亿
+                money_bonus += 5
+            # 3) 事件催化: 当日涨停 +15, 大涨 +5
+            if code_str in today_limit_up:
+                event_bonus += 15
+            elif code_str in today_big_up:
+                event_bonus += 5
+            # 原评分 (动量)
+            base_score = 50 + ret_20 * 1.5 - vol * 2 - overbought_penalty
+            # V2.2 加成 (题材30% + 资金25% + 事件30% = 85% 总权重加成, 稀释动量 60%)
+            new_score = base_score * 0.6 + (theme_bonus * 3 + money_bonus * 2 + event_bonus * 3) * 0.4
+            factor_list.append((code, new_score))
             industry_groups.setdefault(ind, []).append((code, ret_20))
         except Exception:
             continue
