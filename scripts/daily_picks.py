@@ -300,35 +300,119 @@ TODAY_CANDIDATES = [
         "stop": "跌破 5日线",
         "risk_level": "中",
     },
+
+    # === 🆕 V1.1 A+C 方案: 量化选股补充 (形态类) ===
+    # 7. 实益达 - PCB/半导体 (量化形态突破, 2 连板)
+    {
+        "code": "002137",
+        "name": "实益达",
+        "themes": ["PCB", "半导体", "形态突破"],
+        "limit_up_today": False,
+        "limit_up_chain": None,
+        "main_money": 6000,
+        "dragon_tiger_buy": False,
+        "north_bound_buy": False,
+        "ret_20d": 25,
+        "pct_today": 4.0,         # 温和涨 (非涨停, 通过动量保护)
+        "bias_5": 5,
+        "break_ma20": True,
+        "volume_amplify": True,
+        "not_overbought": True,
+        "has_announcement": True,
+        "research_report": False,
+        "policy_catalyst": False,
+        "industry_hot": True,
+        "thesis": "PCB + 半导体, 形态突破 MA20, 2 连板后温和整理, 量化选股 V2.2 形态评分高",
+        "entry": "现价附近, MA5 5.5% 支撑",
+        "target": "突破前高 +10%",
+        "stop": "跌破 MA20 -5%",
+        "risk_level": "中",
+        "from_quant": True,  # 标记来自量化选股
+    },
+    # 8. 巨人网络 - 游戏/AI 应用 (量化形态)
+    {
+        "code": "002558",
+        "name": "巨人网络",
+        "themes": ["游戏", "AI应用", "形态突破"],
+        "limit_up_today": False,
+        "limit_up_chain": None,
+        "main_money": 4500,
+        "dragon_tiger_buy": False,
+        "north_bound_buy": False,
+        "ret_20d": 15,
+        "pct_today": 2.0,
+        "bias_5": 3,
+        "break_ma20": True,
+        "volume_amplify": True,
+        "not_overbought": True,
+        "has_announcement": True,
+        "research_report": False,
+        "policy_catalyst": False,
+        "industry_hot": True,
+        "thesis": "游戏 + AI 应用, 形态突破, 量化 V2.2 选股, 与 5 企推题材互补",
+        "entry": "MA5 支撑附近",
+        "target": "突破 30 元",
+        "stop": "跌破 MA20",
+        "risk_level": "中",
+        "from_quant": True,
+    },
+    # 9. 中密控股 - 工业机械 (量化稳健)
+    {
+        "code": "300470",
+        "name": "中密控股",
+        "themes": ["机械", "工业", "稳健"],
+        "limit_up_today": False,
+        "limit_up_chain": None,
+        "main_money": 3000,
+        "dragon_tiger_buy": False,
+        "north_bound_buy": False,
+        "ret_20d": 12,
+        "pct_today": 1.5,
+        "bias_5": 2,
+        "break_ma20": True,
+        "volume_amplify": True,
+        "not_overbought": True,
+        "has_announcement": True,
+        "research_report": False,
+        "policy_catalyst": False,
+        "industry_hot": False,
+        "thesis": "工业机械龙头, 量化 V2.2 选股, 低波动稳健标的",
+        "entry": "MA5 附近",
+        "target": "MA60 压力位",
+        "stop": "跌破 MA20",
+        "risk_level": "低",
+        "from_quant": True,
+    },
 ]
 
 
 def generate_picks(top_n=5, market_view="", output_dir="/workspace/repo/reports"):
-    """生成今日精选并写入 json"""
-    ranked = rank_picks(TODAY_CANDIDATES, top_n=top_n)
+    """V1.1 A+C 方案: 5 企推 + 3 量化补充 + 交集验证
+    返回结构:
+    - picks: 5 企推精选 (主推)
+    - quant_picks: 量化补充 (3 只, 形态类)
+    - intersection: 双引擎交集 (题材+量化都选)
+    - filtered_out: 动量保护过滤
+    """
+    # 跑 9 只候选 (5 题材精选 + 3 量化 + 1 备选)
+    ranked = rank_picks(TODAY_CANDIDATES, top_n=9)
 
-    output = {
-        "date": (datetime.now() + timedelta(hours=8)).strftime("%Y-%m-%d"),  # 北京时间
-        "update_time": (datetime.utcnow() + timedelta(hours=8)).strftime("%H:%M"),
-        "version": "1.0-test",
-        "weights": WEIGHTS,
-        "overbought_filters": OVERBOUGHT_FILTERS,
-        "market_view": market_view or "震荡偏强, 关注磷化铟/黄金/半导体材料主线, 黄金股受美股金价突破 4270 美元利好催化",
-        "picks": [],
-        "filtered_out": [],
-        "risk_warning": "本榜单基于 8/6 复盘数据 + 美股映射, 仅作参考, 不构成投资建议. 投资有风险, 入市需谨慎.",
-    }
+    # 分离 5 企推 + 量化补充
+    theme_picks = []   # 5 企推 (前 5)
+    quant_picks = []   # 量化补充 (后 3, 标 from_quant=True)
+    filtered = []
 
     for p in ranked:
         if p["_filtered"]:
-            output["filtered_out"].append({
+            filtered.append({
                 "code": p["code"],
                 "name": p["name"],
                 "reason": p["_filter_reason"],
             })
         else:
-            output["picks"].append({
-                "rank": len(output["picks"]) + 1,
+            is_quant = p.get("from_quant", False)
+            entry = {
+                "rank": len(theme_picks) + (1 if is_quant else 0),
                 "code": p["code"],
                 "name": p["name"],
                 "score": p["score"],
@@ -339,13 +423,59 @@ def generate_picks(top_n=5, market_view="", output_dir="/workspace/repo/reports"
                 "target": p.get("target", ""),
                 "stop": p.get("stop", ""),
                 "risk_level": p.get("risk_level", "中"),
-            })
+                "source": "quant" if is_quant else "theme",  # 来源标记
+            }
+            if is_quant:
+                quant_picks.append(entry)
+            else:
+                theme_picks.append(entry)
+
+    # 5 企推只取前 5
+    theme_picks = theme_picks[:5]
+
+    # === 🆕 V1.1 双引擎标签 ===
+    # 标记哪些票在 5 企推 和 量化 都被选上
+    theme_codes = {p["code"] for p in theme_picks}
+    quant_codes = {p["code"] for p in quant_picks}
+    intersection = theme_codes & quant_codes  # 交集
+
+    # 给 theme_picks 标标签
+    for p in theme_picks:
+        p["tag"] = "🎯 双引擎" if p["code"] in intersection else "🔥 仅精选"
+    # 给 quant_picks 标标签
+    for p in quant_picks:
+        p["tag"] = "🎯 双引擎" if p["code"] in intersection else "📊 仅量化"
+
+    # 统计
+    theme_count = len(theme_picks)
+    quant_count = len(quant_picks)
+    intersect_count = len(intersection)
+
+    output = {
+        "date": (datetime.now() + timedelta(hours=8)).strftime("%Y-%m-%d"),
+        "update_time": (datetime.utcnow() + timedelta(hours=8)).strftime("%H:%M"),
+        "version": "1.1-A+C",
+        "weights": WEIGHTS,
+        "overbought_filters": OVERBOUGHT_FILTERS,
+        "market_view": market_view or "震荡偏强, 关注磷化铟/黄金/半导体材料主线, 黄金股受美股金价突破 4270 美元利好催化",
+        "summary": {
+            "theme_picks": theme_count,
+            "quant_picks": quant_count,
+            "intersection": intersect_count,
+            "total": theme_count + quant_count,
+        },
+        "picks": theme_picks,         # 5 企推 (主推)
+        "quant_picks": quant_picks,   # 量化补充
+        "intersection": list(intersection),
+        "filtered_out": filtered,
+        "risk_warning": "本榜单基于 8/6 复盘数据 + 美股映射, 仅作参考, 不构成投资建议. 投资有风险, 入市需谨慎.",
+    }
 
     return output
 
 
 def main():
-    top_n = 5
+    top_n = 9  # V1.1 跑 9 只 (5 题材 + 3 量化 + 1 备选)
     if "--top" in sys.argv:
         idx = sys.argv.index("--top")
         top_n = int(sys.argv[idx + 1])
@@ -363,17 +493,30 @@ def main():
 
     # 控制台打印
     print(f"\n{'='*60}")
-    print(f"🎯 Vibe 每日精选 ({result['date']} {result['update_time']})")
+    print(f"🎯 Vibe 每日精选 V1.1 A+C ({result['date']} {result['update_time']})")
     print(f"市场观点: {result['market_view']}")
     print(f"{'='*60}\n")
 
+    print(f"📊 总览: 5 企推 {result['summary']['theme_picks']} 只 + 量化 {result['summary']['quant_picks']} 只 + 交集 {result['summary']['intersection']} 只")
+    print()
+
+    print("🔥 5 企推精选 (主推):")
     for p in result["picks"]:
-        print(f"#{p['rank']} {p['code']} {p['name']} (得分: {p['score']})")
-        print(f"   主题: {' | '.join(p['themes'])}")
-        print(f"   逻辑: {p['thesis']}")
-        print(f"   入场: {p['entry']}  目标: {p['target']}  止损: {p['stop']}")
-        print(f"   风险: {p['risk_level']}")
-        print(f"   评分: 题材{p['score_breakdown']['theme']} + 资金{p['score_breakdown']['money']} + 技术{p['score_breakdown']['tech']} + 事件{p['score_breakdown']['event']}")
+        print(f"  {p['tag']} #{p['rank']} {p['code']} {p['name']} (得分: {p['score']})")
+        print(f"     主题: {' | '.join(p['themes'])}")
+        print(f"     逻辑: {p['thesis'][:80]}...")
+        print()
+
+    if result["quant_picks"]:
+        print("📊 量化补充 (形态类):")
+        for p in result["quant_picks"]:
+            print(f"  {p['tag']} {p['code']} {p['name']} (得分: {p['score']})")
+            print(f"     主题: {' | '.join(p['themes'])}")
+            print(f"     逻辑: {p['thesis'][:80]}...")
+            print()
+
+    if result["intersection"]:
+        print(f"🎯 双引擎交集 ({len(result['intersection'])} 只): {', '.join(result['intersection'])}")
         print()
 
     if result["filtered_out"]:
