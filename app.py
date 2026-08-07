@@ -838,7 +838,7 @@ with st.sidebar:
     run = st.button("运行分析", type="primary", use_container_width=True)
     st.divider()
     st.header("📊 页面")
-    view_mode = st.radio("页面模式", ["量化选股", "每日复盘", "📝 我的笔记"], index=0, key="view_mode")
+    view_mode = st.radio("页面模式", ["量化选股", "🎯 今日精选", "每日复盘", "📝 我的笔记"], index=0, key="view_mode")
 
 st.markdown("""
 ## Vibe 量化 v2.1 (升级版)
@@ -847,9 +847,93 @@ st.markdown("""
 - 7 条件叠加 (宽松/严格)
 - 公式 2 (中线 5-10 天 胜率 100%) 含独立/叠加双模式
 - 🆕 用户公式 (动量买点,独立扫描) - 早盘短线 1-3 天
+- 🆕 **每日 5 企推** (题材+资金+技术+事件 4 维评分, 动量天花板保护)
 - 2000 智能采样 (主板+创业板+科创板)
 - 北京时间显示
 """)
+
+if view_mode == "🎯 今日精选":
+    st.header("🎯 每日 5 企推 (Vibe Daily Picks)")
+    st.caption("📊 综合: 题材热度30% + 资金强度25% + 技术形态15% + 事件催化30% | 🛡️ 动量天花板保护")
+
+    picks_file = 'reports/today_picks.json'
+    if not os.path.exists(picks_file):
+        st.error(f"❌ {picks_file} 不存在, 请先运行 `python scripts/daily_picks.py`")
+        st.info("💡 数据源: 8/6 复盘数据已生成今日精选 (commit 8a1cefdd20)")
+    else:
+        try:
+            with open(picks_file, 'r', encoding='utf-8') as f:
+                picks_data = json.load(f)
+        except Exception as e:
+            st.error(f"读取 {picks_file} 失败: {e}")
+            st.stop()
+
+        # 顶部信息
+        col1, col2, col3 = st.columns([1, 1, 2])
+        with col1:
+            st.metric("📅 日期", picks_data.get("date", "—"))
+        with col2:
+            st.metric("🕘 更新", picks_data.get("update_time", "—"))
+        with col3:
+            st.metric("🏷️ 版本", picks_data.get("version", "—"))
+
+        # 大盘观点
+        market_view = picks_data.get("market_view", "")
+        if market_view:
+            st.info(f"🌍 **大盘观点**: {market_view}")
+
+        st.divider()
+
+        # 5 只精选
+        picks = picks_data.get("picks", [])
+        if not picks:
+            st.warning("今日无精选")
+        else:
+            for p in picks:
+                rank_emoji = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"][p.get("rank", 1) - 1]
+                risk_color = {"低": "🟢", "中低": "🟢", "中": "🟡", "中高": "🟠", "高": "🔴"}.get(p.get("risk_level", "中"), "🟡")
+
+                with st.container():
+                    st.markdown(f"""
+### {rank_emoji} #{p['rank']} {p['code']} {p['name']}  (得分: **{p['score']}**)
+""")
+
+                    # 主题标签
+                    themes_str = " | ".join([f"`{t}`" for t in p.get("themes", [])])
+                    st.markdown(f"**🎯 主题**: {themes_str}")
+
+                    # 评分明细
+                    sb = p.get("score_breakdown", {})
+                    if sb:
+                        cols = st.columns(4)
+                        cols[0].metric("题材", sb.get("theme", 0))
+                        cols[1].metric("资金", sb.get("money", 0))
+                        cols[2].metric("技术", sb.get("tech", 0))
+                        cols[3].metric("事件", sb.get("event", 0))
+
+                    # 核心逻辑
+                    st.markdown(f"**💡 核心逻辑**: {p.get('thesis', '—')}")
+
+                    # 入场/目标/止损
+                    col_e, col_t, col_s, col_r = st.columns(4)
+                    col_e.markdown(f"**🎯 入场**\n\n{p.get('entry', '—')}")
+                    col_t.markdown(f"**🎁 目标**\n\n{p.get('target', '—')}")
+                    col_s.markdown(f"**🛑 止损**\n\n{p.get('stop', '—')}")
+                    col_r.markdown(f"**⚠️ 风险**\n\n{risk_color} {p.get('risk_level', '中')}")
+
+                    st.divider()
+
+        # 过滤掉
+        filtered = picks_data.get("filtered_out", [])
+        if filtered:
+            with st.expander(f"⚠️ 今日过滤掉 ({len(filtered)} 只 - 动量天花板保护)", expanded=False):
+                for f in filtered:
+                    st.markdown(f"- **{f['code']} {f['name']}**: {f['reason']}")
+
+        # 风险提示
+        st.caption(picks_data.get("risk_warning", "⚠️ 仅供参考, 不构成投资建议"))
+
+    st.stop()
 
 if view_mode == "每日复盘":
     st.header("📊 每日复盘报告")
