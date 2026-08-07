@@ -1,0 +1,133 @@
+{
+  "date": "2026-08-07",
+  "update_time": "09:12",
+  "version": "1.0-test",
+  "weights": {
+    "theme": 30,
+    "money": 25,
+    "tech": 15,
+    "event": 30
+  },
+  "overbought_filters": {
+    "ret_20d_max": 80.0,
+    "pct_today_max": 7.0,
+    "bias_5_max": 15.0
+  },
+  "market_view": "震荡偏强, 关注磷化铟/黄金/半导体材料主线, 黄金股受美股金价突破 4270 美元利好催化",
+  "picks": [
+    {
+      "rank": 1,
+      "code": "002428",
+      "name": "云南锗业",
+      "score": 96,
+      "score_breakdown": {
+        "theme": 30,
+        "money": 21,
+        "tech": 15,
+        "event": 30
+      },
+      "themes": [
+        "磷化铟",
+        "AI算力",
+        "光通信",
+        "半导体材料"
+      ],
+      "thesis": "磷化铟国内最大衬底供应商, 3连板, 600亿市值, AI算力硬通货, 英伟达预测需求激增20倍",
+      "entry": "已 3连板, 激进者轻仓追入 (不超过 5% 仓位), 稳健者等回调 5日线",
+      "target": "突破 4 板 (+10%)",
+      "stop": "跌破 5日线 (-5%)",
+      "risk_level": "中高"
+    },
+    {
+      "rank": 2,
+      "code": "603078",
+      "name": "江化微",
+      "score": 87,
+      "score_breakdown": {
+        "theme": 30,
+        "money": 18,
+        "tech": 15,
+        "event": 24
+      },
+      "themes": [
+        "电子化学品",
+        "湿电子化学品",
+        "半导体材料"
+      ],
+      "thesis": "湿电子化学品, 2连板, 半导体材料涨价, 同板块中巨芯/有研新材/和远气体联动",
+      "entry": "回踩 5日线 7% 位置",
+      "target": "突破 2连板高点",
+      "stop": "跌破 5日线",
+      "risk_level": "中"
+    },
+    {
+      "rank": 3,
+      "code": "601138",
+      "name": "工业富联",
+      "score": 85,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 16,
+        "tech": 15,
+        "event": 30
+      },
+      "themes": [
+        "AI算力",
+        "服务器",
+        "PCB",
+        "液冷"
+      ],
+      "thesis": "AI 服务器龙头, 北向持续加仓, DeepSeek 涨价利好上游算力, 华泰证券看好 AI 中期景气",
+      "entry": "现价 68.27, 回调 66-67 介入",
+      "target": "75 (+10%)",
+      "stop": "62 (-9%)",
+      "risk_level": "中"
+    },
+    {
+      "rank": 4,
+      "code": "600531",
+      "name": "豫光金铅",
+      "score": 77,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 8,
+        "tech": 15,
+        "event": 30
+      },
+      "themes": [
+        "黄金",
+        "小金属",
+        "避险"
+      ],
+      "thesis": "黄金 + 小金属, 美股黄金突破 4270 美元 (+0.56%), 美伊接近达成霍尔木兹临时通航, 韩国央行 13 年来首次恢复购金",
+      "entry": "现价 12.97, 稳健者等回调 5日线 12.5 介入",
+      "target": "14.0 (+8%)",
+      "stop": "11.8 (-9%)",
+      "risk_level": "中"
+    },
+    {
+      "rank": 5,
+      "code": "002971",
+      "name": "和远气体",
+      "score": 77,
+      "score_breakdown": {
+        "theme": 30,
+        "money": 8,
+        "tech": 15,
+        "event": 24
+      },
+      "themes": [
+        "工业气体",
+        "电子特气",
+        "半导体材料"
+      ],
+      "thesis": "工业气体, 2连板, 半导体材料联动, 价格相对低",
+      "entry": "回踩 5日线",
+      "target": "突破 2板高点",
+      "stop": "跌破 5日线",
+      "risk_level": "中"
+    }
+  ],
+  "filtered_out": [],
+  "risk_warning": "本榜单基于 8/6 复盘数据 + 美股映射, 仅作参考, 不构成投资建议. 投资有风险, 入市需谨慎."
+}
