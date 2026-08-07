@@ -274,33 +274,7 @@ TODAY_CANDIDATES = [
         "stop": "跌破 5日线",
         "risk_level": "中",
     },
-    # === 6. 备选: 凯撒文化 - AI 应用 ===
-    {
-        "code": "000821",
-        "name": "凯撒文化",
-        "themes": ["AI应用", "游戏", "网络安全"],
-        "limit_up_today": True,
-        "limit_up_chain": "3连板",
-        "main_money": 4000,
-        "dragon_tiger_buy": False,
-        "north_bound_buy": False,
-        "ret_20d": 25,             # 调整: 实际 8/6 前约 25%
-        "pct_today": 10.0,
-        "bias_5": 9,
-        "break_ma20": True,
-        "volume_amplify": True,
-        "not_overbought": True,
-        "has_announcement": False,
-        "research_report": True,
-        "policy_catalyst": False,
-        "industry_hot": True,
-        "thesis": "AI 应用 + 游戏, 3连板, OpenAI 安全事件催化, 网络安全联动",
-        "entry": "已 3连板, 风险较大, 回调 5日线介入",
-        "target": "突破 4 板",
-        "stop": "跌破 5日线",
-        "risk_level": "高",
-    },
-    # === 7. 备选: 和远气体 - 工业气体 ===
+    # === 6. 备选: 和远气体 - 工业气体 ===
     {
         "code": "002971",
         "name": "和远气体",
