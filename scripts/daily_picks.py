@@ -479,7 +479,8 @@ def main():
         idx = sys.argv.index("--top")
         top_n = int(sys.argv[idx + 1])
 
-    output_dir = Path("/workspace/repo/reports")
+    # 兼容 GitHub Actions 容器路径 + 本地路径
+    output_dir = Path(os.environ.get("VIBE_OUTPUT_DIR", "reports"))
     output_dir.mkdir(parents=True, exist_ok=True)
 
     result = generate_picks(top_n=top_n)
