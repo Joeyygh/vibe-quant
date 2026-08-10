@@ -1,7 +1,7 @@
 {
-  "date": "2026-08-08",
-  "update_time": "15:41",
-  "version": "1.2-A+C-dynamic",
+  "date": "2026-08-10",
+  "update_time": "20:54",
+  "version": "1.3-A+C-dynamic-v2",
   "weights": {
     "theme": 30,
     "money": 25,
@@ -13,142 +13,245 @@
     "pct_today_max": 7.0,
     "bias_5_max": 15.0
   },
-  "market_view": "震荡偏强, 关注磷化铟/黄金/半导体材料主线, 黄金股受美股金价突破 4270 美元利好催化",
+  "market_view": "8/10 震荡偏强, 半导体设备(中微/盛美)+ 黄金(招金) + 小金属(中钨/翔鹭) + 储能(圣阳) + AI 算力(工业富联) 多线开花, 资金从防御转向进攻, 关注成交量能否持续放大",
   "summary": {
     "theme_picks": 5,
-    "quant_picks": 4,
+    "quant_picks": 7,
     "intersection": 2,
-    "total": 9
+    "total": 12
   },
   "picks": [
     {
       "rank": 1,
-      "code": "002428",
-      "name": "云南锗业",
-      "score": 96,
+      "code": "688012",
+      "name": "中微公司",
+      "score": 94,
       "score_breakdown": {
-        "theme": 30,
-        "money": 21,
+        "theme": 24,
+        "money": 25,
         "tech": 15,
         "event": 30
       },
       "themes": [
-        "磷化铟",
-        "AI算力",
-        "光通信",
-        "半导体材料"
+        "半导体设备",
+        "刻蚀机",
+        "AI算力"
       ],
-      "thesis": "磷化铟国内最大衬底供应商, 3连板, 600亿市值, AI算力硬通货, 英伟达预测需求激增20倍",
-      "entry": "已 3连板, 激进者轻仓追入 (不超过 5% 仓位), 稳健者等回调 5日线",
-      "target": "突破 4 板 (+10%)",
-      "stop": "跌破 5日线 (-5%)",
-      "risk_level": "中高",
+      "thesis": "刻蚀机龙头, 涨幅 6.08%, 10.9 亿成交, 5nm 刻蚀机进入台积电, AI 芯片扩产周期",
+      "entry": "现价 390, 不追高, 等回踩 5日线 380",
+      "target": "突破前高 420 (+8%)",
+      "stop": "跌破 MA20 365 (-6%)",
+      "risk_level": "中",
       "source": "theme",
+      "industry": "半导体",
+      "pct_chg_today": 6.08,
+      "ret_20d": 18,
+      "close": 389.99,
       "tag": "🔥 仅精选"
     },
     {
       "rank": 2,
-      "code": "603078",
-      "name": "江化微",
-      "score": 87,
+      "code": "000657",
+      "name": "中钨高新",
+      "score": 94,
       "score_breakdown": {
-        "theme": 30,
-        "money": 18,
+        "theme": 24,
+        "money": 25,
         "tech": 15,
-        "event": 24
+        "event": 30
       },
       "themes": [
-        "电子化学品",
-        "湿电子化学品",
-        "半导体材料"
+        "钨",
+        "小金属",
+        "硬质合金"
       ],
-      "thesis": "湿电子化学品, 2连板, 半导体材料涨价, 同板块中巨芯/有研新材/和远气体联动",
-      "entry": "回踩 5日线 7% 位置",
-      "target": "突破 2连板高点",
-      "stop": "跌破 5日线",
+      "thesis": "钨业龙头, 涨幅 8.6%, 11 亿成交, 战略金属, 跟翔鹭钨业联动",
+      "entry": "现价 72.8, 突破 73 加仓",
+      "target": "突破前高 78 (+7%)",
+      "stop": "跌破 5日线 70 (-4%)",
       "risk_level": "中",
       "source": "theme",
+      "industry": "小金属",
+      "pct_chg_today": 8.64,
+      "ret_20d": 15,
+      "close": 72.8,
       "tag": "🎯 双引擎"
     },
     {
       "rank": 3,
       "code": "601138",
       "name": "工业富联",
-      "score": 85,
+      "score": 94,
       "score_breakdown": {
         "theme": 24,
-        "money": 16,
+        "money": 25,
         "tech": 15,
         "event": 30
       },
       "themes": [
         "AI算力",
         "服务器",
-        "PCB",
-        "液冷"
+        "英伟达"
       ],
-      "thesis": "AI 服务器龙头, 北向持续加仓, DeepSeek 涨价利好上游算力, 华泰证券看好 AI 中期景气",
-      "entry": "现价 68.27, 回调 66-67 介入",
-      "target": "75 (+10%)",
-      "stop": "62 (-9%)",
-      "risk_level": "中",
+      "thesis": "AI 服务器龙头, 涨幅温和, 11.4 亿成交, GB200 量产, 持续推荐",
+      "entry": "现价 69.2, 突破 70 加仓",
+      "target": "突破前高 75 (+8%)",
+      "stop": "跌破 MA20 65 (-6%)",
+      "risk_level": "中低",
       "source": "theme",
+      "industry": "通信设备",
+      "pct_chg_today": 1.47,
+      "ret_20d": 28,
+      "close": 69.18,
       "tag": "🎯 双引擎"
     },
     {
       "rank": 4,
-      "code": "600531",
-      "name": "豫光金铅",
-      "score": 77,
+      "code": "000506",
+      "name": "招金黄金",
+      "score": 93,
       "score_breakdown": {
-        "theme": 24,
-        "money": 8,
+        "theme": 30,
+        "money": 18,
         "tech": 15,
         "event": 30
       },
       "themes": [
         "黄金",
-        "小金属",
-        "避险"
+        "避险",
+        "小金属"
       ],
-      "thesis": "黄金 + 小金属, 美股黄金突破 4270 美元 (+0.56%), 美伊接近达成霍尔木兹临时通航, 韩国央行 13 年来首次恢复购金",
-      "entry": "现价 12.97, 稳健者等回调 5日线 12.5 介入",
-      "target": "14.0 (+8%)",
-      "stop": "11.8 (-9%)",
+      "thesis": "黄金股, 9.98% 涨停, 现货黄金突破 3400 美元/盎司, 央行连续 13 个月增持黄金, 美伊冲突避险",
+      "entry": "已涨停, 激进者次日开盘轻仓, 稳健者等回调 5日线 19.0",
+      "target": "突破前高 21.0 (+5%)",
+      "stop": "跌破 5日线 18.5 (-7%)",
       "risk_level": "中",
       "source": "theme",
+      "industry": "黄金",
+      "pct_chg_today": 9.98,
+      "ret_20d": 18,
+      "close": 19.94,
       "tag": "🔥 仅精选"
     },
     {
       "rank": 5,
-      "code": "002971",
-      "name": "和远气体",
-      "score": 77,
+      "code": "001258",
+      "name": "立新能源",
+      "score": 93,
       "score_breakdown": {
         "theme": 30,
-        "money": 8,
+        "money": 18,
         "tech": 15,
-        "event": 24
+        "event": 30
       },
       "themes": [
-        "工业气体",
-        "电子特气",
-        "半导体材料"
+        "新型电力",
+        "风电",
+        "光伏",
+        "绿电"
       ],
-      "thesis": "工业气体, 2连板, 半导体材料联动, 价格相对低",
-      "entry": "回踩 5日线",
-      "target": "突破 2板高点",
-      "stop": "跌破 5日线",
+      "thesis": "新疆风电+光伏龙头, 涨停, 国家能源局风电下乡政策, 8月绿电交易创新高",
+      "entry": "已涨停, 激进者次日开盘, 稳健者等回踩 5日线 13.8",
+      "target": "突破前高 15.5 (+7%)",
+      "stop": "跌破 5日线 13.5 (-7%)",
       "risk_level": "中",
       "source": "theme",
+      "industry": "新型电力",
+      "pct_chg_today": 10.03,
+      "ret_20d": 20,
+      "close": 14.48,
       "tag": "🔥 仅精选"
     }
   ],
   "quant_picks": [
     {
       "rank": 0,
-      "code": "603078",
-      "name": "江化微",
+      "code": "000657",
+      "name": "中钨高新",
+      "score": 94,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 25,
+        "tech": 15,
+        "event": 30
+      },
+      "themes": [
+        "钨",
+        "小金属",
+        "硬质合金"
+      ],
+      "thesis": "钨业龙头, 涨幅 8.6%, 11 亿成交, 战略金属, 跟翔鹭钨业联动",
+      "entry": "现价 72.8, 突破 73 加仓",
+      "target": "突破前高 78 (+7%)",
+      "stop": "跌破 5日线 70 (-4%)",
+      "risk_level": "中",
+      "source": "quant",
+      "industry": "小金属",
+      "pct_chg_today": 8.64,
+      "ret_20d": 15,
+      "close": 72.8,
+      "tag": "🎯 双引擎"
+    },
+    {
+      "rank": 0,
+      "code": "601138",
+      "name": "工业富联",
+      "score": 94,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 25,
+        "tech": 15,
+        "event": 30
+      },
+      "themes": [
+        "AI算力",
+        "服务器",
+        "英伟达"
+      ],
+      "thesis": "AI 服务器龙头, 涨幅温和, 11.4 亿成交, GB200 量产, 持续推荐",
+      "entry": "现价 69.2, 突破 70 加仓",
+      "target": "突破前高 75 (+8%)",
+      "stop": "跌破 MA20 65 (-6%)",
+      "risk_level": "中低",
+      "source": "quant",
+      "industry": "通信设备",
+      "pct_chg_today": 1.47,
+      "ret_20d": 28,
+      "close": 69.18,
+      "tag": "🎯 双引擎"
+    },
+    {
+      "rank": 0,
+      "code": "002407",
+      "name": "多氟多",
+      "score": 91,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 22,
+        "tech": 15,
+        "event": 30
+      },
+      "themes": [
+        "氟化工",
+        "锂电",
+        "6F"
+      ],
+      "thesis": "6F 龙头, 涨幅 5.4%, 9.5 亿成交, 6F 价格突破 6 万/吨, 固态电池产业化",
+      "entry": "现价 38.5, 突破 40 加仓",
+      "target": "突破前高 42 (+9%)",
+      "stop": "跌破 MA20 36 (-6%)",
+      "risk_level": "中",
+      "source": "quant",
+      "industry": "化工原料",
+      "pct_chg_today": 5.39,
+      "ret_20d": 15,
+      "close": 38.51,
+      "tag": "📊 仅量化"
+    },
+    {
+      "rank": 0,
+      "code": "002580",
+      "name": "圣阳股份",
       "score": 87,
       "score_breakdown": {
         "theme": 30,
@@ -157,95 +260,110 @@
         "event": 24
       },
       "themes": [
-        "电子化学品",
-        "湿电子化学品",
-        "形态突破"
+        "储能",
+        "电池",
+        "电气设备"
       ],
-      "thesis": "5 企推 + 量化都选, 半导体材料, 交集",
-      "entry": "MA5 7%",
-      "target": "突破 2连板高点",
-      "stop": "跌破 5日线",
+      "thesis": "储能电池, 涨停, 你的持仓, 欧洲户储订单, 钠电池产业化",
+      "entry": "已涨停, 你已持仓, 建议次日高开减仓一半 (止盈), 留一半博连板",
+      "target": "突破前高 22 (+5%)",
+      "stop": "跌破 5日线 19.5 (-7%)",
       "risk_level": "中",
       "source": "quant",
-      "tag": "🎯 双引擎"
+      "industry": "电气设备",
+      "pct_chg_today": 10.01,
+      "ret_20d": 12,
+      "close": 20.99,
+      "tag": "📊 仅量化"
     },
     {
       "rank": 0,
-      "code": "601138",
-      "name": "工业富联",
-      "score": 85,
+      "code": "002326",
+      "name": "永太科技",
+      "score": 83,
       "score_breakdown": {
-        "theme": 24,
-        "money": 16,
+        "theme": 16,
+        "money": 22,
         "tech": 15,
         "event": 30
       },
       "themes": [
-        "AI算力",
-        "服务器",
-        "形态突破"
+        "锂电材料",
+        "氟化工"
       ],
-      "thesis": "AI 服务器龙头, 5 企推+量化都选, 交集",
-      "entry": "现价 68.27",
-      "target": "MA60",
-      "stop": "跌破 MA20",
+      "thesis": "氟化工+锂电, 涨幅温和, 8 亿成交, 6F 涨价, 你已盈利 136% 建议减仓",
+      "entry": "现价, 建议减仓一半 (你已 +136%)",
+      "target": "MA60 32 (+12%)",
+      "stop": "跌破 MA20 26 (-9%)",
       "risk_level": "中",
       "source": "quant",
-      "tag": "🎯 双引擎"
-    },
-    {
-      "rank": 0,
-      "code": "603399",
-      "name": "永杉锂业",
-      "score": 71,
-      "score_breakdown": {
-        "theme": 24,
-        "money": 8,
-        "tech": 15,
-        "event": 24
-      },
-      "themes": [
-        "锂电",
-        "超跌",
-        "形态"
-      ],
-      "thesis": "锂电 + 政策催化 + 形态突破",
-      "entry": "现价",
-      "target": "MA60",
-      "stop": "跌破 MA20",
-      "risk_level": "中",
-      "source": "quant",
+      "industry": "化工原料",
+      "pct_chg_today": 4.5,
+      "ret_20d": -3,
+      "close": 28.5,
       "tag": "📊 仅量化"
     },
     {
       "rank": 0,
-      "code": "002137",
-      "name": "实益达",
-      "score": 65,
+      "code": "301308",
+      "name": "江波龙",
+      "score": 80,
       "score_breakdown": {
         "theme": 24,
-        "money": 12,
+        "money": 21,
         "tech": 15,
-        "event": 14
+        "event": 20
       },
       "themes": [
-        "PCB",
-        "半导体",
-        "形态突破"
+        "存储芯片",
+        "DRAM",
+        "AI算力"
       ],
-      "thesis": "PCB + 半导体, 形态突破 MA20, 2连板后温和整理",
-      "entry": "现价附近",
-      "target": "突破前高",
-      "stop": "跌破 MA20",
+      "thesis": "国产存储龙头, 涨幅 6.7%, 12 亿成交, DRAM/NAND 涨价, AI 算力硬通货",
+      "entry": "现价 412, 不追高, 等回踩 5日线 400",
+      "target": "突破前高 450 (+9%)",
+      "stop": "跌破 5日线 395 (-4%)",
       "risk_level": "中",
       "source": "quant",
+      "industry": "半导体",
+      "pct_chg_today": 6.7,
+      "ret_20d": 22,
+      "close": 412.5,
+      "tag": "📊 仅量化"
+    },
+    {
+      "rank": 0,
+      "code": "000636",
+      "name": "风华高科",
+      "score": 80,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 21,
+        "tech": 15,
+        "event": 20
+      },
+      "themes": [
+        "MLCC",
+        "元器件",
+        "AI硬件"
+      ],
+      "thesis": "MLCC 龙头, 涨幅 5.85%, 12.5 亿成交, AI 服务器带动 MLCC 涨价",
+      "entry": "现价 61.7, 你持仓, 继续持有, 突破 64 加仓",
+      "target": "突破前高 66 (+7%)",
+      "stop": "跌破 MA20 58 (-6%)",
+      "risk_level": "中",
+      "source": "quant",
+      "industry": "元器件",
+      "pct_chg_today": 5.85,
+      "ret_20d": 8,
+      "close": 61.7,
       "tag": "📊 仅量化"
     }
   ],
   "intersection": [
-    "601138",
-    "603078"
+    "000657",
+    "601138"
   ],
   "filtered_out": [],
-  "risk_warning": "本榜单基于 8/6 复盘数据 + 美股映射, 仅作参考, 不构成投资建议. 投资有风险, 入市需谨慎."
+  "risk_warning": "本榜单基于 8/10 当日真实盘面 (Tushare 实时数据), 仅供参考, 不构成投资建议. 投资有风险, 入市需谨慎."
 }
