@@ -115,22 +115,22 @@ with open('data/last_update.txt', 'w') as f:
     f.write(datetime.now().isoformat())
 
 
-# ========== 顺便生成今日精选 (修复版) ==========
+# ========== 顺便生成今日精选 (动态版 v1.4) ==========
 import subprocess
 try:
-    print('\n[4/4] 生成今日精选 daily_picks...')
+    print('\n[4/4] 生成今日精选 daily_picks_dynamic.py (动态版)...')
     result = subprocess.run(
-        ['python', 'scripts/daily_picks.py'],
+        ['python', 'scripts/daily_picks_dynamic.py'],
         capture_output=True, text=True, timeout=300,
         env={**__import__('os').environ, 'VIBE_OUTPUT_DIR': 'reports'}
     )
     if result.returncode == 0:
-        print('  ✅ daily_picks 成功')
+        print('  ✅ daily_picks_dynamic 成功')
         print(result.stdout[-500:] if len(result.stdout) > 500 else result.stdout)
     else:
-        print(f'  ⚠️ daily_picks 失败 (returncode={result.returncode})')
+        print(f'  ⚠️ daily_picks_dynamic 失败 (returncode={result.returncode})')
         print(result.stderr[-500:] if len(result.stderr) > 500 else result.stderr)
 except Exception as e:
-    print(f'  ⚠️ daily_picks 调用异常: {e}')
+    print(f'  ⚠️ daily_picks_dynamic 调用异常: {e}')
 
 print('\n✅ 完成！真实数据！')
