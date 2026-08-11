@@ -63,6 +63,19 @@ def get_target_date():
     return target.strftime('%Y-%m-%d')
 
 
+def extract_holdings_list(raw):
+    """兼容两种 my_holdings.json 结构:
+    - 新版 dict: {'version':..,'holdings':[{...},{...}], 'closed_holdings':[...]}
+    - 老版 list: [{...},{...}]
+    返回当前持仓 list[dict]
+    """
+    if isinstance(raw, dict):
+        return raw.get('holdings', []) or []
+    if isinstance(raw, list):
+        return raw
+    return []
+
+
 def fmt_pct(v):
     if v is None or pd.isna(v):
         return '-'
@@ -518,7 +531,10 @@ def get_holding_signals(target_date, date_str):
             return []
     try:
         with open(holdings_file, 'r', encoding='utf-8') as f:
-            holdings = json.load(f)
+            raw = json.load(f)
+        holdings = extract_holdings_list(raw)
+        if not holdings:
+            return []
     except Exception:
         return []
 
@@ -887,7 +903,8 @@ def generate_report():
     raw_holdings_file = os.path.join(repo_root_h, 'my_holdings.json')
     if os.path.exists(raw_holdings_file):
         with open(raw_holdings_file, 'r', encoding='utf-8') as f:
-            raw_all = json.load(f)
+            _raw_all = json.load(f)
+        raw_all = extract_holdings_list(_raw_all)
         other_items = [h for h in raw_all if str(h.get('code', '')).endswith('.HK') or h.get('type') == 'bond' or h.get('currency') == 'HKD']
         if other_items:
             sections.append("### 港股/债券(不参与 A 股信号)")

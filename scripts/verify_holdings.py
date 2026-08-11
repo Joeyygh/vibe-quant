@@ -197,7 +197,12 @@ def main():
         sys.exit(1)
 
     with open(HOLDINGS_FILE, 'r', encoding='utf-8') as f:
-        holdings = json.load(f)
+        _raw = json.load(f)
+    # 兼容新版 dict 结构: {holdings:[...], closed_holdings:[...]}
+    if isinstance(_raw, dict):
+        holdings = _raw.get('holdings', [])
+    else:
+        holdings = _raw
 
     code_to_name, name_to_codes = load_stock_list()
     if not code_to_name:
