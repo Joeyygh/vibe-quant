@@ -882,11 +882,19 @@ def generate_report():
     if holdings:
         sections.append("> 基于 `my_holdings.json` 自动计算,包含止损/止盈/突破/趋势建议。股价为最新收盘价(6.25)。")
         sections.append("")
-        # 按分组组织
+        # 按分组组织 (兼容中英文 group 字段)
         from collections import defaultdict
+        GROUP_MAP = {
+            'deep_loss': '深亏', 'shallow_loss': '浅亏', 'breakeven': '保本',
+            'mid_profit': '温和盈利', 'high_profit': '高盈利',
+            '深亏': '深亏', '浅亏': '浅亏', '保本': '保本',
+            '温和盈利': '温和盈利', '高盈利': '高盈利',
+        }
         by_group = defaultdict(list)
         for s in holdings:
-            by_group[s.get('group', '未分组')].append(s)
+            g_raw = s.get('group', '')
+            g_cn = GROUP_MAP.get(g_raw, g_raw or '未分组')
+            by_group[g_cn].append(s)
         group_order = ['深亏', '浅亏', '保本', '温和盈利', '高盈利']
         for gname in group_order:
             if gname not in by_group:
