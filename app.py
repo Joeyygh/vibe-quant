@@ -923,7 +923,11 @@ if view_mode == "🎯 今日精选":
     st.header("🎯 每日 5 企推 (Vibe Daily Picks)")
     st.caption("📊 综合: 题材热度30% + 资金强度25% + 技术形态15% + 事件催化30% | 🛡️ 动量天花板保护")
 
-    picks_file = 'reports/today_picks.json'
+    # 优先 data/ (workflow 自动 commit), 兜底 reports/
+    if os.path.exists('data/today_picks.json'):
+        picks_file = 'data/today_picks.json'
+    else:
+        picks_file = 'reports/today_picks.json'
     if not os.path.exists(picks_file):
         st.error(f"❌ {picks_file} 不存在, 请先运行 `python scripts/daily_picks.py`")
         st.info("💡 数据源: 8/6 复盘数据已生成今日精选 (commit 8a1cefdd20)")
@@ -1007,7 +1011,11 @@ if view_mode == "🎯 双引擎":
     st.header("🎯 双引擎选股 (V1.1 A+C)")
     st.caption("📊 题材精选 (5 企推) + 量化形态 (V2.2) 双重验证 | 🎯 交集 = 高信心")
 
-    picks_file = 'reports/today_picks.json'
+    # 优先 data/ (workflow 自动 commit), 兜底 reports/
+    if os.path.exists('data/today_picks.json'):
+        picks_file = 'data/today_picks.json'
+    else:
+        picks_file = 'reports/today_picks.json'
     if not os.path.exists(picks_file):
         st.error(f"❌ {picks_file} 不存在")
     else:
