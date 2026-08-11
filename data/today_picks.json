@@ -1,0 +1,308 @@
+{
+  "date": "2026-08-11",
+  "update_time": "18:35",
+  "version": "1.4-dynamic-auto",
+  "weights": {
+    "theme": 30,
+    "money": 25,
+    "tech": 15,
+    "event": 30
+  },
+  "overbought_filters": {
+    "ret_20d_max": 80.0,
+    "pct_today_max": 7.0,
+    "bias_5_max": 15.0
+  },
+  "market_view": "08/11 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
+  "summary": {
+    "theme_picks": 3,
+    "quant_picks": 7,
+    "intersection": 0,
+    "total": 10
+  },
+  "picks": [
+    {
+      "rank": 1,
+      "code": "301717",
+      "name": "N超纯应材",
+      "score": 55,
+      "score_breakdown": {
+        "theme": 30,
+        "money": 0,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "半导体",
+      "themes": [
+        "半导体设备",
+        "存储芯片",
+        "AI算力",
+        "国产替代"
+      ],
+      "pct_chg_today": 662.2367,
+      "ret_20d": 0,
+      "close": 503.0,
+      "thesis": "半导体 行业, 涨幅 +662.24%, 成交 0.07 亿, 半导体设备, 存储芯片",
+      "entry": "已涨停 (662.2%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 503.00",
+      "target": "突破前高/MA60 (543.24, +8%)",
+      "stop": "跌破 5日线 (487.91, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 2,
+      "code": "600667",
+      "name": "太极实业",
+      "score": 55,
+      "score_breakdown": {
+        "theme": 30,
+        "money": 0,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "半导体",
+      "themes": [
+        "半导体设备",
+        "存储芯片",
+        "AI算力",
+        "国产替代"
+      ],
+      "pct_chg_today": 10.0156,
+      "ret_20d": 0,
+      "close": 21.2,
+      "thesis": "半导体 行业, 涨幅 +10.02%, 成交 0.06 亿, 半导体设备, 存储芯片",
+      "entry": "已涨停 (10.0%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 21.20",
+      "target": "突破前高/MA60 (22.90, +8%)",
+      "stop": "跌破 5日线 (20.56, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 3,
+      "code": "600664",
+      "name": "哈药股份",
+      "score": 27,
+      "score_breakdown": {
+        "theme": 14,
+        "money": 0,
+        "tech": 5,
+        "event": 8
+      },
+      "industry": "化学制药",
+      "themes": [
+        "化学制药"
+      ],
+      "pct_chg_today": 9.9734,
+      "ret_20d": 0,
+      "close": 8.27,
+      "thesis": "化学制药 行业, 涨幅 +9.97%, 成交 0.05 亿, 化学制药",
+      "entry": "已涨停 (10.0%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 8.27",
+      "target": "突破前高/MA60 (8.93, +8%)",
+      "stop": "跌破 5日线 (8.02, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    }
+  ],
+  "quant_picks": [
+    {
+      "rank": 0,
+      "code": "000756",
+      "name": "新华制药",
+      "score": 8,
+      "score_breakdown": {
+        "theme": 8,
+        "money": 0,
+        "tech": 0,
+        "event": 0
+      },
+      "industry": "化学制药",
+      "themes": [
+        "化学制药"
+      ],
+      "pct_chg_today": -1.0616,
+      "ret_20d": 0,
+      "close": 13.98,
+      "thesis": "化学制药 行业, 涨幅 -1.06%, 成交 0.00 亿, 化学制药",
+      "entry": "现价 13.98, 不追高, 等回踩 5日线 13.98 介入",
+      "target": "突破前高/MA60 (15.10, +8%)",
+      "stop": "跌破 5日线 (13.56, -3%)",
+      "risk_level": "中",
+      "source": "quant",
+      "tag": "📊 仅量化"
+    },
+    {
+      "rank": 0,
+      "code": "000831",
+      "name": "中国稀土",
+      "score": 36,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 0,
+        "tech": 0,
+        "event": 12
+      },
+      "industry": "小金属",
+      "themes": [
+        "钨",
+        "稀土",
+        "战略金属",
+        "军工"
+      ],
+      "pct_chg_today": -4.318,
+      "ret_20d": 0,
+      "close": 55.84,
+      "thesis": "小金属 行业, 涨幅 -4.32%, 成交 0.03 亿, 钨, 稀土",
+      "entry": "现价 55.84, 不追高, 等回踩 5日线 55.84 介入",
+      "target": "突破前高/MA60 (60.31, +8%)",
+      "stop": "跌破 5日线 (54.16, -3%)",
+      "risk_level": "中",
+      "source": "quant",
+      "tag": "📊 仅量化"
+    },
+    {
+      "rank": 0,
+      "code": "000967",
+      "name": "盈峰环境",
+      "score": 13,
+      "score_breakdown": {
+        "theme": 8,
+        "money": 0,
+        "tech": 5,
+        "event": 0
+      },
+      "industry": "环境保护",
+      "themes": [
+        "环境保护"
+      ],
+      "pct_chg_today": 3.5516,
+      "ret_20d": 0,
+      "close": 9.33,
+      "thesis": "环境保护 行业, 涨幅 +3.55%, 成交 0.02 亿, 环境保护",
+      "entry": "现价 9.33, 不追高, 等回踩 5日线 9.33 介入",
+      "target": "突破前高/MA60 (10.08, +8%)",
+      "stop": "跌破 5日线 (9.05, -3%)",
+      "risk_level": "中",
+      "source": "quant",
+      "tag": "📊 仅量化"
+    },
+    {
+      "rank": 0,
+      "code": "002023",
+      "name": "海特高新",
+      "score": 8,
+      "score_breakdown": {
+        "theme": 8,
+        "money": 0,
+        "tech": 0,
+        "event": 0
+      },
+      "industry": "航空",
+      "themes": [
+        "航空"
+      ],
+      "pct_chg_today": -1.8078,
+      "ret_20d": 0,
+      "close": 10.32,
+      "thesis": "航空 行业, 涨幅 -1.81%, 成交 0.00 亿, 航空",
+      "entry": "现价 10.32, 不追高, 等回踩 5日线 10.32 介入",
+      "target": "突破前高/MA60 (11.15, +8%)",
+      "stop": "跌破 5日线 (10.01, -3%)",
+      "risk_level": "中",
+      "source": "quant",
+      "tag": "📊 仅量化"
+    },
+    {
+      "rank": 0,
+      "code": "002134",
+      "name": "天津普林",
+      "score": 41,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 0,
+        "tech": 5,
+        "event": 12
+      },
+      "industry": "元器件",
+      "themes": [
+        "MLCC",
+        "元器件",
+        "AI硬件",
+        "消费电子"
+      ],
+      "pct_chg_today": 0.1776,
+      "ret_20d": 0,
+      "close": 22.56,
+      "thesis": "元器件 行业, 涨幅 +0.18%, 成交 0.00 亿, MLCC, 元器件",
+      "entry": "现价 22.56, 不追高, 等回踩 5日线 22.56 介入",
+      "target": "突破前高/MA60 (24.36, +8%)",
+      "stop": "跌破 5日线 (21.88, -3%)",
+      "risk_level": "中",
+      "source": "quant",
+      "tag": "📊 仅量化"
+    },
+    {
+      "rank": 0,
+      "code": "002137",
+      "name": "实益达",
+      "score": 36,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 0,
+        "tech": 0,
+        "event": 12
+      },
+      "industry": "元器件",
+      "themes": [
+        "MLCC",
+        "元器件",
+        "AI硬件",
+        "消费电子"
+      ],
+      "pct_chg_today": -1.2453,
+      "ret_20d": 0,
+      "close": 7.93,
+      "thesis": "元器件 行业, 涨幅 -1.25%, 成交 0.00 亿, MLCC, 元器件",
+      "entry": "现价 7.93, 不追高, 等回踩 5日线 7.93 介入",
+      "target": "突破前高/MA60 (8.56, +8%)",
+      "stop": "跌破 5日线 (7.69, -3%)",
+      "risk_level": "中",
+      "source": "quant",
+      "tag": "📊 仅量化"
+    },
+    {
+      "rank": 0,
+      "code": "002326",
+      "name": "永太科技",
+      "score": 36,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 0,
+        "tech": 0,
+        "event": 12
+      },
+      "industry": "化工原料",
+      "themes": [
+        "锂电材料",
+        "氟化工",
+        "6F",
+        "化工"
+      ],
+      "pct_chg_today": -0.7191,
+      "ret_20d": 0,
+      "close": 19.33,
+      "thesis": "化工原料 行业, 涨幅 -0.72%, 成交 0.00 亿, 锂电材料, 氟化工",
+      "entry": "现价 19.33, 不追高, 等回踩 5日线 19.33 介入",
+      "target": "突破前高/MA60 (20.88, +8%)",
+      "stop": "跌破 5日线 (18.75, -3%)",
+      "risk_level": "中",
+      "source": "quant",
+      "tag": "📊 仅量化"
+    }
+  ],
+  "intersection": [],
+  "filtered_out": [],
+  "risk_warning": "本榜单基于 Tushare 当日真实数据动态生成, 仅供参考, 不构成投资建议. 投资有风险, 入市需谨慎."
+}
