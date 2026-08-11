@@ -519,7 +519,6 @@ def get_today_picks(date_str):
 def get_holding_signals(target_date, date_str):
     """读持仓文件 + 计算卖出信号"""
     if not pro:
-        print("  ⚠️ pro 未初始化 (Tushare token 缺失?)")
         return []
     holdings_file = 'my_holdings.json'
     if not os.path.exists(holdings_file):
@@ -534,14 +533,12 @@ def get_holding_signals(target_date, date_str):
         with open(holdings_file, 'r', encoding='utf-8') as f:
             raw = json.load(f)
         holdings = extract_holdings_list(raw)
-        print(f"  📊 持仓 {len(holdings)} 只 (raw type: {type(raw).__name__})")
         if not holdings:
             return []
     except Exception:
         return []
 
     signals = []
-    fail_count = 0
     for h in holdings:
         code_raw = str(h.get('code', '')).strip()
         name = h.get('name', code_raw)
@@ -566,7 +563,6 @@ def get_holding_signals(target_date, date_str):
             start_d = (datetime.strptime(target_date, '%Y-%m-%d') - timedelta(days=30)).strftime('%Y%m%d')
             df = pro.daily(ts_code=ts_code, start_date=start_d, end_date=date_str)
             if df is None or df.empty or len(df) < 5:
-                fail_count += 1
                 continue
             # pro.daily 返回倒序(最新在第一行),我们排成正序,取最后一行=最新
             df = df.sort_values('trade_date').reset_index(drop=True)
@@ -628,10 +624,8 @@ def get_holding_signals(target_date, date_str):
                 'group': group,
             })
         except Exception as e:
-            fail_count += 1
             continue
 
-    print(f"  ✅ get_holding_signals 返回 {len(signals)} 个信号, {fail_count} 只无数据")
     return signals
 
 
