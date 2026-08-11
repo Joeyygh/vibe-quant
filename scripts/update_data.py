@@ -119,10 +119,13 @@ with open('data/last_update.txt', 'w') as f:
 import subprocess
 try:
     print('\n[4/4] 生成今日精选 daily_picks_dynamic.py (动态版)...')
+    # 把 picks 写到 data/ 下, 让 git add data/ 能一起 commit
+    # 同时也在 reports/ 下保留一份给 App 看
+    os.makedirs('reports', exist_ok=True)
     result = subprocess.run(
         ['python', 'scripts/daily_picks_dynamic.py'],
         capture_output=True, text=True, timeout=300,
-        env={**__import__('os').environ, 'VIBE_OUTPUT_DIR': 'reports'}
+        env={**__import__('os').environ, 'VIBE_OUTPUT_DIR': 'data'}
     )
     if result.returncode == 0:
         print('  ✅ daily_picks_dynamic 成功')
@@ -134,3 +137,11 @@ except Exception as e:
     print(f'  ⚠️ daily_picks_dynamic 调用异常: {e}')
 
 print('\n✅ 完成！真实数据！')
+
+# 把 picks 同步到 reports/ 给 App 读 (workflow 走 data/, App 读 reports/)
+import shutil
+src = 'data/today_picks.json'
+dst = 'reports/today_picks.json'
+if os.path.exists(src):
+    shutil.copy2(src, dst)
+    print(f'  📋 picks 同步: {src} -> {dst}')
