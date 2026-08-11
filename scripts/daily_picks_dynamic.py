@@ -185,6 +185,11 @@ def pass_overbought_filter(p):
     ret_20d = p.get("ret_20d", 0)
     pct_today = p.get("pct_chg", 0)
     bias_5 = p.get("bias_5", 0)
+    code = p.get("code", "")
+
+    # 新股过滤: 代码以 301/688/920 开头 (创业板/科创板/北证) 且 ret_20d=0 (无 20 日数据 = 新股)
+    if code.startswith(("301", "688", "920")) and ret_20d == 0 and pct_today > 30:
+        return False, f"新股首日 ({pct_today:.0f}%, 无 20 日 K 线)"
 
     # 20日涨幅 >80% 必过滤
     if ret_20d > 80:
@@ -315,6 +320,19 @@ def generate_picks():
         p['score_breakdown'] = json.loads(p['score_breakdown']) if p['score_breakdown'] else {}
         entry = build_pick_entry(p, source="theme")
         theme_picks.append(entry)
+    
+    # 5 企推至少 5 只: 不足时从 quant_pool 拉涨幅 5-9.5% 高分票补足
+    if len(theme_picks) < 5:
+        already_codes = {p['code'] for p in theme_picks}
+        backup_pool = quant_pool[~quant_pool['code'].isin(already_codes)].head(5 - len(theme_picks))
+        for _, row in backup_pool.iterrows():
+            p = row.to_dict()
+            p['themes'] = get_themes_for_industry(p.get('industry', ''))
+            p['score'] = int(p['score'])
+            p['score_breakdown'] = json.loads(p['score_breakdown']) if p['score_breakdown'] else {}
+            entry = build_pick_entry(p, source="theme")
+            theme_picks.append(entry)
+    
     theme_picks = theme_picks[:5]
     for i, p in enumerate(theme_picks, 1):
         p['rank'] = i
