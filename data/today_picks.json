@@ -1,6 +1,6 @@
 {
-  "date": "2026-08-14",
-  "update_time": "18:37",
+  "date": "2026-08-17",
+  "update_time": "18:18",
   "version": "1.4-dynamic-auto",
   "weights": {
     "theme": 30,
@@ -13,7 +13,7 @@
     "pct_today_max": 7.0,
     "bias_5_max": 15.0
   },
-  "market_view": "08/14 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
+  "market_view": "08/17 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
   "summary": {
     "theme_picks": 5,
     "quant_picks": 7,
@@ -23,11 +23,158 @@
   "picks": [
     {
       "rank": 1,
-      "code": "600487",
-      "name": "亨通光电",
+      "code": "688825",
+      "name": "长鑫科技",
       "score": 59,
       "score_breakdown": {
         "theme": 30,
+        "money": 4,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "半导体",
+      "themes": [
+        "半导体设备",
+        "存储芯片",
+        "AI算力",
+        "国产替代"
+      ],
+      "pct_chg_today": 11.9971,
+      "ret_20d": 0,
+      "close": 61.8,
+      "thesis": "半导体 行业, 涨幅 +12.00%, 成交 0.34 亿, 半导体设备, 存储芯片",
+      "entry": "已涨停 (12.0%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 61.80",
+      "target": "突破前高/MA60 (66.74, +8%)",
+      "stop": "跌破 5日线 (59.95, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 2,
+      "code": "002156",
+      "name": "通富微电",
+      "score": 55,
+      "score_breakdown": {
+        "theme": 30,
+        "money": 0,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "半导体",
+      "themes": [
+        "半导体设备",
+        "存储芯片",
+        "AI算力",
+        "国产替代"
+      ],
+      "pct_chg_today": 10.0064,
+      "ret_20d": 0,
+      "close": 69.26,
+      "thesis": "半导体 行业, 涨幅 +10.01%, 成交 0.10 亿, 半导体设备, 存储芯片",
+      "entry": "已涨停 (10.0%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 69.26",
+      "target": "突破前高/MA60 (74.80, +8%)",
+      "stop": "跌破 5日线 (67.18, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 3,
+      "code": "688766",
+      "name": "普冉股份",
+      "score": 55,
+      "score_breakdown": {
+        "theme": 30,
+        "money": 0,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "半导体",
+      "themes": [
+        "半导体设备",
+        "存储芯片",
+        "AI算力",
+        "国产替代"
+      ],
+      "pct_chg_today": 13.382,
+      "ret_20d": 0,
+      "close": 466.0,
+      "thesis": "半导体 行业, 涨幅 +13.38%, 成交 0.08 亿, 半导体设备, 存储芯片",
+      "entry": "已涨停 (13.4%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 466.00",
+      "target": "突破前高/MA60 (503.28, +8%)",
+      "stop": "跌破 5日线 (452.02, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 4,
+      "code": "002436",
+      "name": "兴森科技",
+      "score": 55,
+      "score_breakdown": {
+        "theme": 30,
+        "money": 0,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "元器件",
+      "themes": [
+        "MLCC",
+        "元器件",
+        "AI硬件",
+        "消费电子"
+      ],
+      "pct_chg_today": 9.9943,
+      "ret_20d": 0,
+      "close": 38.3,
+      "thesis": "元器件 行业, 涨幅 +9.99%, 成交 0.06 亿, MLCC, 元器件",
+      "entry": "已涨停 (10.0%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 38.30",
+      "target": "突破前高/MA60 (41.36, +8%)",
+      "stop": "跌破 5日线 (37.15, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 5,
+      "code": "688361",
+      "name": "中科飞测",
+      "score": 55,
+      "score_breakdown": {
+        "theme": 30,
+        "money": 0,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "半导体",
+      "themes": [
+        "半导体设备",
+        "存储芯片",
+        "AI算力",
+        "国产替代"
+      ],
+      "pct_chg_today": 13.6805,
+      "ret_20d": 0,
+      "close": 368.7,
+      "thesis": "半导体 行业, 涨幅 +13.68%, 成交 0.05 亿, 半导体设备, 存储芯片",
+      "entry": "已涨停 (13.7%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 368.70",
+      "target": "突破前高/MA60 (398.20, +8%)",
+      "stop": "跌破 5日线 (357.64, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    }
+  ],
+  "quant_picks": [
+    {
+      "rank": 0,
+      "code": "300308",
+      "name": "中际旭创",
+      "score": 53,
+      "score_breakdown": {
+        "theme": 24,
         "money": 4,
         "tech": 5,
         "event": 20
@@ -39,151 +186,39 @@
         "光模块",
         "5G"
       ],
-      "pct_chg_today": 10.0087,
+      "pct_chg_today": 6.1538,
       "ret_20d": 0,
-      "close": 62.98,
-      "thesis": "通信设备 行业, 涨幅 +10.01%, 成交 0.19 亿, AI算力, 服务器",
-      "entry": "已涨停 (10.0%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 62.98",
-      "target": "突破前高/MA60 (68.02, +8%)",
-      "stop": "跌破 5日线 (61.09, -3%)",
+      "close": 1001.03,
+      "thesis": "通信设备 行业, 涨幅 +6.15%, 成交 0.35 亿, AI算力, 服务器",
+      "entry": "现价 1001.03, 突破 1021.05 加仓",
+      "target": "突破前高/MA60 (1081.11, +8%)",
+      "stop": "跌破 5日线 (971.00, -3%)",
       "risk_level": "中",
-      "source": "theme",
-      "tag": "🔥 仅精选"
+      "source": "quant",
+      "tag": "📊 仅量化"
     },
-    {
-      "rank": 2,
-      "code": "603629",
-      "name": "利通电子",
-      "score": 55,
-      "score_breakdown": {
-        "theme": 30,
-        "money": 0,
-        "tech": 5,
-        "event": 20
-      },
-      "industry": "元器件",
-      "themes": [
-        "MLCC",
-        "元器件",
-        "AI硬件",
-        "消费电子"
-      ],
-      "pct_chg_today": 10.0,
-      "ret_20d": 0,
-      "close": 137.5,
-      "thesis": "元器件 行业, 涨幅 +10.00%, 成交 0.09 亿, MLCC, 元器件",
-      "entry": "已涨停 (10.0%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 137.50",
-      "target": "突破前高/MA60 (148.50, +8%)",
-      "stop": "跌破 5日线 (133.38, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🔥 仅精选"
-    },
-    {
-      "rank": 3,
-      "code": "300017",
-      "name": "网宿科技",
-      "score": 27,
-      "score_breakdown": {
-        "theme": 14,
-        "money": 0,
-        "tech": 5,
-        "event": 8
-      },
-      "industry": "软件服务",
-      "themes": [
-        "软件服务"
-      ],
-      "pct_chg_today": 20.0139,
-      "ret_20d": 0,
-      "close": 17.33,
-      "thesis": "软件服务 行业, 涨幅 +20.01%, 成交 0.08 亿, 软件服务",
-      "entry": "已涨停 (20.0%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 17.33",
-      "target": "突破前高/MA60 (18.72, +8%)",
-      "stop": "跌破 5日线 (16.81, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🔥 仅精选"
-    },
-    {
-      "rank": 4,
-      "code": "603083",
-      "name": "剑桥科技",
-      "score": 55,
-      "score_breakdown": {
-        "theme": 30,
-        "money": 0,
-        "tech": 5,
-        "event": 20
-      },
-      "industry": "通信设备",
-      "themes": [
-        "AI算力",
-        "服务器",
-        "光模块",
-        "5G"
-      ],
-      "pct_chg_today": 10.0,
-      "ret_20d": 0,
-      "close": 185.9,
-      "thesis": "通信设备 行业, 涨幅 +10.00%, 成交 0.07 亿, AI算力, 服务器",
-      "entry": "已涨停 (10.0%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 185.90",
-      "target": "突破前高/MA60 (200.77, +8%)",
-      "stop": "跌破 5日线 (180.32, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🔥 仅精选"
-    },
-    {
-      "rank": 5,
-      "code": "300209",
-      "name": "行云科技",
-      "score": 27,
-      "score_breakdown": {
-        "theme": 14,
-        "money": 0,
-        "tech": 5,
-        "event": 8
-      },
-      "industry": "互联网",
-      "themes": [
-        "互联网"
-      ],
-      "pct_chg_today": 10.1273,
-      "ret_20d": 0,
-      "close": 38.93,
-      "thesis": "互联网 行业, 涨幅 +10.13%, 成交 0.07 亿, 互联网",
-      "entry": "已涨停 (10.1%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 38.93",
-      "target": "突破前高/MA60 (42.04, +8%)",
-      "stop": "跌破 5日线 (37.76, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🔥 仅精选"
-    }
-  ],
-  "quant_picks": [
     {
       "rank": 0,
       "code": "000756",
       "name": "新华制药",
-      "score": 13,
+      "score": 8,
       "score_breakdown": {
         "theme": 8,
         "money": 0,
-        "tech": 5,
+        "tech": 0,
         "event": 0
       },
       "industry": "化学制药",
       "themes": [
         "化学制药"
       ],
-      "pct_chg_today": 1.8532,
+      "pct_chg_today": -1.3996,
       "ret_20d": 0,
-      "close": 14.29,
-      "thesis": "化学制药 行业, 涨幅 +1.85%, 成交 0.00 亿, 化学制药",
-      "entry": "现价 14.29, 不追高, 等回踩 5日线 14.29 介入",
-      "target": "突破前高/MA60 (15.43, +8%)",
-      "stop": "跌破 5日线 (13.86, -3%)",
+      "close": 14.09,
+      "thesis": "化学制药 行业, 涨幅 -1.40%, 成交 0.00 亿, 化学制药",
+      "entry": "现价 14.09, 不追高, 等回踩 5日线 14.09 介入",
+      "target": "突破前高/MA60 (15.22, +8%)",
+      "stop": "跌破 5日线 (13.67, -3%)",
       "risk_level": "中",
       "source": "quant",
       "tag": "📊 仅量化"
@@ -192,12 +227,12 @@
       "rank": 0,
       "code": "000831",
       "name": "中国稀土",
-      "score": 55,
+      "score": 41,
       "score_breakdown": {
-        "theme": 30,
+        "theme": 24,
         "money": 0,
         "tech": 5,
-        "event": 20
+        "event": 12
       },
       "industry": "小金属",
       "themes": [
@@ -206,13 +241,13 @@
         "战略金属",
         "军工"
       ],
-      "pct_chg_today": 9.9982,
+      "pct_chg_today": 3.0189,
       "ret_20d": 0,
-      "close": 60.95,
-      "thesis": "小金属 行业, 涨幅 +10.00%, 成交 0.05 亿, 钨, 稀土",
-      "entry": "已涨停 (10.0%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 60.95",
-      "target": "突破前高/MA60 (65.83, +8%)",
-      "stop": "跌破 5日线 (59.12, -3%)",
+      "close": 62.79,
+      "thesis": "小金属 行业, 涨幅 +3.02%, 成交 0.04 亿, 钨, 稀土",
+      "entry": "现价 62.79, 不追高, 等回踩 5日线 62.79 介入",
+      "target": "突破前高/MA60 (67.81, +8%)",
+      "stop": "跌破 5日线 (60.91, -3%)",
       "risk_level": "中",
       "source": "quant",
       "tag": "📊 仅量化"
@@ -221,24 +256,24 @@
       "rank": 0,
       "code": "000967",
       "name": "盈峰环境",
-      "score": 13,
+      "score": 8,
       "score_breakdown": {
         "theme": 8,
         "money": 0,
-        "tech": 5,
+        "tech": 0,
         "event": 0
       },
       "industry": "环境保护",
       "themes": [
         "环境保护"
       ],
-      "pct_chg_today": 2.3784,
+      "pct_chg_today": -2.7455,
       "ret_20d": 0,
-      "close": 9.47,
-      "thesis": "环境保护 行业, 涨幅 +2.38%, 成交 0.01 亿, 环境保护",
-      "entry": "现价 9.47, 不追高, 等回踩 5日线 9.47 介入",
-      "target": "突破前高/MA60 (10.23, +8%)",
-      "stop": "跌破 5日线 (9.19, -3%)",
+      "close": 9.21,
+      "thesis": "环境保护 行业, 涨幅 -2.75%, 成交 0.01 亿, 环境保护",
+      "entry": "现价 9.21, 不追高, 等回踩 5日线 9.21 介入",
+      "target": "突破前高/MA60 (9.95, +8%)",
+      "stop": "跌破 5日线 (8.93, -3%)",
       "risk_level": "中",
       "source": "quant",
       "tag": "📊 仅量化"
@@ -247,24 +282,24 @@
       "rank": 0,
       "code": "002023",
       "name": "海特高新",
-      "score": 8,
+      "score": 13,
       "score_breakdown": {
         "theme": 8,
         "money": 0,
-        "tech": 0,
+        "tech": 5,
         "event": 0
       },
       "industry": "航空",
       "themes": [
         "航空"
       ],
-      "pct_chg_today": -1.5785,
+      "pct_chg_today": 1.7925,
       "ret_20d": 0,
-      "close": 10.6,
-      "thesis": "航空 行业, 涨幅 -1.58%, 成交 0.00 亿, 航空",
-      "entry": "现价 10.60, 不追高, 等回踩 5日线 10.60 介入",
-      "target": "突破前高/MA60 (11.45, +8%)",
-      "stop": "跌破 5日线 (10.28, -3%)",
+      "close": 10.79,
+      "thesis": "航空 行业, 涨幅 +1.79%, 成交 0.00 亿, 航空",
+      "entry": "现价 10.79, 不追高, 等回踩 5日线 10.79 介入",
+      "target": "突破前高/MA60 (11.65, +8%)",
+      "stop": "跌破 5日线 (10.47, -3%)",
       "risk_level": "中",
       "source": "quant",
       "tag": "📊 仅量化"
@@ -273,11 +308,11 @@
       "rank": 0,
       "code": "002134",
       "name": "天津普林",
-      "score": 36,
+      "score": 41,
       "score_breakdown": {
         "theme": 24,
         "money": 0,
-        "tech": 0,
+        "tech": 5,
         "event": 12
       },
       "industry": "元器件",
@@ -287,13 +322,13 @@
         "AI硬件",
         "消费电子"
       ],
-      "pct_chg_today": -0.1342,
+      "pct_chg_today": 1.5233,
       "ret_20d": 0,
-      "close": 22.32,
-      "thesis": "元器件 行业, 涨幅 -0.13%, 成交 0.00 亿, MLCC, 元器件",
-      "entry": "现价 22.32, 不追高, 等回踩 5日线 22.32 介入",
-      "target": "突破前高/MA60 (24.11, +8%)",
-      "stop": "跌破 5日线 (21.65, -3%)",
+      "close": 22.66,
+      "thesis": "元器件 行业, 涨幅 +1.52%, 成交 0.00 亿, MLCC, 元器件",
+      "entry": "现价 22.66, 不追高, 等回踩 5日线 22.66 介入",
+      "target": "突破前高/MA60 (24.47, +8%)",
+      "stop": "跌破 5日线 (21.98, -3%)",
       "risk_level": "中",
       "source": "quant",
       "tag": "📊 仅量化"
@@ -316,42 +351,13 @@
         "AI硬件",
         "消费电子"
       ],
-      "pct_chg_today": 0.5051,
+      "pct_chg_today": 1.5075,
       "ret_20d": 0,
-      "close": 7.96,
-      "thesis": "元器件 行业, 涨幅 +0.51%, 成交 0.00 亿, MLCC, 元器件",
-      "entry": "现价 7.96, 不追高, 等回踩 5日线 7.96 介入",
-      "target": "突破前高/MA60 (8.60, +8%)",
-      "stop": "跌破 5日线 (7.72, -3%)",
-      "risk_level": "中",
-      "source": "quant",
-      "tag": "📊 仅量化"
-    },
-    {
-      "rank": 0,
-      "code": "002326",
-      "name": "永太科技",
-      "score": 41,
-      "score_breakdown": {
-        "theme": 24,
-        "money": 0,
-        "tech": 5,
-        "event": 12
-      },
-      "industry": "化工原料",
-      "themes": [
-        "锂电材料",
-        "氟化工",
-        "6F",
-        "化工"
-      ],
-      "pct_chg_today": 1.3982,
-      "ret_20d": 0,
-      "close": 19.58,
-      "thesis": "化工原料 行业, 涨幅 +1.40%, 成交 0.01 亿, 锂电材料, 氟化工",
-      "entry": "现价 19.58, 不追高, 等回踩 5日线 19.58 介入",
-      "target": "突破前高/MA60 (21.15, +8%)",
-      "stop": "跌破 5日线 (18.99, -3%)",
+      "close": 8.08,
+      "thesis": "元器件 行业, 涨幅 +1.51%, 成交 0.00 亿, MLCC, 元器件",
+      "entry": "现价 8.08, 不追高, 等回踩 5日线 8.08 介入",
+      "target": "突破前高/MA60 (8.73, +8%)",
+      "stop": "跌破 5日线 (7.84, -3%)",
       "risk_level": "中",
       "source": "quant",
       "tag": "📊 仅量化"
