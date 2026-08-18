@@ -8,6 +8,39 @@ import time
 from datetime import datetime, timedelta, timezone
 
 st.set_page_config(page_title="Vibe 量化 v2.0", page_icon="V", layout="wide", initial_sidebar_state="expanded")
+
+
+# ============ 🔐 密码登录 (Vibe v2.1) ============
+def check_password():
+    """如果用户没输对密码,显示登录框并停在这里。"""
+    if st.session_state.get("password_correct", False):
+        return True
+    with st.form("login_form"):
+        st.markdown("### 🔐 Vibe 量化系统 v2.1")
+        st.markdown("**请输入密码访问**")
+        password = st.text_input("密码", type="password", placeholder="联系作者获取")
+        submitted = st.form_submit_button("🚀 登录", use_container_width=True)
+        if submitted:
+            try:
+                valid_str = st.secrets.get("APP_PASSWORDS", "ygh960805")
+                valid = [p.strip() for p in valid_str.split(";") if p.strip()]
+            except Exception:
+                valid = ["ygh960805"]
+            if password in valid:
+                st.session_state["password_correct"] = True
+                st.session_state["login_time"] = str(datetime.now())
+                st.rerun()
+            else:
+                st.error("❌ 密码错误,请重试")
+                st.info("💡 忘记密码请联系作者")
+    return False
+
+
+# 验证密码,不通过就停
+if not check_password():
+    st.stop()
+
+
 st.title("Vibe 股票量化分析 v2.0")
 beijing_now = (datetime.now(timezone.utc) + timedelta(hours=8)).strftime('%Y-%m-%d %H:%M')
 # 动态读 last_update.txt
