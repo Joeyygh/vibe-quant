@@ -136,6 +136,29 @@ try:
 except Exception as e:
     print(f'  ⚠️ daily_picks_dynamic 调用异常: {e}')
 
+
+try:
+    print('\n[4.5/4] 生成 4 个实战公式 picks (v2.0)...')
+    os.makedirs('reports', exist_ok=True)
+    result2 = subprocess.run(
+        ['python', 'scripts/daily_picks_v2.py'],
+        capture_output=True, text=True, timeout=300,
+        env={**__import__('os').environ, 'VIBE_OUTPUT_DIR': 'data'}
+    )
+    if result2.returncode == 0:
+        print('  ✅ daily_picks_v2 成功 (4 个实战公式)')
+        # 同步到 data/ 让 git commit
+        formulas_data = 'data/formulas_picks.json'
+        formulas_reports = 'reports/formulas_picks.json'
+        if os.path.exists(formulas_data):
+            shutil.copy2(formulas_data, formulas_reports)
+            print(f'  📋 formulas 同步: {formulas_data} -> {formulas_reports}')
+    else:
+        print(f'  ⚠️ daily_picks_v2 失败 (returncode={result2.returncode})')
+        print(result2.stderr[-500:] if len(result2.stderr) > 500 else result2.stderr)
+except Exception as e:
+    print(f'  ⚠️ daily_picks_v2 调用异常: {e}')
+
 print('\n✅ 完成！真实数据！')
 
 # 把 picks 同步到 reports/ 给 App 读 (workflow 走 data/, App 读 reports/)
