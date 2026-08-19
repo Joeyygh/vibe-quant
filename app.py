@@ -938,7 +938,7 @@ with st.sidebar:
     run = st.button("运行分析", type="primary", use_container_width=True)
     st.divider()
     st.header("📊 页面")
-    view_mode = st.radio("页面模式", ["量化选股", "🎯 今日精选", "🎯 双引擎", "📐 实战公式", "每日复盘", "📝 我的笔记"], index=0, key="view_mode")
+    view_mode = st.radio("页面模式", ["量化选股", "🎯 今日精选", "🎯 双引擎", "📐 实战公式", "🎯 多公式共振", "每日复盘", "📝 我的笔记"], index=0, key="view_mode")
 
 st.markdown("""
 ## Vibe 量化 v2.1 (升级版)
@@ -1134,6 +1134,17 @@ if view_mode == "📐 实战公式":
         formulas_data = json.load(f)
 
     st.success(f"📅 数据日期: {formulas_data.get('date', 'N/A')} | ⏰ {formulas_data.get('update_time', 'N/A')} | 版本: {formulas_data.get('version', 'N/A')}")
+    
+    # 🎯 共振统计概览
+    resonance = formulas_data.get("resonance", [])
+    if resonance:
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("🎯 共振总数", len(resonance))
+        c2.metric("💎 3+公式", sum(1 for r in resonance if r['hit_count'] >= 3))
+        c3.metric("⭐ 2公式", sum(1 for r in resonance if r['hit_count'] == 2))
+        c4.metric("📊 公式总命中", sum(len(v) for v in formulas_data.get("formulas", {}).values()))
+        st.info("💡 **多公式共振 = 高信心信号**!同一只票被多个公式选中,说明技术面/资金面/基本面多维度确认,优先级 > 单公式。点 '🎯 多公式共振' 看详情。")
+    st.divider()
 
     # 4 个公式 tab
     tab1, tab2, tab3, tab4 = st.tabs([
@@ -1174,6 +1185,88 @@ if view_mode == "📐 实战公式":
 
     st.divider()
     st.info("💡 4 个公式可与「量化选股」叠加使用,选择共振票胜率更高")
+    st.stop()
+
+
+
+
+# ============ 🎯 多公式共振 (自动筛选) ============
+if view_mode == "🎯 多公式共振":
+    st.header("🎯 多公式共振 (自动筛选)")
+    st.caption("💎 同一只票被 2 个以上实战公式同时选中 = 高信心信号")
+
+    formulas_file = "data/formulas_picks.json"
+    if not os.path.exists(formulas_file):
+        formulas_file = "reports/formulas_picks.json"
+    if not os.path.exists(formulas_file):
+        st.error("❌ 公式 picks 还没生成")
+        st.stop()
+
+    with open(formulas_file, "r", encoding="utf-8") as f:
+        formulas_data = json.load(f)
+
+    resonance = formulas_data.get("resonance", [])
+    if not resonance:
+        st.warning("⚠️ 今日无共振股票 (各公式选出的票没重叠)")
+        st.info("💡 这种时候市场方向不明确,建议空仓观望")
+        st.stop()
+
+    # 顶部统计
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("🎯 共振总数", len(resonance))
+    c2.metric("💎 3+ 公式", sum(1 for r in resonance if r['hit_count'] >= 3))
+    c3.metric("⭐ 2 公式", sum(1 for r in resonance if r['hit_count'] == 2))
+    c4.metric("📅 日期", formulas_data.get('date', 'N/A'))
+
+    st.divider()
+
+    # 按 hit_count 分组
+    high_resonance = [r for r in resonance if r['hit_count'] >= 3]
+    mid_resonance = [r for r in resonance if r['hit_count'] == 2]
+
+    if high_resonance:
+        st.markdown("### 💎 顶级共振 (3+ 公式) — 重点关注")
+        for r in high_resonance:
+            with st.container():
+                cols = st.columns([1, 3, 1, 1, 1, 4])
+                with cols[0]:
+                    st.markdown(f"## 🎯")
+                with cols[1]:
+                    st.markdown(f"**{r['code']} {r['name']}**")
+                    st.caption(f"行业: {r.get('industry', 'N/A')}")
+                with cols[2]:
+                    pct = r['pct_chg']
+                    color = "🟢" if pct > 0 else "🔴"
+                    st.metric("涨跌幅", f"{color} {pct:+.2f}%")
+                with cols[3]:
+                    st.metric("换手率", f"{r.get('turnover_rate', 0):.1f}%")
+                with cols[4]:
+                    st.metric("量比", f"{r.get('volume_ratio', 0):.2f}")
+                with cols[5]:
+                    hit_badges = " ".join([f"`{h.split('_')[0]}️⃣`" for h in r['hit_formulas']])
+                    st.markdown(f"**命中公式**: {hit_badges}")
+                    st.caption(f"3日资金: {r.get('money_3d', 0)/10000:+.2f} 亿")
+                st.divider()
+
+    if mid_resonance:
+        st.markdown("### ⭐ 中度共振 (2 公式) — 可关注")
+        # 表格展示
+        import pandas as pd
+        df_mid = pd.DataFrame([{
+            "代码": r['code'],
+            "名称": r['name'],
+            "行业": r.get('industry', ''),
+            "今日涨跌幅": f"{r['pct_chg']:+.2f}%",
+            "换手率": f"{r.get('turnover_rate', 0):.1f}%",
+            "量比": f"{r.get('volume_ratio', 0):.2f}",
+            "3日资金(亿)": f"{r.get('money_3d', 0)/10000:+.2f}",
+            "命中公式": " ".join([h.split('_')[0] + "️⃣" for h in r['hit_formulas']]),
+        } for r in mid_resonance])
+        st.dataframe(df_mid, use_container_width=True, hide_index=True)
+
+    st.divider()
+    st.info("💡 **用法**: 顶级共振(3+公式) 开盘 30 分钟观察,中度共振(2公式) 可做短线。严设止损!")
+
     st.stop()
 
 
