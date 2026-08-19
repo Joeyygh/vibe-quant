@@ -938,7 +938,7 @@ with st.sidebar:
     run = st.button("运行分析", type="primary", use_container_width=True)
     st.divider()
     st.header("📊 页面")
-    view_mode = st.radio("页面模式", ["量化选股", "🎯 今日精选", "🎯 双引擎", "每日复盘", "📝 我的笔记"], index=0, key="view_mode")
+    view_mode = st.radio("页面模式", ["量化选股", "🎯 今日精选", "🎯 双引擎", "📐 实战公式", "每日复盘", "📝 我的笔记"], index=0, key="view_mode")
 
 st.markdown("""
 ## Vibe 量化 v2.1 (升级版)
@@ -1113,6 +1113,69 @@ if view_mode == "🎯 双引擎":
         st.caption(picks_data.get("risk_warning", "⚠️ 仅供参考"))
 
     st.stop()
+
+
+
+# ============ 📐 实战公式 (4 个) ============
+if view_mode == "📐 实战公式":
+    st.header("📐 实战公式 (4 个 Vibe 验证)")
+    st.caption("🎯 4 个经市场验证的实战选股公式 | 覆盖: 底部反转 / 趋势确立 / 价值起涨 / 主力介入")
+
+    formulas_file = "data/formulas_picks.json"
+    if not os.path.exists(formulas_file):
+        # 兜底读 reports/
+        formulas_file = "reports/formulas_picks.json"
+    if not os.path.exists(formulas_file):
+        st.error("❌ 公式 picks 还没生成,等今晚 17:00 daily.yml 跑完就有")
+        st.info("💡 想立刻跑?在 GitHub Actions 手动触发 'daily' workflow")
+        st.stop()
+
+    with open(formulas_file, "r", encoding="utf-8") as f:
+        formulas_data = json.load(f)
+
+    st.success(f"📅 数据日期: {formulas_data.get('date', 'N/A')} | ⏰ {formulas_data.get('update_time', 'N/A')} | 版本: {formulas_data.get('version', 'N/A')}")
+
+    # 4 个公式 tab
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "1️⃣ 缩量企稳上穿MA20",
+        "2️⃣ 多金叉共振",
+        "3️⃣ 起量+基本面",
+        "4️⃣ 强势主力介入",
+    ])
+
+    formula_keys = [
+        "1_缩量企稳上穿MA20",
+        "2_多金叉共振",
+        "3_起量基本面",
+        "4_强势主力",
+    ]
+    formula_descs = [
+        "**思路**: 抄底型 — 近1月跌20%+ 缩量企稳 + 站上MA20 + 资金小幅回流\n\n**适用**: 左侧布局,博反弹\n\n**风险**: 中,需严格止损",
+        "**思路**: 趋势型 — 上穿MA60 + MACD金叉 + 资金共振 + 量价齐升\n\n**适用**: 右侧追涨,中线持有\n\n**风险**: 中,关键支撑跌破止损",
+        "**思路**: 价值型 — 起量 + 业绩 + BPS 前 5\n\n**适用**: 中线持有,基本面兜底\n\n**风险**: 低,价值投资者",
+        "**思路**: 主力型 — 量价齐升 + 资金榜 top3\n\n**适用**: 短线博弈,快进快出\n\n**风险**: 高,严控仓位",
+    ]
+
+    for tab, key, desc in zip([tab1, tab2, tab3, tab4], formula_keys, formula_descs):
+        with tab:
+            st.markdown(desc)
+            st.divider()
+            picks = formulas_data.get("formulas", {}).get(key, [])
+            if not picks:
+                st.warning("⚠️ 今日无符合条件股票 (可能市场不满足条件)")
+                st.info("💡 这种时候不要硬买,空仓也是策略")
+            else:
+                st.success(f"✅ 找到 {len(picks)} 只")
+                # 表格展示
+                import pandas as pd
+                df_picks = pd.DataFrame([{"代码": p.split()[0], "名称": p.split()[1] if len(p.split()) > 1 else ""} for p in picks])
+                st.dataframe(df_picks, use_container_width=True, hide_index=True)
+                st.caption("💡 建议先加入自选,等回踩不破 MA5/MA10 再介入,严设止损")
+
+    st.divider()
+    st.info("💡 4 个公式可与「量化选股」叠加使用,选择共振票胜率更高")
+    st.stop()
+
 
 if view_mode == "每日复盘":
     st.header("📊 每日复盘报告")
