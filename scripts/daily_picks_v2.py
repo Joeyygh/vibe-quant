@@ -320,17 +320,55 @@ def generate_picks():
     def to_list(d):
         return [f"{r['code']} {r['name']}" for _, r in d.iterrows()] if not d.empty else []
     
+    # ========== 🎯 多公式共振分析 ==========
+    # 收集每只票的命中公式
+    code_to_formulas = {}
+    for fname, fdf in results.items():
+        if fdf is not None and not fdf.empty:
+            for _, r in fdf.iterrows():
+                code = r["code"]
+                if code not in code_to_formulas:
+                    code_to_formulas[code] = {"hits": [], "row": r}
+                code_to_formulas[code]["hits"].append(fname)
+    
+    # 至少 2 公式命中的票
+    resonance = []
+    for code, info in code_to_formulas.items():
+        if len(info["hits"]) >= 2:
+            r = info["row"]
+            resonance.append({
+                "code": code,
+                "name": r.get("name", ""),
+                "industry": r.get("industry", ""),
+                "pct_chg": float(r.get("pct_chg", 0)),
+                "close": float(r.get("close", 0)),
+                "turnover_rate": float(r.get("turnover_rate", 0)) if pd.notna(r.get("turnover_rate")) else 0,
+                "volume_ratio": float(r.get("volume_ratio", 0)) if pd.notna(r.get("volume_ratio")) else 0,
+                "money_3d": float(r.get("money_3d_wan", 0)) if pd.notna(r.get("money_3d_wan")) else 0,
+                "money_1d": float(r.get("money_1d_wan", 0)) if pd.notna(r.get("money_1d_wan")) else 0,
+                "hit_formulas": info["hits"],
+                "hit_count": len(info["hits"]),
+            })
+    resonance.sort(key=lambda x: (-x["hit_count"], x["pct_chg"]))
+    print(f"   🎯 共振股票: {len(resonance)} 只")
+    
     output = {
         "date": now.strftime("%Y-%m-%d"),
         "update_time": now.strftime("%H:%M"),
-        "version": "2.0-formulas",
+        "version": "2.1-resonance",
         "formulas": {
             "1_缩量企稳上穿MA20": to_list(results["1_缩量企稳上穿MA20"]),
             "2_多金叉共振": to_list(results["2_多金叉共振"]),
             "3_起量基本面": to_list(results["3_起量基本面"]),
             "4_强势主力": to_list(results["4_强势主力"]),
         },
-        "summary": {k: len(v) for k, v in results.items()},
+        "resonance": resonance,
+        "summary": {
+            "formulas": {k: len(v) for k, v in results.items()},
+            "resonance_total": len(resonance),
+            "resonance_2": sum(1 for r in resonance if r["hit_count"] == 2),
+            "resonance_3": sum(1 for r in resonance if r["hit_count"] >= 3),
+        },
     }
     return output
 
