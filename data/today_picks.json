@@ -1,7 +1,7 @@
 {
   "date": "2026-08-20",
-  "update_time": "22:44",
-  "version": "1.4-dynamic-auto-fixed (manual run)",
+  "update_time": "07:56",
+  "version": "1.4-dynamic-auto-fixed (manual run 8:00)",
   "weights": {
     "theme": 30,
     "money": 25,
@@ -13,7 +13,7 @@
     "pct_today_max": 7.0,
     "bias_5_max": 15.0
   },
-  "market_view": "8/20 收 5204 只,成交活跃,5 企推基于涨停+高成交,量化补充基于强势股+用户持仓",
+  "market_view": "8/20 收 5204 只, 5 企推基于涨停+高成交",
   "summary": {
     "theme_picks": 5,
     "quant_picks": 7,
