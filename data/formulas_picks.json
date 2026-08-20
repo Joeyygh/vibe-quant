@@ -1,444 +1,568 @@
 {
-  "date": "2026-08-19",
-  "update_time": "21:40",
+  "date": "2026-08-20",
+  "update_time": "09:27",
   "version": "2.1-resonance",
-  "data_source": "8/18 行情 + 8/14-8/18 资金流",
+  "data_source": "20260819 行情 + 8/15-8/19 资金流",
   "formulas": {
     "1_缩量企稳上穿MA20": [
-      "002156 通富微电",
-      "300394 天孚通信",
+      "300189 神农种业",
       "600206 有研新材",
-      "603259 药明康德",
-      "300570 太辰光",
-      "300475 香农芯创",
-      "001309 德明利",
-      "688766 普冉股份",
-      "601869 长飞光纤",
-      "000977 浪潮信息",
-      "300666 江丰电子",
-      "300054 鼎龙股份",
-      "688313 仕佳光子",
-      "300285 国瓷材料",
-      "000657 中钨高新"
+      "600367 红星发展",
+      "002202 金风科技",
+      "688036 传音控股",
+      "600598 北大荒",
+      "600026 中远海能",
+      "600219 南山铝业",
+      "002041 登海种业",
+      "600988 赤峰黄金",
+      "002647 仁东控股",
+      "301358 湖南裕能",
+      "300970 华绿生物",
+      "600216 浙江医药",
+      "301232 飞沃科技"
     ],
     "2_多金叉共振": [
-      "002156 通富微电",
-      "000725 京东方A",
-      "300570 太辰光",
-      "300433 蓝思科技",
-      "688503 聚和材料",
-      "600330 天通股份",
-      "688233 神工股份",
-      "603773 沃格光电",
-      "603929 亚翔集成",
-      "600703 三安光电",
-      "000670 盈方微",
-      "300757 罗博特科",
-      "600460 士兰微",
-      "002129 TCL中环",
-      "603067 振华股份"
+      "000620 盈新发展",
+      "300598 诚迈科技",
+      "601609 金田股份",
+      "600598 北大荒",
+      "600219 南山铝业",
+      "600547 山东黄金",
+      "000703 恒逸石化",
+      "603580 艾艾精工",
+      "301358 湖南裕能",
+      "300465 高伟达",
+      "688152 麒麟信安",
+      "000525 红太阳",
+      "300967 晓鸣股份",
+      "603406 天富龙",
+      "000523 红棉股份"
     ],
     "3_起量基本面": [
-      "301696 三瑞智能",
-      "603407 长裕集团",
-      "002290 禾盛新材",
-      "688019 安集科技",
-      "001359 平安电工",
-      "600206 有研新材",
-      "603650 彤程新材",
-      "688610 埃科光电",
-      "688188 柏楚电子",
-      "603211 晋拓股份"
+      "600367 红星发展",
+      "300046 台基股份",
+      "300865 大宏立",
+      "603406 天富龙",
+      "300970 华绿生物",
+      "603556 海兴电力",
+      "600566 济川药业",
+      "000651 格力电器",
+      "002508 老板电器",
+      "600219 南山铝业"
     ],
     "4_强势主力": [
-      "600206 有研新材",
-      "688503 聚和材料",
-      "600330 天通股份",
-      "600172 黄河旋风",
-      "603929 亚翔集成"
+      "000620 盈新发展",
+      "600367 红星发展",
+      "300598 诚迈科技",
+      "600598 北大荒",
+      "600313 农发种业"
     ]
   },
   "formulas_detail": {
     "1_缩量企稳上穿MA20": [
       {
-        "code": "002156",
-        "name": "通富微电",
-        "pct_chg": 2.0214,
-        "industry": "半导体",
-        "money_3d": 22.852932999999993,
-        "close": 70.66
-      },
-      {
-        "code": "300394",
-        "name": "天孚通信",
-        "pct_chg": 1.703,
-        "industry": "通信设备",
-        "money_3d": 11.369019,
-        "close": 291.44
+        "code": "300189",
+        "name": "神农种业",
+        "pct_chg": 0.1605,
+        "industry": "种植业",
+        "money_3d": 5.530825,
+        "close": 6.24,
+        "turnover_rate": 50.173,
+        "volume_ratio": 2.34
       },
       {
         "code": "600206",
         "name": "有研新材",
-        "pct_chg": 3.3298,
+        "pct_chg": 1.9924,
         "industry": "半导体",
-        "money_3d": 10.807993000000002,
-        "close": 57.72
+        "money_3d": 5.014719000000002,
+        "close": 58.87,
+        "turnover_rate": 21.6118,
+        "volume_ratio": 1.68
       },
       {
-        "code": "603259",
-        "name": "药明康德",
-        "pct_chg": 0.1738,
-        "industry": "化学制药",
-        "money_3d": 9.414999,
-        "close": 167.18
-      },
-      {
-        "code": "300570",
-        "name": "太辰光",
-        "pct_chg": 2.8225,
-        "industry": "通信设备",
-        "money_3d": 6.424979999999997,
-        "close": 199.27
-      },
-      {
-        "code": "300475",
-        "name": "香农芯创",
-        "pct_chg": 0.9245,
-        "industry": "元器件",
-        "money_3d": 6.000277999999997,
-        "close": 173.58
-      },
-      {
-        "code": "001309",
-        "name": "德明利",
-        "pct_chg": 0.4433,
-        "industry": "半导体",
-        "money_3d": 5.639476000000001,
-        "close": 437.33
-      },
-      {
-        "code": "688766",
-        "name": "普冉股份",
-        "pct_chg": 0.1738,
-        "industry": "半导体",
-        "money_3d": 5.609087000000005,
-        "close": 466.81
-      },
-      {
-        "code": "601869",
-        "name": "长飞光纤",
-        "pct_chg": 1.875,
-        "industry": "通信设备",
-        "money_3d": 4.826839999999996,
-        "close": 383.6
-      },
-      {
-        "code": "000977",
-        "name": "浪潮信息",
-        "pct_chg": 0.3594,
-        "industry": "IT设备",
-        "money_3d": 4.696941000000001,
-        "close": 80.97
-      },
-      {
-        "code": "300666",
-        "name": "江丰电子",
-        "pct_chg": 3.1354,
-        "industry": "半导体",
-        "money_3d": 4.279329000000001,
-        "close": 278.28
-      },
-      {
-        "code": "300054",
-        "name": "鼎龙股份",
-        "pct_chg": 0.2214,
+        "code": "600367",
+        "name": "红星发展",
+        "pct_chg": 4.316,
         "industry": "化工原料",
-        "money_3d": 3.9469179999999993,
-        "close": 81.48
+        "money_3d": 3.8968880000000015,
+        "close": 39.88,
+        "turnover_rate": 28.7469,
+        "volume_ratio": 2.49
       },
       {
-        "code": "688313",
-        "name": "仕佳光子",
-        "pct_chg": 1.4375,
+        "code": "002202",
+        "name": "金风科技",
+        "pct_chg": 0.0909,
+        "industry": "电气设备",
+        "money_3d": 2.498602000000001,
+        "close": 22.03,
+        "turnover_rate": 12.1368,
+        "volume_ratio": 3.17
+      },
+      {
+        "code": "688036",
+        "name": "传音控股",
+        "pct_chg": 1.7416,
         "industry": "通信设备",
-        "money_3d": 3.647772999999998,
-        "close": 162.3
+        "money_3d": 2.273708,
+        "close": 57.25,
+        "turnover_rate": 2.1192,
+        "volume_ratio": 1.49
       },
       {
-        "code": "300285",
-        "name": "国瓷材料",
-        "pct_chg": 1.0065,
-        "industry": "陶瓷",
-        "money_3d": 3.6332209999999963,
-        "close": 74.26
+        "code": "600598",
+        "name": "北大荒",
+        "pct_chg": 2.9718,
+        "industry": "种植业",
+        "money_3d": 1.7330840000000003,
+        "close": 13.86,
+        "turnover_rate": 8.4131,
+        "volume_ratio": 3.67
       },
       {
-        "code": "000657",
-        "name": "中钨高新",
-        "pct_chg": 3.4757,
-        "industry": "小金属",
-        "money_3d": 3.3270960000000023,
-        "close": 72.94
+        "code": "600026",
+        "name": "中远海能",
+        "pct_chg": 1.7778,
+        "industry": "水运",
+        "money_3d": 1.7201110000000004,
+        "close": 18.32,
+        "turnover_rate": 2.3155,
+        "volume_ratio": 2.08
+      },
+      {
+        "code": "600219",
+        "name": "南山铝业",
+        "pct_chg": 3.8697,
+        "industry": "铝",
+        "money_3d": 1.4160579999999998,
+        "close": 5.1,
+        "turnover_rate": 3.5239,
+        "volume_ratio": 2.24
+      },
+      {
+        "code": "002041",
+        "name": "登海种业",
+        "pct_chg": 1.0204,
+        "industry": "种植业",
+        "money_3d": 1.1651779999999996,
+        "close": 9.9,
+        "turnover_rate": 10.6232,
+        "volume_ratio": 3.75
+      },
+      {
+        "code": "600988",
+        "name": "赤峰黄金",
+        "pct_chg": 1.2082,
+        "industry": "黄金",
+        "money_3d": 1.068621999999998,
+        "close": 42.72,
+        "turnover_rate": 3.6739,
+        "volume_ratio": 1.03
+      },
+      {
+        "code": "002647",
+        "name": "仁东控股",
+        "pct_chg": 0.1671,
+        "industry": "多元金融",
+        "money_3d": 0.8496710000000003,
+        "close": 11.99,
+        "turnover_rate": 3.6832,
+        "volume_ratio": 1.26
+      },
+      {
+        "code": "301358",
+        "name": "湖南裕能",
+        "pct_chg": 2.07,
+        "industry": "电气设备",
+        "money_3d": 0.7889859999999993,
+        "close": 71.5,
+        "turnover_rate": 4.4123,
+        "volume_ratio": 1.64
+      },
+      {
+        "code": "300970",
+        "name": "华绿生物",
+        "pct_chg": 4.0166,
+        "industry": "种植业",
+        "money_3d": 0.777417,
+        "close": 22.53,
+        "turnover_rate": 31.4181,
+        "volume_ratio": 7.19
+      },
+      {
+        "code": "600216",
+        "name": "浙江医药",
+        "pct_chg": 1.2355,
+        "industry": "化学制药",
+        "money_3d": 0.749907,
+        "close": 13.93,
+        "turnover_rate": 7.6711,
+        "volume_ratio": 1.13
+      },
+      {
+        "code": "301232",
+        "name": "飞沃科技",
+        "pct_chg": 1.6797,
+        "industry": "机械基件",
+        "money_3d": 0.6330720000000001,
+        "close": 117.44,
+        "turnover_rate": 27.8711,
+        "volume_ratio": 4.68
       }
     ],
     "2_多金叉共振": [
       {
-        "code": "002156",
-        "name": "通富微电",
-        "pct_chg": 2.0214,
-        "industry": "半导体",
-        "money_3d": 22.852932999999993,
-        "close": 70.66
+        "code": "000620",
+        "name": "盈新发展",
+        "pct_chg": 3.8123,
+        "industry": "全国地产",
+        "money_3d": 2.7817899999999995,
+        "close": 3.54,
+        "turnover_rate": 19.2305,
+        "volume_ratio": 2.26
       },
       {
-        "code": "000725",
-        "name": "京东方A",
-        "pct_chg": 6.4145,
-        "industry": "元器件",
-        "money_3d": 16.862477000000002,
-        "close": 6.47
+        "code": "300598",
+        "name": "诚迈科技",
+        "pct_chg": 2.7457,
+        "industry": "软件服务",
+        "money_3d": 2.1183460000000007,
+        "close": 35.55,
+        "turnover_rate": 18.3809,
+        "volume_ratio": 4.75
       },
       {
-        "code": "300570",
-        "name": "太辰光",
-        "pct_chg": 2.8225,
-        "industry": "通信设备",
-        "money_3d": 6.424979999999997,
-        "close": 199.27
+        "code": "601609",
+        "name": "金田股份",
+        "pct_chg": 8.3682,
+        "industry": "铜",
+        "money_3d": 1.9080659999999998,
+        "close": 12.95,
+        "turnover_rate": 11.7964,
+        "volume_ratio": 3.13
       },
       {
-        "code": "300433",
-        "name": "蓝思科技",
-        "pct_chg": 5.7583,
-        "industry": "元器件",
-        "money_3d": 5.372481999999999,
-        "close": 39.12
+        "code": "600598",
+        "name": "北大荒",
+        "pct_chg": 2.9718,
+        "industry": "种植业",
+        "money_3d": 1.7330840000000003,
+        "close": 13.86,
+        "turnover_rate": 8.4131,
+        "volume_ratio": 3.67
       },
       {
-        "code": "688503",
-        "name": "聚和材料",
-        "pct_chg": 6.7308,
+        "code": "600219",
+        "name": "南山铝业",
+        "pct_chg": 3.8697,
+        "industry": "铝",
+        "money_3d": 1.4160579999999998,
+        "close": 5.1,
+        "turnover_rate": 3.5239,
+        "volume_ratio": 2.24
+      },
+      {
+        "code": "600547",
+        "name": "山东黄金",
+        "pct_chg": 6.5011,
+        "industry": "黄金",
+        "money_3d": 1.2584630000000006,
+        "close": 32.6,
+        "turnover_rate": 4.8905,
+        "volume_ratio": 2.59
+      },
+      {
+        "code": "000703",
+        "name": "恒逸石化",
+        "pct_chg": 9.2158,
+        "industry": "化纤",
+        "money_3d": 1.1508640000000008,
+        "close": 19.08,
+        "turnover_rate": 4.587,
+        "volume_ratio": 2.38
+      },
+      {
+        "code": "603580",
+        "name": "艾艾精工",
+        "pct_chg": 6.2012,
+        "industry": "塑料",
+        "money_3d": 1.0746559999999998,
+        "close": 67.99,
+        "turnover_rate": 14.4038,
+        "volume_ratio": 1.91
+      },
+      {
+        "code": "301358",
+        "name": "湖南裕能",
+        "pct_chg": 2.07,
         "industry": "电气设备",
-        "money_3d": 5.336272000000002,
-        "close": 102.12
+        "money_3d": 0.7889859999999993,
+        "close": 71.5,
+        "turnover_rate": 4.4123,
+        "volume_ratio": 1.64
       },
       {
-        "code": "600330",
-        "name": "天通股份",
-        "pct_chg": 6.9505,
-        "industry": "专用机械",
-        "money_3d": 4.336529,
-        "close": 29.39
+        "code": "300465",
+        "name": "高伟达",
+        "pct_chg": 2.1962,
+        "industry": "软件服务",
+        "money_3d": 0.5323789999999999,
+        "close": 13.96,
+        "turnover_rate": 14.2384,
+        "volume_ratio": 2.81
       },
       {
-        "code": "688233",
-        "name": "神工股份",
-        "pct_chg": 8.2782,
-        "industry": "半导体",
-        "money_3d": 2.915003999999999,
-        "close": 134.2
+        "code": "688152",
+        "name": "麒麟信安",
+        "pct_chg": 8.4334,
+        "industry": "软件服务",
+        "money_3d": 0.4347630000000001,
+        "close": 37.93,
+        "turnover_rate": 12.9801,
+        "volume_ratio": 5.79
       },
       {
-        "code": "603773",
-        "name": "沃格光电",
-        "pct_chg": 7.1873,
-        "industry": "元器件",
-        "money_3d": 2.395747,
-        "close": 112.0
+        "code": "000525",
+        "name": "红太阳",
+        "pct_chg": 5.7692,
+        "industry": "农药化肥",
+        "money_3d": 0.312283,
+        "close": 4.95,
+        "turnover_rate": 8.7427,
+        "volume_ratio": 3.82
       },
       {
-        "code": "603929",
-        "name": "亚翔集成",
-        "pct_chg": 2.2238,
-        "industry": "装修装饰",
-        "money_3d": 2.395675,
-        "close": 182.95
+        "code": "300967",
+        "name": "晓鸣股份",
+        "pct_chg": 2.0735,
+        "industry": "农业综合",
+        "money_3d": 0.30435299999999993,
+        "close": 17.23,
+        "turnover_rate": 14.3586,
+        "volume_ratio": 2.51
       },
       {
-        "code": "600703",
-        "name": "三安光电",
-        "pct_chg": 4.8057,
-        "industry": "半导体",
-        "money_3d": 2.2038800000000003,
-        "close": 14.83
+        "code": "603406",
+        "name": "天富龙",
+        "pct_chg": 3.9242,
+        "industry": "化纤",
+        "money_3d": 0.27053600000000005,
+        "close": 30.72,
+        "turnover_rate": 16.6703,
+        "volume_ratio": 5.43
       },
       {
-        "code": "000670",
-        "name": "盈方微",
-        "pct_chg": 2.6525,
-        "industry": "元器件",
-        "money_3d": 2.1798559999999996,
-        "close": 7.74
-      },
-      {
-        "code": "300757",
-        "name": "罗博特科",
-        "pct_chg": 2.9209,
-        "industry": "专用机械",
-        "money_3d": 1.8977560000000013,
-        "close": 546.51
-      },
-      {
-        "code": "600460",
-        "name": "士兰微",
-        "pct_chg": 2.4376,
-        "industry": "半导体",
-        "money_3d": 1.8864200000000004,
-        "close": 34.88
-      },
-      {
-        "code": "002129",
-        "name": "TCL中环",
-        "pct_chg": 3.3229,
-        "industry": "电气设备",
-        "money_3d": 1.7374190000000003,
-        "close": 9.95
-      },
-      {
-        "code": "603067",
-        "name": "振华股份",
-        "pct_chg": 3.8609,
-        "industry": "化工原料",
-        "money_3d": 1.574623000000001,
-        "close": 37.93
+        "code": "000523",
+        "name": "红棉股份",
+        "pct_chg": 5.5921,
+        "industry": "食品",
+        "money_3d": 0.18764800000000006,
+        "close": 3.21,
+        "turnover_rate": 11.9935,
+        "volume_ratio": 5.32
       }
     ],
     "3_起量基本面": [
       {
-        "code": "301696",
-        "name": "三瑞智能",
-        "pct_chg": 3.7,
-        "industry": "电气设备",
-        "money_3d": 0.1568989999999998,
-        "close": 114.35
-      },
-      {
-        "code": "603407",
-        "name": "长裕集团",
-        "pct_chg": 3.4273,
+        "code": "600367",
+        "name": "红星发展",
+        "pct_chg": 4.316,
         "industry": "化工原料",
-        "money_3d": 0.19552199999999975,
-        "close": 67.9
+        "money_3d": 3.8968880000000015,
+        "close": 39.88,
+        "turnover_rate": 28.7469,
+        "volume_ratio": 2.49
       },
       {
-        "code": "002290",
-        "name": "禾盛新材",
-        "pct_chg": 3.0517,
-        "industry": "家用电器",
-        "money_3d": 0.5157039999999999,
-        "close": 68.55
-      },
-      {
-        "code": "688019",
-        "name": "安集科技",
-        "pct_chg": 4.2227,
+        "code": "300046",
+        "name": "台基股份",
+        "pct_chg": 3.2385,
         "industry": "半导体",
-        "money_3d": 0.5753439999999987,
-        "close": 272.98
+        "money_3d": 0.014832000000000109,
+        "close": 26.14,
+        "turnover_rate": 7.5342,
+        "volume_ratio": 3.35
       },
       {
-        "code": "001359",
-        "name": "平安电工",
-        "pct_chg": 4.4517,
-        "industry": "矿物制品",
-        "money_3d": 0.1381330000000001,
-        "close": 96.2
-      },
-      {
-        "code": "600206",
-        "name": "有研新材",
-        "pct_chg": 3.3298,
-        "industry": "半导体",
-        "money_3d": 10.807993000000002,
-        "close": 57.72
-      },
-      {
-        "code": "603650",
-        "name": "彤程新材",
-        "pct_chg": 4.0855,
-        "industry": "化工原料",
-        "money_3d": 0.6706529999999998,
-        "close": 70.57
-      },
-      {
-        "code": "688610",
-        "name": "埃科光电",
-        "pct_chg": 4.8753,
-        "industry": "电器仪表",
-        "money_3d": 0.32840599999999975,
-        "close": 185.0
-      },
-      {
-        "code": "688188",
-        "name": "柏楚电子",
-        "pct_chg": 4.1302,
+        "code": "300865",
+        "name": "大宏立",
+        "pct_chg": 4.2357,
         "industry": "专用机械",
-        "money_3d": 0.18036499999999997,
-        "close": 107.15
+        "money_3d": 0.07379000000000004,
+        "close": 28.3,
+        "turnover_rate": 15.3035,
+        "volume_ratio": 3.14
       },
       {
-        "code": "603211",
-        "name": "晋拓股份",
-        "pct_chg": 3.6475,
-        "industry": "汽车配件",
-        "money_3d": 0.04840099999999998,
-        "close": 28.7
+        "code": "603406",
+        "name": "天富龙",
+        "pct_chg": 3.9242,
+        "industry": "化纤",
+        "money_3d": 0.27053600000000005,
+        "close": 30.72,
+        "turnover_rate": 16.6703,
+        "volume_ratio": 5.43
+      },
+      {
+        "code": "300970",
+        "name": "华绿生物",
+        "pct_chg": 4.0166,
+        "industry": "种植业",
+        "money_3d": 0.777417,
+        "close": 22.53,
+        "turnover_rate": 31.4181,
+        "volume_ratio": 7.19
+      },
+      {
+        "code": "603556",
+        "name": "海兴电力",
+        "pct_chg": 4.8872,
+        "industry": "电器仪表",
+        "money_3d": 0.1848210000000001,
+        "close": 27.9,
+        "turnover_rate": 5.8938,
+        "volume_ratio": 2.14
+      },
+      {
+        "code": "600566",
+        "name": "济川药业",
+        "pct_chg": 3.4569,
+        "industry": "中成药",
+        "money_3d": 0.01985200000000001,
+        "close": 24.84,
+        "turnover_rate": 1.2452,
+        "volume_ratio": 2.16
+      },
+      {
+        "code": "000651",
+        "name": "格力电器",
+        "pct_chg": 3.1453,
+        "industry": "家用电器",
+        "money_3d": 1.521671,
+        "close": 41.32,
+        "turnover_rate": 1.3712,
+        "volume_ratio": 2.53
+      },
+      {
+        "code": "002508",
+        "name": "老板电器",
+        "pct_chg": 4.3175,
+        "industry": "家用电器",
+        "money_3d": 0.002400000000000027,
+        "close": 16.43,
+        "turnover_rate": 2.4614,
+        "volume_ratio": 2.44
+      },
+      {
+        "code": "600219",
+        "name": "南山铝业",
+        "pct_chg": 3.8697,
+        "industry": "铝",
+        "money_3d": 1.4160579999999998,
+        "close": 5.1,
+        "turnover_rate": 3.5239,
+        "volume_ratio": 2.24
       }
     ],
     "4_强势主力": [
       {
-        "code": "600206",
-        "name": "有研新材",
-        "pct_chg": 3.3298,
-        "industry": "半导体",
-        "money_3d": 10.807993000000002,
-        "close": 57.72
+        "code": "000620",
+        "name": "盈新发展",
+        "pct_chg": 3.8123,
+        "industry": "全国地产",
+        "money_3d": 2.7817899999999995,
+        "close": 3.54,
+        "turnover_rate": 19.2305,
+        "volume_ratio": 2.26
       },
       {
-        "code": "688503",
-        "name": "聚和材料",
-        "pct_chg": 6.7308,
-        "industry": "电气设备",
-        "money_3d": 5.336272000000002,
-        "close": 102.12
+        "code": "600367",
+        "name": "红星发展",
+        "pct_chg": 4.316,
+        "industry": "化工原料",
+        "money_3d": 3.8968880000000015,
+        "close": 39.88,
+        "turnover_rate": 28.7469,
+        "volume_ratio": 2.49
       },
       {
-        "code": "600330",
-        "name": "天通股份",
-        "pct_chg": 6.9505,
-        "industry": "专用机械",
-        "money_3d": 4.336529,
-        "close": 29.39
+        "code": "300598",
+        "name": "诚迈科技",
+        "pct_chg": 2.7457,
+        "industry": "软件服务",
+        "money_3d": 2.1183460000000007,
+        "close": 35.55,
+        "turnover_rate": 18.3809,
+        "volume_ratio": 4.75
       },
       {
-        "code": "600172",
-        "name": "黄河旋风",
-        "pct_chg": 4.9853,
-        "industry": "矿物制品",
-        "money_3d": 4.121303999999999,
-        "close": 14.32
+        "code": "600598",
+        "name": "北大荒",
+        "pct_chg": 2.9718,
+        "industry": "种植业",
+        "money_3d": 1.7330840000000003,
+        "close": 13.86,
+        "turnover_rate": 8.4131,
+        "volume_ratio": 3.67
       },
       {
-        "code": "603929",
-        "name": "亚翔集成",
-        "pct_chg": 2.2238,
-        "industry": "装修装饰",
-        "money_3d": 2.395675,
-        "close": 182.95
+        "code": "600313",
+        "name": "农发种业",
+        "pct_chg": 5.1622,
+        "industry": "种植业",
+        "money_3d": 2.118854,
+        "close": 7.13,
+        "turnover_rate": 21.1144,
+        "volume_ratio": 5.44
       }
     ]
   },
   "resonance": [
     {
-      "code": "600206",
-      "name": "有研新材",
-      "industry": "半导体",
-      "pct_chg": 3.3298,
-      "close": 57.72,
-      "turnover_rate": 20.0113,
-      "volume_ratio": 1.63,
-      "money_3d": 10.807993000000002,
-      "money_1d": 10.807993000000002,
+      "code": "600598",
+      "name": "北大荒",
+      "industry": "种植业",
+      "pct_chg": 2.9718,
+      "close": 13.86,
+      "turnover_rate": 8.4131,
+      "volume_ratio": 3.67,
+      "money_3d": 1.7330840000000003,
+      "money_1d": 1.5327730000000004,
+      "hit_formulas": [
+        "1_缩量企稳上穿MA20",
+        "2_多金叉共振",
+        "4_强势主力"
+      ],
+      "hit_count": 3
+    },
+    {
+      "code": "600219",
+      "name": "南山铝业",
+      "industry": "铝",
+      "pct_chg": 3.8697,
+      "close": 5.1,
+      "turnover_rate": 3.5239,
+      "volume_ratio": 2.24,
+      "money_3d": 1.4160579999999998,
+      "money_1d": 0.48887700000000006,
+      "hit_formulas": [
+        "1_缩量企稳上穿MA20",
+        "2_多金叉共振",
+        "3_起量基本面"
+      ],
+      "hit_count": 3
+    },
+    {
+      "code": "600367",
+      "name": "红星发展",
+      "industry": "化工原料",
+      "pct_chg": 4.316,
+      "close": 39.88,
+      "turnover_rate": 28.7469,
+      "volume_ratio": 2.49,
+      "money_3d": 3.8968880000000015,
+      "money_1d": 4.031207000000001,
       "hit_formulas": [
         "1_缩量企稳上穿MA20",
         "3_起量基本面",
@@ -447,63 +571,31 @@
       "hit_count": 3
     },
     {
-      "code": "002156",
-      "name": "通富微电",
-      "industry": "半导体",
-      "pct_chg": 2.0214,
-      "close": 70.66,
-      "turnover_rate": 12.1094,
-      "volume_ratio": 1.96,
-      "money_3d": 22.852932999999993,
-      "money_1d": 22.852932999999993,
-      "hit_formulas": [
-        "1_缩量企稳上穿MA20",
-        "2_多金叉共振"
-      ],
-      "hit_count": 2
-    },
-    {
-      "code": "603929",
-      "name": "亚翔集成",
-      "industry": "装修装饰",
-      "pct_chg": 2.2238,
-      "close": 182.95,
-      "turnover_rate": 5.5682,
-      "volume_ratio": 2.3,
-      "money_3d": 2.395675,
-      "money_1d": 2.395675,
-      "hit_formulas": [
-        "2_多金叉共振",
-        "4_强势主力"
-      ],
-      "hit_count": 2
-    },
-    {
-      "code": "300570",
-      "name": "太辰光",
-      "industry": "通信设备",
-      "pct_chg": 2.8225,
-      "close": 199.27,
-      "turnover_rate": 14.8494,
-      "volume_ratio": 1.41,
-      "money_3d": 6.424979999999997,
-      "money_1d": 6.424979999999997,
-      "hit_formulas": [
-        "1_缩量企稳上穿MA20",
-        "2_多金叉共振"
-      ],
-      "hit_count": 2
-    },
-    {
-      "code": "688503",
-      "name": "聚和材料",
+      "code": "301358",
+      "name": "湖南裕能",
       "industry": "电气设备",
-      "pct_chg": 6.7308,
-      "close": 102.12,
-      "turnover_rate": 15.865,
-      "volume_ratio": 2.0,
-      "money_3d": 5.336272000000002,
-      "money_1d": 5.336272000000002,
+      "pct_chg": 2.07,
+      "close": 71.5,
+      "turnover_rate": 4.4123,
+      "volume_ratio": 1.64,
+      "money_3d": 0.7889859999999993,
+      "money_1d": -0.4972779999999999,
+      "hit_formulas": [
+        "1_缩量企稳上穿MA20",
+        "2_多金叉共振"
+      ],
+      "hit_count": 2
+    },
+    {
+      "code": "300598",
+      "name": "诚迈科技",
+      "industry": "软件服务",
+      "pct_chg": 2.7457,
+      "close": 35.55,
+      "turnover_rate": 18.3809,
+      "volume_ratio": 4.75,
+      "money_3d": 2.1183460000000007,
+      "money_1d": 2.1407600000000007,
       "hit_formulas": [
         "2_多金叉共振",
         "4_强势主力"
@@ -511,18 +603,50 @@
       "hit_count": 2
     },
     {
-      "code": "600330",
-      "name": "天通股份",
-      "industry": "专用机械",
-      "pct_chg": 6.9505,
-      "close": 29.39,
-      "turnover_rate": 16.8205,
-      "volume_ratio": 1.69,
-      "money_3d": 4.336529,
-      "money_1d": 4.336529,
+      "code": "000620",
+      "name": "盈新发展",
+      "industry": "全国地产",
+      "pct_chg": 3.8123,
+      "close": 3.54,
+      "turnover_rate": 19.2305,
+      "volume_ratio": 2.26,
+      "money_3d": 2.7817899999999995,
+      "money_1d": 4.801277,
       "hit_formulas": [
         "2_多金叉共振",
         "4_强势主力"
+      ],
+      "hit_count": 2
+    },
+    {
+      "code": "603406",
+      "name": "天富龙",
+      "industry": "化纤",
+      "pct_chg": 3.9242,
+      "close": 30.72,
+      "turnover_rate": 16.6703,
+      "volume_ratio": 5.43,
+      "money_3d": 0.27053600000000005,
+      "money_1d": 0.27452600000000005,
+      "hit_formulas": [
+        "2_多金叉共振",
+        "3_起量基本面"
+      ],
+      "hit_count": 2
+    },
+    {
+      "code": "300970",
+      "name": "华绿生物",
+      "industry": "种植业",
+      "pct_chg": 4.0166,
+      "close": 22.53,
+      "turnover_rate": 31.4181,
+      "volume_ratio": 7.19,
+      "money_3d": 0.777417,
+      "money_1d": 0.730859,
+      "hit_formulas": [
+        "1_缩量企稳上穿MA20",
+        "3_起量基本面"
       ],
       "hit_count": 2
     }
@@ -534,9 +658,8 @@
       "3_起量基本面": 10,
       "4_强势主力": 5
     },
-    "resonance_total": 6,
+    "resonance_total": 8,
     "resonance_2": 5,
-    "resonance_3": 1,
-    "resonance_4": 0
+    "resonance_3": 3
   }
 }
