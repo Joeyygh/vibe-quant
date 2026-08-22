@@ -1,38 +1,490 @@
 {
-  "date": "2026-08-21",
-  "update_time": "18:14",
-  "version": "2.1-resonance",
-  "formulas": {
-    "1_缩量企稳上穿MA20": [
-      "600547 山东黄金",
-      "300570 太辰光",
-      "301232 飞沃科技",
-      "603290 斯达半导",
-      "601609 金田股份",
-      "688826 C频准",
-      "002025 航天电器",
-      "000703 恒逸石化",
-      "000975 山金国际",
-      "603936 博敏电子"
+  "date": "2026-08-22",
+  "update_time": "20:53",
+  "version": "3.0-multi-strategy",
+  "data_source": "20260820 行情 + 资金流 + 板块",
+  "market": {
+    "status": "🟢 普涨 (大盘+1.46%, 涨家75%), 全部允许",
+    "market_pct": 1.4626066871637202,
+    "up_ratio": 0.7524980784012298,
+    "up_limit": 131,
+    "down_limit": 27,
+    "hot_industries": []
+  },
+  "strategies": {
+    "A_保守稳健": [
+      {
+        "code": "002716",
+        "name": "湖南白银",
+        "pct_chg": 4.0659,
+        "industry": "小金属",
+        "close": 9.47,
+        "money_3d": 12.067081999999997,
+        "money_1d": 10.603499999999997,
+        "volume_ratio": 1.27,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "600489",
+        "name": "中金黄金",
+        "pct_chg": 4.6844,
+        "industry": "黄金",
+        "close": 26.37,
+        "money_3d": 5.621497,
+        "money_1d": 3.641624000000002,
+        "volume_ratio": 1.7,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "002536",
+        "name": "飞龙股份",
+        "pct_chg": 2.1531,
+        "industry": "汽车配件",
+        "close": 42.7,
+        "money_3d": 4.834766999999999,
+        "money_1d": 4.833944,
+        "volume_ratio": 0.83,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "002353",
+        "name": "杰瑞股份",
+        "pct_chg": 1.8272,
+        "industry": "化工机械",
+        "close": 153.25,
+        "money_3d": 4.6332070000000005,
+        "money_1d": 1.5991109999999993,
+        "volume_ratio": 0.71,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "002396",
+        "name": "星网锐捷",
+        "pct_chg": 2.2727,
+        "industry": "通信设备",
+        "close": 30.15,
+        "money_3d": 4.367464,
+        "money_1d": 7.118629999999999,
+        "volume_ratio": 0.65,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "000975",
+        "name": "山金国际",
+        "pct_chg": 4.1045,
+        "industry": "黄金",
+        "close": 27.9,
+        "money_3d": 3.791793999999999,
+        "money_1d": 0.45013300000000017,
+        "volume_ratio": 1.78,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "001337",
+        "name": "四川黄金",
+        "pct_chg": 2.2957,
+        "industry": "黄金",
+        "close": 48.57,
+        "money_3d": 3.172732000000001,
+        "money_1d": 1.9298239999999998,
+        "volume_ratio": 1.58,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "300016",
+        "name": "北陆药业",
+        "pct_chg": 4.8193,
+        "industry": "化学制药",
+        "close": 8.7,
+        "money_3d": 2.9459269999999993,
+        "money_1d": 3.0027369999999993,
+        "volume_ratio": 1.5,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "000628",
+        "name": "高新发展",
+        "pct_chg": 4.0636,
+        "industry": "建筑工程",
+        "close": 41.23,
+        "money_3d": 2.731555,
+        "money_1d": 1.7233470000000002,
+        "volume_ratio": 1.2,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "300454",
+        "name": "深信服",
+        "pct_chg": 3.5091,
+        "industry": "软件服务",
+        "close": 118.58,
+        "money_3d": 2.4162159999999995,
+        "money_1d": 2.1350369999999996,
+        "volume_ratio": 0.84,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "600353",
+        "name": "旭光电子",
+        "pct_chg": 2.9891,
+        "industry": "元器件",
+        "close": 34.8,
+        "money_3d": 2.349321999999995,
+        "money_1d": 4.944213999999999,
+        "volume_ratio": 1.56,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "601069",
+        "name": "西部黄金",
+        "pct_chg": 4.888,
+        "industry": "黄金",
+        "close": 30.9,
+        "money_3d": 2.306179,
+        "money_1d": 0.7819529999999999,
+        "volume_ratio": 1.67,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "600711",
+        "name": "盛屯矿业",
+        "pct_chg": 1.6594,
+        "industry": "小金属",
+        "close": 11.64,
+        "money_3d": 2.276088999999999,
+        "money_1d": 1.382629999999999,
+        "volume_ratio": 1.15,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "000737",
+        "name": "北方铜业",
+        "pct_chg": 1.5896,
+        "industry": "铜",
+        "close": 14.06,
+        "money_3d": 2.2677809999999994,
+        "money_1d": 2.179079999999999,
+        "volume_ratio": 1.0,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "688677",
+        "name": "海泰新光",
+        "pct_chg": 1.4728,
+        "industry": "医疗保健",
+        "close": 87.5,
+        "money_3d": 1.9932580000000004,
+        "money_1d": 1.016446,
+        "volume_ratio": 0.83,
+        "in_hot_industry": false,
+        "score": 100
+      }
     ],
-    "2_多金叉共振": [],
-    "3_起量基本面": [],
-    "4_强势主力": [
-      "300142 沃森生物",
-      "300109 新开源",
-      "603123 翠微股份"
+    "B_趋势跟随": [
+      {
+        "code": "000421",
+        "name": "南京公用",
+        "pct_chg": 5.5655,
+        "industry": "供气供热",
+        "close": 5.88,
+        "money_3d": 0.422404,
+        "volume_ratio": 6.12,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "603113",
+        "name": "金能科技",
+        "pct_chg": 7.767,
+        "industry": "化工原料",
+        "close": 5.55,
+        "money_3d": 0.6249899999999999,
+        "volume_ratio": 5.38,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "603199",
+        "name": "九华旅游",
+        "pct_chg": 7.3232,
+        "industry": "旅游景点",
+        "close": 34.0,
+        "money_3d": 0.030270999999999992,
+        "volume_ratio": 5.18,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "600610",
+        "name": "中毅达",
+        "pct_chg": 2.8205,
+        "industry": "化工原料",
+        "close": 8.02,
+        "money_3d": 1.3092049999999995,
+        "volume_ratio": 4.62,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "600315",
+        "name": "上海家化",
+        "pct_chg": 6.7905,
+        "industry": "日用化工",
+        "close": 18.4,
+        "money_3d": 0.06194600000000003,
+        "volume_ratio": 3.94,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "002427",
+        "name": "尤夫股份",
+        "pct_chg": 5.7339,
+        "industry": "化纤",
+        "close": 4.61,
+        "money_3d": 0.39502400000000004,
+        "volume_ratio": 3.85,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "300927",
+        "name": "江天化学",
+        "pct_chg": 7.0574,
+        "industry": "化工原料",
+        "close": 25.94,
+        "money_3d": 0.237271,
+        "volume_ratio": 3.67,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "601089",
+        "name": "福元医药",
+        "pct_chg": 6.6432,
+        "industry": "化学制药",
+        "close": 18.14,
+        "money_3d": 0.603873,
+        "volume_ratio": 3.55,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "002755",
+        "name": "奥赛康",
+        "pct_chg": 6.8702,
+        "industry": "化学制药",
+        "close": 14.0,
+        "money_3d": 0.6156289999999998,
+        "volume_ratio": 3.37,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "002693",
+        "name": "双成药业",
+        "pct_chg": 7.0815,
+        "industry": "生物制药",
+        "close": 9.98,
+        "money_3d": 0.4803900000000003,
+        "volume_ratio": 3.33,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "002393",
+        "name": "力生制药",
+        "pct_chg": 4.6431,
+        "industry": "化学制药",
+        "close": 15.1,
+        "money_3d": 0.15548800000000002,
+        "volume_ratio": 3.24,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "001225",
+        "name": "和泰机电",
+        "pct_chg": 8.5548,
+        "industry": "专用机械",
+        "close": 46.57,
+        "money_3d": 0.333646,
+        "volume_ratio": 3.15,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "600851",
+        "name": "海欣股份",
+        "pct_chg": 4.5508,
+        "industry": "化学制药",
+        "close": 8.96,
+        "money_3d": 0.35549100000000006,
+        "volume_ratio": 3.07,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "301212",
+        "name": "联盛化学",
+        "pct_chg": 8.2432,
+        "industry": "化工原料",
+        "close": 24.03,
+        "money_3d": 0.25625599999999993,
+        "volume_ratio": 3.0,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "001301",
+        "name": "尚太科技",
+        "pct_chg": 2.9681,
+        "industry": "电气设备",
+        "close": 64.18,
+        "money_3d": 1.0599539999999985,
+        "volume_ratio": 2.87,
+        "in_hot_industry": false,
+        "score": 100
+      }
+    ],
+    "C_抄底反弹": [
+      {
+        "code": "688027",
+        "name": "国盾量子",
+        "pct_chg": -1.0175,
+        "industry": "通信设备",
+        "close": 386.2,
+        "money_1d": -0.16139699999999993,
+        "volume_ratio": 0.74,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "002428",
+        "name": "云南锗业",
+        "pct_chg": -1.0888,
+        "industry": "小金属",
+        "close": 103.56,
+        "money_1d": -3.8895360000000014,
+        "volume_ratio": 0.82,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "601606",
+        "name": "长城军工",
+        "pct_chg": -1.2642,
+        "industry": "专用机械",
+        "close": 30.46,
+        "money_1d": -0.3644780000000001,
+        "volume_ratio": 0.64,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "301396",
+        "name": "宏景科技",
+        "pct_chg": -1.052,
+        "industry": "软件服务",
+        "close": 190.0,
+        "money_1d": -2.3794499999999985,
+        "volume_ratio": 0.64,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "001331",
+        "name": "胜通能源",
+        "pct_chg": -1.086,
+        "industry": "供气供热",
+        "close": 44.63,
+        "money_1d": 0.23707400000000006,
+        "volume_ratio": 0.83,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "603026",
+        "name": "石大胜华",
+        "pct_chg": -2.7637,
+        "industry": "化工原料",
+        "close": 63.33,
+        "money_1d": -0.3030040000000001,
+        "volume_ratio": 0.72,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "688568",
+        "name": "中科星图",
+        "pct_chg": -2.8235,
+        "industry": "软件服务",
+        "close": 33.04,
+        "money_1d": -0.075125,
+        "volume_ratio": 0.93,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "301269",
+        "name": "华大九天",
+        "pct_chg": -2.443,
+        "industry": "半导体",
+        "close": 94.64,
+        "money_1d": 0.29894400000000004,
+        "volume_ratio": 0.76,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "688627",
+        "name": "精智达",
+        "pct_chg": -1.6931,
+        "industry": "专用机械",
+        "close": 483.66,
+        "money_1d": -0.9369349999999976,
+        "volume_ratio": 0.9,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "300720",
+        "name": "海川智能",
+        "pct_chg": -1.1195,
+        "industry": "电器仪表",
+        "close": 78.61,
+        "money_1d": -0.24811699999999984,
+        "volume_ratio": 0.72,
+        "in_hot_industry": false,
+        "score": 100
+      }
     ]
   },
   "resonance": [],
+  "holdings_warnings": [],
   "summary": {
-    "formulas": {
-      "1_缩量企稳上穿MA20": 10,
-      "2_多金叉共振": 0,
-      "3_起量基本面": 0,
-      "4_强势主力": 3
+    "strategies": {
+      "A_保守稳健": 15,
+      "B_趋势跟随": 15,
+      "C_抄底反弹": 10
     },
     "resonance_total": 0,
     "resonance_2": 0,
-    "resonance_3": 0
+    "resonance_3": 0,
+    "holdings_count": 0
   }
 }
