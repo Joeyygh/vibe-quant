@@ -1192,15 +1192,27 @@ if view_mode == "📐 实战公式":
         with tab:
             st.markdown(desc)
             st.divider()
-            picks = formulas_data.get("formulas", {}).get(key, [])
+            # 兼容 v3.0 (strategies 字段) 和 v2.x (formulas 字段)
+            if "strategies" in formulas_data:
+                picks = formulas_data.get("strategies", {}).get(key, [])
+                # v3.0 格式: 已经是 dict 列表
+                df_picks = pd.DataFrame([{
+                    "代码": p["code"],
+                    "名称": p.get("name", ""),
+                    "涨跌幅": f"{p.get('pct_chg', 0):+.2f}%",
+                    "板块": p.get("industry", ""),
+                    "风口": "🔥" if p.get("in_hot_industry") else "",
+                    "3日资金(亿)": f"{p.get('money_3d', 0)/10000:+.2f}",
+                } for p in picks])
+            else:
+                picks = formulas_data.get("formulas", {}).get(key, [])
+                df_picks = pd.DataFrame([{"代码": p.split()[0], "名称": p.split()[1] if len(p.split()) > 1 else ""} for p in picks])
+            
             if not picks:
                 st.warning("⚠️ 今日无符合条件股票 (可能市场不满足条件)")
                 st.info("💡 这种时候不要硬买,空仓也是策略")
             else:
                 st.success(f"✅ 找到 {len(picks)} 只")
-                # 表格展示
-                import pandas as pd
-                df_picks = pd.DataFrame([{"代码": p.split()[0], "名称": p.split()[1] if len(p.split()) > 1 else ""} for p in picks])
                 st.dataframe(df_picks, use_container_width=True, hide_index=True)
                 st.caption("💡 建议先加入自选,等回踩不破 MA5/MA10 再介入,严设止损")
 
