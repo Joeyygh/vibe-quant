@@ -1146,26 +1146,47 @@ if view_mode == "📐 实战公式":
         st.info("💡 **多公式共振 = 高信心信号**!同一只票被多个公式选中,说明技术面/资金面/基本面多维度确认,优先级 > 单公式。点 '🎯 多公式共振' 看详情。")
     st.divider()
 
-    # 4 个公式 tab
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "1️⃣ 缩量企稳上穿MA20",
-        "2️⃣ 多金叉共振",
-        "3️⃣ 起量+基本面",
-        "4️⃣ 强势主力介入",
-    ])
+    # 3 大策略 + 1 个实战公式
+    if "strategies" in formulas_data:
+        # v3.0 多策略
+        tab1, tab2, tab3, tab4 = st.tabs([
+            "🅰️ 保守稳健",
+            "🅱️ 趋势跟随",
+            "🅲️ 抄底反弹",
+            "🎯 共振 (2+)",
+        ])
+    else:
+        # v2.x 老格式
+        tab1, tab2, tab3, tab4 = st.tabs([
+            "1️⃣ 缩量企稳上穿MA20",
+            "2️⃣ 多金叉共振",
+            "3️⃣ 起量+基本面",
+            "4️⃣ 强势主力介入",
+        ])
 
-    formula_keys = [
-        "1_缩量企稳上穿MA20",
-        "2_多金叉共振",
-        "3_起量基本面",
-        "4_强势主力",
-    ]
-    formula_descs = [
-        "**思路**: 抄底型 — 近1月跌20%+ 缩量企稳 + 站上MA20 + 资金小幅回流\n\n**适用**: 左侧布局,博反弹\n\n**风险**: 中,需严格止损",
-        "**思路**: 趋势型 — 上穿MA60 + MACD金叉 + 资金共振 + 量价齐升\n\n**适用**: 右侧追涨,中线持有\n\n**风险**: 中,关键支撑跌破止损",
-        "**思路**: 价值型 — 起量 + 业绩 + BPS 前 5\n\n**适用**: 中线持有,基本面兜底\n\n**风险**: 低,价值投资者",
-        "**思路**: 主力型 — 量价齐升 + 资金榜 top3\n\n**适用**: 短线博弈,快进快出\n\n**风险**: 高,严控仓位",
-    ]
+    if "strategies" in formulas_data:
+        formula_keys = ["A_保守稳健", "B_趋势跟随", "C_抄底反弹"]
+    else:
+        formula_keys = [
+            "1_缩量企稳上穿MA20",
+            "2_多金叉共振",
+            "3_起量基本面",
+            "4_强势主力",
+        ]
+    if "strategies" in formulas_data:
+        formula_descs = [
+            "**思路**: 温和涨 + 站上均价 + 资金回流 + 业绩正 + 风口加权\n\n**适用**: 震荡市/慢牛,稳健持仓\n\n**风险**: 低,胜率优先",
+            "**思路**: 强势红盘 + 量比放大 + 资金共振 + 板块联动\n\n**适用**: 普涨市,趋势跟随\n\n**风险**: 中,追高有回撤",
+            "**思路**: 跌 1-5% + 缩量 + 业绩正 + 资金不大幅流出\n\n**适用**: 熊市/震荡,反共识抄底\n\n**风险**: 中,需快进快出",
+            "**思路**: 2+ 策略同时选中 = 多维度确认\n\n**适用**: 高信心信号\n\n**风险**: 取决于命中策略",
+        ]
+    else:
+        formula_descs = [
+            "**思路**: 抄底型 — 近1月跌20%+ 缩量企稳 + 站上MA20 + 资金小幅回流\n\n**适用**: 左侧布局,博反弹\n\n**风险**: 中,需严格止损",
+            "**思路**: 趋势型 — 上穿MA60 + MACD金叉 + 资金共振 + 量价齐升\n\n**适用**: 右侧追涨,中线持有\n\n**风险**: 中,关键支撑跌破止损",
+            "**思路**: 价值型 — 起量 + 业绩 + BPS 前 5\n\n**适用**: 中线持有,基本面兜底\n\n**风险**: 低,价值投资者",
+            "**思路**: 主力型 — 量价齐升 + 资金榜 top3\n\n**适用**: 短线博弈,快进快出\n\n**风险**: 高,严控仓位",
+        ]
 
     for tab, key, desc in zip([tab1, tab2, tab3, tab4], formula_keys, formula_descs):
         with tab:
@@ -1183,6 +1204,41 @@ if view_mode == "📐 实战公式":
                 st.dataframe(df_picks, use_container_width=True, hide_index=True)
                 st.caption("💡 建议先加入自选,等回踩不破 MA5/MA10 再介入,严设止损")
 
+    # 🛡️ 市场环境 + 板块联动展示
+    market = formulas_data.get("market", {})
+    if market:
+        st.divider()
+        st.subheader("🛡️ 大盘环境 + 板块联动")
+        st.markdown(f"**{market.get('status', 'N/A')}**")
+        cols = st.columns(5)
+        cols[0].metric("大盘平均", f"{market.get('market_pct', 0):+.2f}%")
+        cols[1].metric("涨家比", f"{market.get('up_ratio', 0)*100:.0f}%")
+        cols[2].metric("涨停", int(market.get('up_limit', 0)))
+        cols[3].metric("跌停", int(market.get('down_limit', 0)))
+        cols[4].metric("风口行业数", int(market.get('hot_industries', 0)))
+        hot = market.get('hot_industries', [])
+        if hot:
+            st.success(f"🔥 风口行业: {', '.join(hot)}")
+        else:
+            st.info("暂无明显风口行业")
+    
+    # 💼 持仓风险预警
+    holdings_warnings = formulas_data.get("holdings_warnings", [])
+    if holdings_warnings:
+        st.divider()
+        st.subheader("💼 持仓风险预警")
+        import pandas as pd
+        df_warn = pd.DataFrame([{
+            "代码": w["code"],
+            "名称": w["name"],
+            "成本": w.get("cost", 0),
+            "现价": w["close"],
+            "累计%": f"{w.get('ret', 0):+.1f}%",
+            "今日%": f"{w.get('pct_today', 0):+.2f}%",
+            "信号": " | ".join(w.get("signals", [])),
+        } for w in holdings_warnings])
+        st.dataframe(df_warn, use_container_width=True, hide_index=True)
+    
     st.divider()
     st.info("💡 4 个公式可与「量化选股」叠加使用,选择共振票胜率更高")
     st.stop()
