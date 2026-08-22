@@ -1223,11 +1223,17 @@ if view_mode == "📐 实战公式":
         st.subheader("🛡️ 大盘环境 + 板块联动")
         st.markdown(f"**{market.get('status', 'N/A')}**")
         cols = st.columns(5)
-        cols[0].metric("大盘平均", f"{market.get('market_pct', 0):+.2f}%")
-        cols[1].metric("涨家比", f"{market.get('up_ratio', 0)*100:.0f}%")
+        cols[0].metric("大盘平均", f"{float(market.get('market_pct', 0)):+.2f}%")
+        cols[1].metric("涨家比", f"{float(market.get('up_ratio', 0))*100:.0f}%")
         cols[2].metric("涨停", int(market.get('up_limit', 0)))
         cols[3].metric("跌停", int(market.get('down_limit', 0)))
-        cols[4].metric("风口行业数", int(market.get('hot_industries', 0)))
+        # hot_industries 可能是 list (新) 或 int (老), 兼容
+        hot = market.get('hot_industries', 0)
+        if isinstance(hot, list):
+            hot_count = len(hot)
+        else:
+            hot_count = int(hot)
+        cols[4].metric("风口行业数", hot_count)
         hot = market.get('hot_industries', [])
         if hot:
             st.success(f"🔥 风口行业: {', '.join(hot)}")
