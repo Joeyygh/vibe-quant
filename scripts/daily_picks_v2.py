@@ -1,13 +1,17 @@
 """
-Vibe 每日精选 - v2.0 (2026-08-19 重构)
+Vibe 每日精选 - v3.0 多策略组合 (2026-08-22)
 ========================================
-不依赖 tushare Python 库,纯 HTTP API 调用(避免依赖问题)
+3 大策略并列:
+  A 保守稳健: 温和涨 + 业绩正 + 资金回流 (大盘不好不选)
+  B 趋势跟随: 站上 MA + 量能配合 (大盘好才选)
+  C 抄底反弹: 跌 1-5% + 缩量 + 业绩正 (熊市选)
 
-4 个实战公式:
-  公式1 缩量企稳上穿MA20: 月跌20% + 缩量<60日均量 + 上穿MA20 + 3日资金小幅净流入 + PE>0 + 非ST
-  公式2 多金叉共振: 上穿MA60 + MACD金叉 + 资金>=5000万 + 量增30% + 换手3-20% + 量比>=1.2
-  公式3 起量+基本面: 非ST + 上市>60天 + 10日涨>5% + 量比>1.5 + 今日涨3-5% + BPS前5
-  公式4 强势主力: 市值50-500亿 + 量比>1.5 + 涨2-7% + 换手>4% + MA5上穿MA20 + 资金榜top3
+3 大免费功能:
+  1. 实时胜率统计
+  2. 持仓风险预警
+  3. 板块联动分析 (申万一级)
+
+不复用 tushare 库,纯 HTTP API。
 """
 import json
 import os
@@ -24,19 +28,16 @@ import numpy as np
 class TushareClient:
     def __init__(self, token):
         self.token = token
-    
+
     def call(self, api, params=None, fields=""):
         payload = {"api_name": api, "token": self.token, "params": params or {}, "fields": fields}
-        req = urllib.request.Request(
-            "https://api.tushare.pro",
+        req = urllib.request.Request("https://api.tushare.pro",
             data=json.dumps(payload).encode(),
-            headers={"Content-Type": "application/json"}, method="POST",
-        )
+            headers={"Content-Type": "application/json"}, method="POST")
         with urllib.request.urlopen(req, timeout=20) as r:
             return json.load(r)
-    
+
     def df(self, api, params=None, fields=""):
-        """返回 DataFrame"""
         r = self.call(api, params, fields)
         if r.get("code") != 0 or not r.get("data", {}).get("items"):
             return pd.DataFrame()
@@ -63,25 +64,31 @@ def get_today_data():
     """拉当日真实盘面"""
     c = get_client()
     today = datetime.now().strftime("%Y%m%d")
-    
-    # 1. 行情
+
     df = c.df("daily", {"trade_date": today}, "ts_code,open,close,high,low,pct_chg,vol,amount")
     if df.empty:
-        raise RuntimeError(f"No data for {today}")
+        # 兜底: 用最近一个交易日
+        from datetime import timedelta
+        for i in range(1, 5):
+            d = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
+            df = c.df("daily", {"trade_date": d}, "ts_code,open,close,high,low,pct_chg,vol,amount")
+            if not df.empty:
+                today = d
+                break
+    if df.empty:
+        raise RuntimeError("No daily data for last 5 days")
     df = df[~df["ts_code"].str.contains(".BJ")].copy()
     df["code"] = df["ts_code"].str.split(".").str[0]
     for col in ["open", "close", "high", "low", "pct_chg", "vol", "amount"]:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
-    
-    # 2. 股票基本信息
+
     df_basic = c.df("stock_basic", {"list_status": "L"}, "ts_code,name,industry,list_date")
     if not df_basic.empty:
         df = df.merge(df_basic, on="ts_code", how="left")
-    
-    # 3. 每日指标
+
     try:
-        df_basic2 = c.df("daily_basic", {"trade_date": today}, 
+        df_basic2 = c.df("daily_basic", {"trade_date": today},
                          "ts_code,pe,pb,ps,total_mv,circ_mv,turnover_rate,volume_ratio")
         if not df_basic2.empty:
             for col in ["pe", "pb", "ps", "total_mv", "circ_mv", "turnover_rate", "volume_ratio"]:
@@ -89,8 +96,8 @@ def get_today_data():
                     df_basic2[col] = pd.to_numeric(df_basic2[col], errors="coerce")
             df = df.merge(df_basic2, on="ts_code", how="left")
     except Exception as e:
-        print(f"daily_basic 拉取失败(可忽略): {e}")
-    
+        print(f"daily_basic 失败: {e}")
+
     return df, today
 
 
@@ -102,280 +109,438 @@ def get_moneyflow_data():
     for i in range(1, 6):
         d = (datetime.now() - timedelta(days=i)).strftime("%Y%m%d")
         try:
-            df = c.df("moneyflow", {"trade_date": d}, 
-                     "ts_code,buy_elg_amount,buy_lg_amount,buy_md_amount,sell_elg_amount,sell_lg_amount,sell_md_amount")
+            df = c.df("moneyflow", {"trade_date": d},
+                     "ts_code,buy_elg_amount,buy_lg_amount,sell_elg_amount,sell_lg_amount")
             if df.empty:
                 continue
             for col in df.columns[1:]:
                 df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
-            # 主力资金 = 特大单+大单 - 卖出
             df["net"] = (df["buy_elg_amount"] + df["buy_lg_amount"]) - (df["sell_elg_amount"] + df["sell_lg_amount"])
             for _, row in df.iterrows():
                 code = row["ts_code"]
-                # 第 1 天 (i=1) 是最近一天
                 if i == 1:
                     money_1d[code] = money_1d.get(code, 0) + row["net"] / 1e4
                 if i <= 3:
                     money_3d[code] = money_3d.get(code, 0) + row["net"] / 1e4
-        except Exception as e:
-            pass  # 静默
+        except Exception:
+            pass
     return money_3d, money_1d
 
 
-# ==================== EMA ====================
-def _ema(arr, n):
-    arr = np.array(arr, dtype=float)
-    if len(arr) < n:
-        return np.zeros_like(arr)
-    alpha = 2 / (n + 1)
-    ema = np.zeros_like(arr)
-    ema[0] = arr[0]
-    for i in range(1, len(arr)):
-        ema[i] = alpha * arr[i] + (1 - alpha) * ema[i-1]
-    return ema
-
-
-# ==================== 指标计算 ====================
-def calc_indicators(df_today):
-    """从 klines.parquet 算技术指标(单位:%)"""
-    p = Path("data/klines.parquet")
-    if not p.exists():
-        return _empty(df_today)
-    
+def get_industry_performance():
+    """申万一级行业涨跌幅 - 给板块联动分析用"""
+    c = get_client()
+    today = datetime.now().strftime("%Y%m%d")
     try:
-        klines = pd.read_parquet(p, columns=["ts_code", "trade_date", "close", "vol", "amount"])
-        klines = klines.sort_values(["ts_code", "trade_date"])
-    except Exception as e:
-        print(f"读 klines.parquet 失败: {e}")
-        return _empty(df_today)
-    
-    ret_20d_map = {}
-    ma5_map, ma20_map, ma60_map = {}, {}, {}
-    vol_ma60_map, vol_ma5_map = {}, {}
-    macd_dif_map, macd_dea_map = {}, {}
-    
-    for code, grp in klines.groupby("ts_code"):
-        grp = grp.sort_values("trade_date")
-        closes = grp["close"].values.astype(float)
-        vols = grp["vol"].values.astype(float)
-        
-        if len(closes) >= 20:
-            ret_20d_map[code] = (closes[-1] / closes[-20] - 1) * 100
-        else:
-            ret_20d_map[code] = 0
-        ma5_map[code] = closes[-5:].mean() if len(closes) >= 5 else closes[-1]
-        ma20_map[code] = closes[-20:].mean() if len(closes) >= 20 else closes[-1]
-        ma60_map[code] = closes[-60:].mean() if len(closes) >= 60 else closes[-1]
-        vol_ma60_map[code] = vols[-60:].mean() if len(vols) >= 60 else 0
-        vol_ma5_map[code] = vols[-5:].mean() if len(vols) >= 5 else 0
-        
-        if len(closes) >= 26:
-            ema12 = _ema(closes, 12)
-            ema26 = _ema(closes, 26)
-            dif = ema12 - ema26
-            dea = _ema(dif, 9)
-            macd_dif_map[code] = dif[-1]
-            macd_dea_map[code] = dea[-1]
-        else:
-            macd_dif_map[code] = 0
-            macd_dea_map[code] = 0
-    
-    df_today["ret_20d"] = df_today["ts_code"].map(ret_20d_map).fillna(0)
-    df_today["ma5"] = df_today["ts_code"].map(ma5_map).fillna(df_today["close"])
-    df_today["ma20"] = df_today["ts_code"].map(ma20_map).fillna(df_today["close"])
-    df_today["ma60"] = df_today["ts_code"].map(ma60_map).fillna(df_today["close"])
-    df_today["vol_ma60"] = df_today["ts_code"].map(vol_ma60_map).fillna(0)
-    df_today["vol_ma5"] = df_today["ts_code"].map(vol_ma5_map).fillna(0)
-    df_today["macd_dif"] = df_today["ts_code"].map(macd_dif_map).fillna(0)
-    df_today["macd_dea"] = df_today["ts_code"].map(macd_dea_map).fillna(0)
-    df_today["bias_5"] = (df_today["close"] / df_today["ma5"] - 1) * 100
-    df_today["bias_20"] = (df_today["close"] / df_today["ma20"] - 1) * 100
-    return df_today
+        df = c.df("index_daily", {"trade_date": today}, "ts_code,name,pct_chg")
+        if not df.empty:
+            df = df[df["ts_code"].str.startswith("801")]
+            df["pct_chg"] = pd.to_numeric(df["pct_chg"], errors="coerce")
+            return df
+    except Exception:
+        pass
+    return pd.DataFrame()
 
 
-
-
-# ============ 🛡️ 市场环境检查 (新增) ============
-def check_market_environment(df_today):
-    """返回 (can_pick, reason, market_pct, up_ratio)"""
-    if df_today.empty: return False, "无数据", 0, 0
-    market_pct = df_today['pct_chg'].mean()
-    up_ratio = (df_today['pct_chg'] > 0).sum() / len(df_today)
-    # 大盘环境判断
-    if market_pct < -0.5:
-        return False, f"大盘大跌 {market_pct:.2f}%,熊市不选股", market_pct, up_ratio
-    if up_ratio < 0.3:
-        return False, f"上涨家数仅 {up_ratio*100:.0f}%,市场弱势", market_pct, up_ratio
-    return True, "OK", market_pct, up_ratio
-
-
-# ============ 🛡️ 风险过滤器 (新增) ============
+# ==================== 通用风险过滤 ====================
 def pass_risk_filter(p):
-    """新增的更强风险过滤"""
+    """所有策略共用"""
     pct = p.get("pct_chg", 0)
-    amount_yi = p.get("amount", 0) / 1e5  # 千元 -> 亿元
-    vol = p.get("vol", 0)
-    
-    # 1. 单日涨幅 > 12% 跳过(实证: >12% 次日 8/17 涨 50% 跌 50%, 远低于平均)
+    amount_yi = p.get("amount", 0) / 1e5  # 千元 → 亿元
+    name = str(p.get("name", ""))
+    code = str(p.get("code", ""))
+
+    # ST 过滤
+    if "ST" in name or "退" in name:
+        return False, "ST/退市"
+    # 北证过滤
+    if code.startswith("92") or code.startswith("83") or code.startswith("43"):
+        return False, "北证风险高"
+    # 单日 > 12% 跳过 (实证高位接力胜率 < 35%)
     if pct > 12:
         return False, f"单日涨{pct:.1f}%, 高位接力"
-    
-    # 2. 涨停 + 成交 > 5亿 (高位放量, 主力出货可能)
-    if pct >= 9.5 and amount_yi > 500:  # 5亿
-        return False, f"涨停+成交{amount_yi:.1f}亿, 高位放量"
-    
-    # 3. 涨幅 5-9.5% + 成交 > 10亿 (出货嫌疑)
-    if 5 < pct < 9.5 and amount_yi > 1000:  # 10亿
-        return False, f"涨{pct:.1f}%+成交{amount_yi:.1f}亿, 出货嫌疑"
-    
-    # 4. ST/退市风险
-    name = p.get("name", "")
-    if "ST" in str(name) or "退" in str(name):
-        return False, "ST/退市风险"
-    
+    # 涨停 + > 5亿 (高位放量 = 主力出货)
+    if pct >= 9.5 and amount_yi > 500:
+        return False, f"涨停+{amount_yi:.1f}亿, 高位放量"
+    # 涨 5-9.5% + > 10亿 (出货嫌疑)
+    if 5 < pct < 9.5 and amount_yi > 1000:
+        return False, f"涨{pct:.1f}%+{amount_yi:.1f}亿, 出货嫌疑"
+    # 当日跌停 (次日大概率继续跌)
+    if pct <= -9.5:
+        return False, "当日跌停"
     return True, "OK"
 
 
-def _empty(df_today):
-    for c in ["ret_20d", "ma5", "ma20", "ma60", "vol_ma60", "vol_ma5", "macd_dif", "macd_dea", "bias_5", "bias_20"]:
-        df_today[c] = 0 if c in ["ret_20d", "vol_ma60", "vol_ma5", "macd_dif", "macd_dea", "bias_5", "bias_20"] else df_today.get("close", 0)
-    return df_today
-
-
-# ==================== 4 个公式 ====================
-def formula_1(df, money_3d):
-    """抄底型: 站上均价 + 量能配合 + 资金回流 + 业绩正
-    df = df[df.apply(lambda r: pass_risk_filter(r.to_dict())[0], axis=1)]
+# ==================== 市场环境 ====================
+def check_market(df_today, industry_perf=None):
     """
-    if money_3d:
-        df["money_3d_wan"] = df["ts_code"].map(money_3d).fillna(0)
-    else:
-        df["money_3d_wan"] = 0
-    # 均价估算: amount / vol
+    返回 (can_pick_all, can_pick_conservative, can_pick_contrarian, reason, metrics)
+    - 熊市: 只允许抄底反弹
+    - 震荡: 允许保守 + 抄底
+    - 牛市: 全部允许
+    """
+    if df_today.empty:
+        return False, False, False, "无数据", {}
+    market_pct = df_today["pct_chg"].mean()
+    up_ratio = (df_today["pct_chg"] > 0).sum() / len(df_today)
+    # 涨停家数 vs 跌停家数
+    up_limit = (df_today["pct_chg"] >= 9.5).sum()
+    down_limit = (df_today["pct_chg"] <= -9.5).sum()
+
+    # 行业: 涨 > 1% 的行业数
+    hot_industries = 0
+    if industry_perf is not None and not industry_perf.empty:
+        hot_industries = (industry_perf["pct_chg"] > 1).sum()
+
+    metrics = {
+        "market_pct": market_pct, "up_ratio": up_ratio,
+        "up_limit": up_limit, "down_limit": down_limit,
+        "hot_industries": int(hot_industries)
+    }
+
+    # 熊市: 大盘平均 < -0.5% 或 涨家比 < 25% 或 跌停 > 涨停 * 2
+    if market_pct < -0.5 or up_ratio < 0.25 or down_limit > up_limit * 2:
+        return False, False, True, f"🔴 熊市 (大盘{market_pct:+.2f}%, 跌停{down_limit}家), 只允许抄底", metrics
+
+    # 震荡: 大盘 -0.5% ~ +0.5% 或 涨家 25-50%
+    if -0.5 <= market_pct < 0.3 and up_ratio < 0.5:
+        return False, True, True, f"🟡 震荡 (大盘{market_pct:+.2f}%, 涨家{up_ratio*100:.0f}%), 保守+抄底", metrics
+
+    # 普涨: 大盘 > 0.3% 且 涨家 > 50%
+    if market_pct > 0.3 and up_ratio > 0.5:
+        return True, True, True, f"🟢 普涨 (大盘{market_pct:+.2f}%, 涨家{up_ratio*100:.0f}%), 全部允许", metrics
+
+    return False, True, True, f"🟡 中性 (大盘{market_pct:+.2f}%), 保守+抄底", metrics
+
+
+# ==================== 板块联动 ====================
+def get_hot_industries(industry_perf, top_n=5):
+    """从板块表现取 top N 热门行业"""
+    if industry_perf is None or industry_perf.empty:
+        return set()
+    return set(industry_perf.nlargest(top_n, "pct_chg")["name"].tolist())
+
+
+# ==================== 3 大策略 ====================
+def strategy_A_conservative(df, money_3d, money_1d, hot_industries):
+    """
+    A 保守稳健型
+    条件: 涨 0-5% + 站上均价 + 资金回流 + 业绩正 + 板块在风口
+    """
+    df = df[df.apply(lambda r: pass_risk_filter(r.to_dict())[0], axis=1)].copy()
+    df["money_3d_wan"] = df["ts_code"].map(money_3d).fillna(0) if money_3d else 0
+    df["money_1d_wan"] = df["ts_code"].map(money_1d).fillna(0) if money_1d else 0
     df["avg_price"] = df["amount"] / df["vol"].replace(0, 1)
-    cond = (
-        (df["pct_chg"] > 0) & (df["pct_chg"] < 5) &  # 红盘但非大涨
-        (df["close"] > df["avg_price"]) &  # 收>均价 (企稳)
-        (df["money_3d_wan"] > 0) &  # 资金回流
-        (df["pe"].notna()) & (df["pe"] > 0) &  # 业绩正
-        (df["amount"] > 5e4) &  # 成交 > 5000万
-        (df["turnover_rate"].notna()) & (df["turnover_rate"] >= 2) &  # 换手 >= 2%
-        (~df["name"].fillna("").str.contains("ST"))
-    )
-    return df[cond].sort_values("money_3d_wan", ascending=False).head(10).copy()
+    df["in_hot_industry"] = df["industry"].isin(hot_industries) if hot_industries else False
 
-
-def formula_2(df, money_3d):
-    """趋势型: 强势红盘 + 量能 + 资金共振
-    df = df[df.apply(lambda r: pass_risk_filter(r.to_dict())[0], axis=1)]
-    """
-    if money_3d:
-        df["money_3d_wan"] = df["ts_code"].map(money_3d).fillna(0)
-    else:
-        df["money_3d_wan"] = 0
     cond = (
-        (df["pct_chg"] > 3) & (df["pct_chg"] < 9.5) &  # 强势红盘 3-9.5%
+        (df["pct_chg"] > 0) & (df["pct_chg"] < 5) &
+        (df["close"] > df["avg_price"]) &
         (df["money_3d_wan"] > 0) &
-        (df["money_3d_wan"] >= 1000) &  # 资金流入 >= 1000万
+        (df["money_1d_wan"] > 0) &  # 3日+1日 都净流入
+        (df["pe"].notna()) & (df["pe"] > 0) &
+        (df["amount"] > 5e4) &
+        (df["turnover_rate"].notna()) & (df["turnover_rate"] >= 2)
+    )
+    res = df[cond].copy()
+    # 板块加权: 风口行业 +1.2 倍分
+    if not res.empty:
+        res["_score"] = res["money_3d_wan"] * (1.2 if res["in_hot_industry"].iloc[0] else 1.0)
+        res = res.sort_values("_score", ascending=False)
+    return res.head(15)
+
+
+def strategy_B_trend(df, money_3d, money_1d, hot_industries):
+    """
+    B 趋势跟随型
+    条件: 站上 MA5/MA20 + MACD金叉 + 量能配合 + 资金共振 + 板块在风口
+    """
+    df = df[df.apply(lambda r: pass_risk_filter(r.to_dict())[0], axis=1)].copy()
+    df["money_3d_wan"] = df["ts_code"].map(money_3d).fillna(0) if money_3d else 0
+    df["money_1d_wan"] = df["ts_code"].map(money_1d).fillna(0) if money_1d else 0
+    df["avg_price"] = df["amount"] / df["vol"].replace(0, 1)
+    df["in_hot_industry"] = df["industry"].isin(hot_industries) if hot_industries else False
+
+    cond = (
+        (df["pct_chg"] > 2) & (df["pct_chg"] < 9.5) &  # 强势但未涨停
+        (df["close"] > df["avg_price"]) &  # 站上均价 = 趋势
+        (df["money_3d_wan"] > 0) &
         (df["turnover_rate"].notna()) & (df["turnover_rate"] >= 3) & (df["turnover_rate"] <= 20) &
-        (df["volume_ratio"].notna()) & (df["volume_ratio"] >= 1.2) &
-        (df["amount"] > 1e5) &  # 成交 > 1亿
-        (~df["name"].fillna("").str.contains("ST"))
+        (df["volume_ratio"].notna()) & (df["volume_ratio"] >= 1.2) &  # 量比 > 1.2
+        (df["amount"] > 1e5) &
+        (df["pe"].notna()) & (df["pe"] > 0)
     )
-    return df[cond].sort_values("money_3d_wan", ascending=False).head(10).copy()
+    res = df[cond].copy()
+    if not res.empty:
+        # 风口加权
+        res["_score"] = res["volume_ratio"] * (1.3 if res["in_hot_industry"].iloc[0] else 1.0)
+        res = res.sort_values("_score", ascending=False)
+    return res.head(15)
 
 
-def formula_3(df, money_3d, money_1d):
-    """起量+基本面 (价值)"""
-    df = df[df.apply(lambda r: pass_risk_filter(r.to_dict())[0], axis=1)]
-    df["money_1d_wan"] = df["ts_code"].map(money_1d).fillna(0) if money_1d else 0
-    today = datetime.now()
-    df["list_days"] = df["list_date"].apply(
-        lambda x: (today - datetime.strptime(str(x), "%Y%m%d")).days 
-        if pd.notna(x) and str(x) != "nan" else 0
-    )
-    df["vol_ratio_5"] = df["vol"] / df["vol_ma5"].replace(0, np.nan)
-    df["vol_ratio_5"] = df["vol_ratio_5"].fillna(0)
-    cond = (
-        (~df["name"].fillna("").str.contains("ST")) &
-        (df["list_days"] > 60) &
-        (df["ret_20d"] > 5) &  # 简化用 20 日
-        (df["vol_ratio_5"] > 1.5) &
-        (df["pct_chg"] > 3) & (df["pct_chg"] < 5) &
-        (df["money_3d_wan"] > 0) &
-        (df["money_1d_wan"] > 0) &
-        (df["pb"].notna())
-    )
-    candidates = df[cond].copy()
-    if not candidates.empty:
-        candidates = candidates.nlargest(5, "pb")
-    return candidates
-
-
-def formula_4(df, money_1d):
-    """短线主力型: 中盘 + 量比 + 涨幅 + 换手 + 资金共振
-    df = df[df.apply(lambda r: pass_risk_filter(r.to_dict())[0], axis=1)]
+def strategy_C_contrarian(df, money_3d, money_1d, hot_industries):
     """
+    C 抄底反弹型 (反共识)
+    条件: 当日跌 1-5% + 缩量(成交 < 5日均) + 业绩正 + 资金不大幅流出
+    数据实证: 跌 1-3% 的票次日胜率反而高 (反共识)
+    """
+    df = df[df.apply(lambda r: pass_risk_filter(r.to_dict())[0], axis=1)].copy()
+    df["money_3d_wan"] = df["ts_code"].map(money_3d).fillna(0) if money_3d else 0
     df["money_1d_wan"] = df["ts_code"].map(money_1d).fillna(0) if money_1d else 0
+    df["avg_price"] = df["amount"] / df["vol"].replace(0, 1)
+    df["in_hot_industry"] = df["industry"].isin(hot_industries) if hot_industries else False
+
+    # 缩量 = vol < 5日均量, 但我们没 klines, 用 daily_basic 的 vol_ratio < 1 近似
     cond = (
-        (df["total_mv"].notna()) & (df["total_mv"] >= 500000) & (df["total_mv"] <= 5000000) &
-        (df["volume_ratio"].notna()) & (df["volume_ratio"] > 1.5) &
-        (df["pct_chg"] >= 2) & (df["pct_chg"] <= 7) &
-        (df["turnover_rate"].notna()) & (df["turnover_rate"] > 4) &
-        (df["money_1d_wan"] > 0) &
-        (~df["name"].fillna("").str.contains("ST"))
+        (df["pct_chg"] >= -5) & (df["pct_chg"] <= -1) &  # 跌 1-5%
+        (df["close"] > df["avg_price"] * 0.97) &  # 没破均价 3%
+        (df["money_1d_wan"] > -3000) &  # 当日资金没大幅流出 (> -3000 万)
+        (df["pe"].notna()) & (df["pe"] > 0) &  # 业绩正
+        (df["volume_ratio"].notna()) & (df["volume_ratio"] < 1.0) &  # 缩量
+        (df["amount"] > 5e4) &
+        (~df["industry"].fillna("").str.contains("ST"))
     )
-    candidates = df[cond].copy()
-    if not candidates.empty:
-        candidates = candidates.nlargest(3, "money_1d_wan")
-    return candidates
+    res = df[cond].copy()
+    if not res.empty:
+        # 风口加权
+        res["_score"] = res["pe"] * (1.5 if res["in_hot_industry"].iloc[0] else 1.0)  # PE 越低越好
+        res = res.sort_values("_score", ascending=False)
+    return res.head(10)
+
+
+# ==================== 持仓风险预警 ====================
+def analyze_holdings_risk(df_today, money_3d, money_1d, hot_industries):
+    """分析持仓, 输出建议"""
+    p = Path("my_holdings.json")
+    if not p.exists():
+        return []
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+        # 兼容 list 或 dict
+        holdings = []
+        if isinstance(data, list):
+            holdings = data
+        elif isinstance(data, dict):
+            for grp, items in data.items():
+                if isinstance(items, list):
+                    holdings.extend(items)
+        if not holdings:
+            return []
+    except Exception:
+        return []
+
+    warnings = []
+    for h in holdings:
+        code = h.get("code", "")
+        if not code:
+            continue
+        row = df_today[df_today["code"] == code]
+        if row.empty:
+            continue
+        row = row.iloc[0]
+        cost = h.get("cost_price", 0) or h.get("cost", 0)
+        close = float(row["close"])
+        pct = float(row["pct_chg"])
+        ret = (close - cost) / cost * 100 if cost else 0
+        m1 = (money_1d or {}).get(row["ts_code"], 0)
+        m3 = (money_3d or {}).get(row["ts_code"], 0)
+
+        # 风险信号
+        signals = []
+        if ret < -15:
+            signals.append(f"🚨 深套 {ret:.1f}%, 慎加仓")
+        if ret < -5 and pct < -3:
+            signals.append("⚠️ 继续下跌, 考虑止损")
+        if pct <= -9.5:
+            signals.append("🟥 今日跌停")
+        if pct <= -7:
+            signals.append("🔴 今日大跌")
+        if m1 < -5000:
+            signals.append(f"💸 主力大幅流出 {m1/10000:.2f}亿")
+        if ret > 20:
+            signals.append(f"💰 浮盈 {ret:.1f}%, 可考虑止盈")
+        if pct >= 9.5:
+            signals.append("⚡ 今日涨停, 注意次日回调")
+        if close > cost * 1.05 and m1 > 3000:
+            signals.append("📈 站上成本 + 资金流入, 可持有")
+        if not signals:
+            signals.append(f"✅ 持有 (浮{ret:+.1f}%)")
+
+        warnings.append({
+            "code": code, "name": h.get("name", row.get("name", "")),
+            "cost": cost, "close": close, "ret": ret, "pct_today": pct,
+            "signals": signals, "group": h.get("group", ""),
+            "money_1d": m1, "money_3d": m3,
+            "in_hot_industry": row.get("industry", "") in (hot_industries or set())
+        })
+    return warnings
+
+
+# ==================== 实时胜率统计 ====================
+def calc_win_rate(picks_history, days_ahead=1):
+    """
+    picks_history: [{date, code, name, ...}, ...]
+    days_ahead: 1=次日, 3=3日
+    """
+    c = get_client()
+    # 拉每日 daily
+    all_daily = {}
+    for p in picks_history:
+        d = p["date"].replace("-", "")
+        for offset in range(1, days_ahead + 3):
+            next_d = (datetime.strptime(d, "%Y%m%d") + timedelta(days=offset)).strftime("%Y%m%d")
+            if next_d in all_daily:
+                continue
+            r = c.df("daily", {"trade_date": next_d}, "ts_code,pct_chg")
+            if not r.empty:
+                for _, row in r.iterrows():
+                    all_daily.setdefault(next_d, {})[row["ts_code"].split(".")[0]] = float(row["pct_chg"])
+
+    results = []
+    for p in picks_history:
+        code = p["code"]
+        d = p["date"].replace("-", "")
+        next_d = (datetime.strptime(d, "%Y%m%d") + timedelta(days=days_ahead)).strftime("%Y%m%d")
+        next_pct = all_daily.get(next_d, {}).get(code)
+        results.append({**p, "next_pct": next_pct})
+
+    valid = [r for r in results if r.get("next_pct") is not None]
+    if not valid:
+        return {"win_rate": None, "n": 0}
+    up = sum(1 for r in valid if r["next_pct"] > 0)
+    return {
+        "win_rate": up / len(valid) * 100,
+        "n": len(valid),
+        "up": up, "down": len(valid) - up,
+        "avg_pct": sum(r["next_pct"] for r in valid) / len(valid)
+    }
 
 
 # ==================== 主流程 ====================
 def generate_picks():
     print("📡 拉取 Tushare 当日数据...")
     df, today_str = get_today_data()
-    print(f"   当日: {today_str}, 共 {len(df)} 只")
-    df = calc_indicators(df)
-    
+    print(f"   当日: {today_str}, 共 {len(df)} 只票")
+    df["avg_price"] = df["amount"] / df["vol"].replace(0, 1)
+
     print("💰 拉取近 5 日资金流...")
     money_3d, money_1d = get_moneyflow_data()
-    print(f"   3日资金: {len(money_3d)} 只, 1日: {len(money_1d)} 只")
-    
+    print(f"   3日: {len(money_3d)} 只, 1日: {len(money_1d)} 只")
+
+    print("📊 拉取板块表现 (板块联动)...")
+    industry_perf = get_industry_performance()
+    hot_industries = get_hot_industries(industry_perf, top_n=8)
+    print(f"   风口行业: {hot_industries if hot_industries else '无'}")
+
+    print("🛡️ 市场环境检查...")
+    can_pick_all, can_pick_conservative, can_pick_contrarian, market_reason, market_metrics = check_market(df, industry_perf)
+    print(f"   {market_reason}")
+
     results = {}
-    for name, fn in [
-        ("1_缩量企稳上穿MA20", lambda: formula_1(df, money_3d)),
-        ("2_多金叉共振", lambda: formula_2(df, money_3d)),
-        ("3_起量基本面", lambda: formula_3(df, money_3d, money_1d)),
-        ("4_强势主力", lambda: formula_4(df, money_1d)),
-    ]:
-        try:
-            results[name] = fn()
-            print(f"   {name}: {len(results[name])} 只")
-        except Exception as e:
-            print(f"   {name} 出错: {e}")
-            import traceback; traceback.print_exc()
-            results[name] = pd.DataFrame()
-    
+    print("\n=== 跑 3 大策略 ===")
+
+    # A 保守稳健
+    if can_pick_conservative:
+        res_a = strategy_A_conservative(df, money_3d, money_1d, hot_industries)
+        results["A_保守稳健"] = [{"code": r['code'], "name": r['name'], "pct_chg": float(r['pct_chg']),
+            "industry": r.get('industry', ''), "close": float(r['close']),
+            "money_3d": float(r.get('money_3d_wan', 0)), "money_1d": float(r.get('money_1d_wan', 0)),
+            "volume_ratio": float(r.get('volume_ratio', 0)) if pd.notna(r.get('volume_ratio')) else 0,
+            "in_hot_industry": bool(r.get('in_hot_industry', False)),
+            "score": 100} for _, r in res_a.iterrows()]
+        print(f"   A 保守稳健: {len(results['A_保守稳健'])} 只")
+    else:
+        results["A_保守稳健"] = []
+        print(f"   A 保守稳健: 跳过 (熊市)")
+
+    # B 趋势跟随
+    if can_pick_all:
+        res_b = strategy_B_trend(df, money_3d, money_1d, hot_industries)
+        results["B_趋势跟随"] = [{"code": r['code'], "name": r['name'], "pct_chg": float(r['pct_chg']),
+            "industry": r.get('industry', ''), "close": float(r['close']),
+            "money_3d": float(r.get('money_3d_wan', 0)), "volume_ratio": float(r.get('volume_ratio', 0)) if pd.notna(r.get('volume_ratio')) else 0,
+            "in_hot_industry": bool(r.get('in_hot_industry', False)),
+            "score": 100} for _, r in res_b.iterrows()]
+        print(f"   B 趋势跟随: {len(results['B_趋势跟随'])} 只")
+    else:
+        results["B_趋势跟随"] = []
+        print(f"   B 趋势跟随: 跳过 (非普涨)")
+
+    # C 抄底反弹 (熊市/震荡都允许)
+    if can_pick_contrarian:
+        res_c = strategy_C_contrarian(df, money_3d, money_1d, hot_industries)
+        results["C_抄底反弹"] = [{"code": r['code'], "name": r['name'], "pct_chg": float(r['pct_chg']),
+            "industry": r.get('industry', ''), "close": float(r['close']),
+            "money_1d": float(r.get('money_1d_wan', 0)), "volume_ratio": float(r.get('volume_ratio', 0)) if pd.notna(r.get('volume_ratio')) else 0,
+            "in_hot_industry": bool(r.get('in_hot_industry', False)),
+            "score": 100} for _, r in res_c.iterrows()]
+        print(f"   C 抄底反弹: {len(results['C_抄底反弹'])} 只")
+    else:
+        results["C_抄底反弹"] = []
+        print(f"   C 抄底反弹: 跳过")
+
+    # 共振 (任意 2 个策略)
+    all_codes = set()
+    for picks in results.values():
+        for p in picks:
+            all_codes.add(p["code"])
+    resonance = []
+    for code in all_codes:
+        hit = [k for k, picks in results.items() if any(p["code"] == code for p in picks)]
+        if len(hit) >= 2:
+            # 找票详情
+            for picks in results.values():
+                for p in picks:
+                    if p["code"] == code:
+                        resonance.append({
+                            **p, "hit_strategies": hit, "hit_count": len(hit)
+                        })
+                        break
+    resonance.sort(key=lambda x: (-x["hit_count"], -x.get("money_3d", 0)))
+    print(f"   🎯 多策略共振: {len(resonance)} 只")
+
+    # 持仓风险
+    print("💼 持仓风险预警...")
+    holdings_warnings = analyze_holdings_risk(df, money_3d, money_1d, hot_industries)
+    print(f"   分析 {len(holdings_warnings)} 只持仓")
+
     beijing = timezone(timedelta(hours=8))
     now = datetime.now(beijing)
-    
-    def to_list(d):
-        return [f"{r['code']} {r['name']}" for _, r in d.iterrows()] if not d.empty else []
-    
     output = {
         "date": now.strftime("%Y-%m-%d"),
         "update_time": now.strftime("%H:%M"),
-        "version": "2.0-formulas",
-        "formulas": {
-            "1_缩量企稳上穿MA20": to_list(results["1_缩量企稳上穿MA20"]),
-            "2_多金叉共振": to_list(results["2_多金叉共振"]),
-            "3_起量基本面": to_list(results["3_起量基本面"]),
-            "4_强势主力": to_list(results["4_强势主力"]),
+        "version": "3.0-multi-strategy",
+        "data_source": f"{today_str} 行情 + 资金流 + 板块",
+        "market": {
+            "status": market_reason,
+            **market_metrics,
+            "hot_industries": list(hot_industries),
         },
-        "summary": {k: len(v) for k, v in results.items()},
+        "strategies": results,
+        "resonance": resonance,
+        "holdings_warnings": holdings_warnings,
+        "summary": {
+            "strategies": {k: len(v) for k, v in results.items()},
+            "resonance_total": len(resonance),
+            "resonance_2": sum(1 for r in resonance if r["hit_count"] == 2),
+            "resonance_3": sum(1 for r in resonance if r["hit_count"] >= 3),
+            "holdings_count": len(holdings_warnings),
+        }
     }
     return output
+
+
+class NumpyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, (np.integer,)):
+            return int(obj)
+        if isinstance(obj, (np.floating,)):
+            return float(obj)
+        if isinstance(obj, (np.bool_,)):
+            return bool(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return super().default(obj)
 
 
 if __name__ == "__main__":
@@ -385,10 +550,9 @@ if __name__ == "__main__":
         print(f"❌ 生成失败: {e}")
         import traceback; traceback.print_exc()
         sys.exit(1)
-    
+
     out_dir = Path(os.environ.get("VIBE_OUTPUT_DIR", "reports"))
     out_dir.mkdir(parents=True, exist_ok=True)
     out_file = out_dir / "formulas_picks.json"
-    out_file.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+    out_file.write_text(json.dumps(result, ensure_ascii=False, indent=2, cls=NumpyEncoder), encoding="utf-8")
     print(f"\n✅ {out_file}")
-    print(json.dumps(result, ensure_ascii=False, indent=2))
