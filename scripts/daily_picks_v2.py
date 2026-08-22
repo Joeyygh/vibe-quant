@@ -193,6 +193,49 @@ def calc_indicators(df_today):
     return df_today
 
 
+
+
+# ============ 🛡️ 市场环境检查 (新增) ============
+def check_market_environment(df_today):
+    """返回 (can_pick, reason, market_pct, up_ratio)"""
+    if df_today.empty: return False, "无数据", 0, 0
+    market_pct = df_today['pct_chg'].mean()
+    up_ratio = (df_today['pct_chg'] > 0).sum() / len(df_today)
+    # 大盘环境判断
+    if market_pct < -0.5:
+        return False, f"大盘大跌 {market_pct:.2f}%,熊市不选股", market_pct, up_ratio
+    if up_ratio < 0.3:
+        return False, f"上涨家数仅 {up_ratio*100:.0f}%,市场弱势", market_pct, up_ratio
+    return True, "OK", market_pct, up_ratio
+
+
+# ============ 🛡️ 风险过滤器 (新增) ============
+def pass_risk_filter(p):
+    """新增的更强风险过滤"""
+    pct = p.get("pct_chg", 0)
+    amount_yi = p.get("amount", 0) / 1e5  # 千元 -> 亿元
+    vol = p.get("vol", 0)
+    
+    # 1. 单日涨幅 > 12% 跳过(实证: >12% 次日 8/17 涨 50% 跌 50%, 远低于平均)
+    if pct > 12:
+        return False, f"单日涨{pct:.1f}%, 高位接力"
+    
+    # 2. 涨停 + 成交 > 5亿 (高位放量, 主力出货可能)
+    if pct >= 9.5 and amount_yi > 500:  # 5亿
+        return False, f"涨停+成交{amount_yi:.1f}亿, 高位放量"
+    
+    # 3. 涨幅 5-9.5% + 成交 > 10亿 (出货嫌疑)
+    if 5 < pct < 9.5 and amount_yi > 1000:  # 10亿
+        return False, f"涨{pct:.1f}%+成交{amount_yi:.1f}亿, 出货嫌疑"
+    
+    # 4. ST/退市风险
+    name = p.get("name", "")
+    if "ST" in str(name) or "退" in str(name):
+        return False, "ST/退市风险"
+    
+    return True, "OK"
+
+
 def _empty(df_today):
     for c in ["ret_20d", "ma5", "ma20", "ma60", "vol_ma60", "vol_ma5", "macd_dif", "macd_dea", "bias_5", "bias_20"]:
         df_today[c] = 0 if c in ["ret_20d", "vol_ma60", "vol_ma5", "macd_dif", "macd_dea", "bias_5", "bias_20"] else df_today.get("close", 0)
@@ -202,7 +245,7 @@ def _empty(df_today):
 # ==================== 4 个公式 ====================
 def formula_1(df, money_3d):
     """抄底型: 站上均价 + 量能配合 + 资金回流 + 业绩正
-    不依赖 K 线 MA,只用当日价量
+    df = df[df.apply(lambda r: pass_risk_filter(r.to_dict())[0], axis=1)]
     """
     if money_3d:
         df["money_3d_wan"] = df["ts_code"].map(money_3d).fillna(0)
@@ -224,7 +267,7 @@ def formula_1(df, money_3d):
 
 def formula_2(df, money_3d):
     """趋势型: 强势红盘 + 量能 + 资金共振
-    不依赖 MA,只用量价 + 资金
+    df = df[df.apply(lambda r: pass_risk_filter(r.to_dict())[0], axis=1)]
     """
     if money_3d:
         df["money_3d_wan"] = df["ts_code"].map(money_3d).fillna(0)
@@ -244,7 +287,7 @@ def formula_2(df, money_3d):
 
 def formula_3(df, money_3d, money_1d):
     """起量+基本面 (价值)"""
-    df["money_3d_wan"] = df["ts_code"].map(money_3d).fillna(0) if money_3d else 0
+    df = df[df.apply(lambda r: pass_risk_filter(r.to_dict())[0], axis=1)]
     df["money_1d_wan"] = df["ts_code"].map(money_1d).fillna(0) if money_1d else 0
     today = datetime.now()
     df["list_days"] = df["list_date"].apply(
@@ -271,7 +314,7 @@ def formula_3(df, money_3d, money_1d):
 
 def formula_4(df, money_1d):
     """短线主力型: 中盘 + 量比 + 涨幅 + 换手 + 资金共振
-    不依赖 MA
+    df = df[df.apply(lambda r: pass_risk_filter(r.to_dict())[0], axis=1)]
     """
     df["money_1d_wan"] = df["ts_code"].map(money_1d).fillna(0) if money_1d else 0
     cond = (
@@ -320,55 +363,17 @@ def generate_picks():
     def to_list(d):
         return [f"{r['code']} {r['name']}" for _, r in d.iterrows()] if not d.empty else []
     
-    # ========== 🎯 多公式共振分析 ==========
-    # 收集每只票的命中公式
-    code_to_formulas = {}
-    for fname, fdf in results.items():
-        if fdf is not None and not fdf.empty:
-            for _, r in fdf.iterrows():
-                code = r["code"]
-                if code not in code_to_formulas:
-                    code_to_formulas[code] = {"hits": [], "row": r}
-                code_to_formulas[code]["hits"].append(fname)
-    
-    # 至少 2 公式命中的票
-    resonance = []
-    for code, info in code_to_formulas.items():
-        if len(info["hits"]) >= 2:
-            r = info["row"]
-            resonance.append({
-                "code": code,
-                "name": r.get("name", ""),
-                "industry": r.get("industry", ""),
-                "pct_chg": float(r.get("pct_chg", 0)),
-                "close": float(r.get("close", 0)),
-                "turnover_rate": float(r.get("turnover_rate", 0)) if pd.notna(r.get("turnover_rate")) else 0,
-                "volume_ratio": float(r.get("volume_ratio", 0)) if pd.notna(r.get("volume_ratio")) else 0,
-                "money_3d": float(r.get("money_3d_wan", 0)) if pd.notna(r.get("money_3d_wan")) else 0,
-                "money_1d": float(r.get("money_1d_wan", 0)) if pd.notna(r.get("money_1d_wan")) else 0,
-                "hit_formulas": info["hits"],
-                "hit_count": len(info["hits"]),
-            })
-    resonance.sort(key=lambda x: (-x["hit_count"], x["pct_chg"]))
-    print(f"   🎯 共振股票: {len(resonance)} 只")
-    
     output = {
         "date": now.strftime("%Y-%m-%d"),
         "update_time": now.strftime("%H:%M"),
-        "version": "2.1-resonance",
+        "version": "2.0-formulas",
         "formulas": {
             "1_缩量企稳上穿MA20": to_list(results["1_缩量企稳上穿MA20"]),
             "2_多金叉共振": to_list(results["2_多金叉共振"]),
             "3_起量基本面": to_list(results["3_起量基本面"]),
             "4_强势主力": to_list(results["4_强势主力"]),
         },
-        "resonance": resonance,
-        "summary": {
-            "formulas": {k: len(v) for k, v in results.items()},
-            "resonance_total": len(resonance),
-            "resonance_2": sum(1 for r in resonance if r["hit_count"] == 2),
-            "resonance_3": sum(1 for r in resonance if r["hit_count"] >= 3),
-        },
+        "summary": {k: len(v) for k, v in results.items()},
     }
     return output
 
