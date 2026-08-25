@@ -1589,3 +1589,5 @@ if run:
 
 st.divider()
 st.caption(f"Vibe v2.0 | {(datetime.now(timezone.utc) + timedelta(hours=8)).strftime('%Y-%m-%d %H:%M')} (北京时间)")
+
+# 8/25 21:50 触发 App 重启读取 8/25 数据
