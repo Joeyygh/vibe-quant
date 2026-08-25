@@ -132,14 +132,25 @@ def get_industry_performance():
     c = get_client()
     today = datetime.now().strftime("%Y%m%d")
     try:
-        df = c.df("index_daily", {"trade_date": today}, "ts_code,name,pct_chg")
-        if not df.empty:
-            df = df[df["ts_code"].str.startswith("801")]
-            df["pct_chg"] = pd.to_numeric(df["pct_chg"], errors="coerce")
-            return df
-    except Exception:
-        pass
-    return pd.DataFrame()
+        # 申万一级指数: 801010, 801020, ..., 801950
+        df = c.df("index_classify", level="L1", src="SW")
+        if df.empty:
+            return pd.DataFrame()
+        # 取今日所有一级指数
+        sw_codes = df['index_code'].tolist()
+        all_pct = []
+        for code in sw_codes:
+            r = c.df("index_daily", {"ts_code": code, "trade_date": today}, "ts_code,name,pct_chg")
+            if not r.empty:
+                r["pct_chg"] = pd.to_numeric(r["pct_chg"], errors="coerce")
+                all_pct.append(r.iloc[0].to_dict())
+        if not all_pct:
+            return pd.DataFrame()
+        result = pd.DataFrame(all_pct)
+        return result
+    except Exception as e:
+        print(f"行业接口失败: {e}")
+        return pd.DataFrame()
 
 
 # ==================== 通用风险过滤 ====================
@@ -217,6 +228,8 @@ def check_market(df_today, industry_perf=None):
 def get_hot_industries(industry_perf, top_n=5):
     """从板块表现取 top N 热门行业"""
     if industry_perf is None or industry_perf.empty:
+        return set()
+    if "name" not in industry_perf.columns or "pct_chg" not in industry_perf.columns:
         return set()
     return set(industry_perf.nlargest(top_n, "pct_chg")["name"].tolist())
 
