@@ -1134,6 +1134,24 @@ if view_mode == "📐 实战公式":
         formulas_data = json.load(f)
 
     st.success(f"📅 数据日期: {formulas_data.get('date', 'N/A')} | ⏰ {formulas_data.get('update_time', 'N/A')} | 版本: {formulas_data.get('version', 'N/A')}")
+
+    # 🌟 精选 6 只 - 开盘关注
+    top_picks = formulas_data.get("top_picks", [])
+    if top_picks:
+        st.markdown("### 🌟 今日精选 (8/26 开盘重点关注)")
+        st.caption(formulas_data.get("top_picks_note", ""))
+        import pandas as pd
+        df_top = pd.DataFrame([{
+            "代码": p["code"],
+            "名称": p["name"],
+            "PE": p.get("pe", 0),
+            "市值(亿)": p.get("mv_yi", 0),
+            "理由": p.get("thesis", ""),
+            "止损": p.get("stop", ""),
+            "目标": p.get("target", ""),
+        } for p in top_picks])
+        st.dataframe(df_top, use_container_width=True, hide_index=True)
+        st.divider()
     
     # 🎯 共振统计概览
     resonance = formulas_data.get("resonance", [])
