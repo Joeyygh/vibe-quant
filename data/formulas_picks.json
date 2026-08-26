@@ -1,16 +1,46 @@
 {
   "date": "2026-08-26",
-  "update_time": "18:23",
-  "version": "3.1-multi-strategy (改进 5 项)",
+  "update_time": "21:34",
+  "version": "3.2-priority (C>弱市, A>震荡, B>普涨)",
   "data_source": "20260826 行情 + 资金流 + 板块",
   "market": {
-    "status": "🟡 中性 (大盘+0.26%), 保守+抄底",
+    "status": "🟡 中性 (大盘+0.26%), A+C 可用, A 优先",
+    "priority": "A",
     "market_pct": 0.2619001151852563,
     "up_ratio": 0.5298521789210981,
     "up_limit": 66,
     "down_limit": 11,
     "hot_industries": []
   },
+  "top_picks": [
+    {
+      "code": "600487",
+      "name": "亨通光电",
+      "pe": 0,
+      "mv_yi": 0,
+      "score": 0.0,
+      "strategy_source": "A_保守稳健",
+      "thesis": "通信设备 涨 +0.36% 资金 +0.00亿"
+    },
+    {
+      "code": "603950",
+      "name": "长源东谷",
+      "pe": 0,
+      "mv_yi": 0,
+      "score": 0.0,
+      "strategy_source": "A_保守稳健",
+      "thesis": "汽车配件 涨 +0.94% 资金 +0.00亿"
+    },
+    {
+      "code": "600888",
+      "name": "新疆众和",
+      "pe": 0,
+      "mv_yi": 0,
+      "score": 0.0,
+      "strategy_source": "A_保守稳健",
+      "thesis": "铝 涨 +0.19% 资金 +0.00亿"
+    }
+  ],
   "strategies": {
     "A_保守稳健": [
       {
