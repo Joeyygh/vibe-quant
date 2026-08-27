@@ -1611,3 +1611,5 @@ st.caption(f"Vibe v2.0 | {(datetime.now(timezone.utc) + timedelta(hours=8)).strf
 # 8/25 21:50 触发 App 重启读取 8/25 数据
 
 # v3.2 上线 2026-08-26 21:35 (智能优先级 + top 3 推荐)
+
+# 21:42 加 today_picks rank 字段 修复
