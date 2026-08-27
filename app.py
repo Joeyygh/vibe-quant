@@ -1613,3 +1613,5 @@ st.caption(f"Vibe v2.0 | {(datetime.now(timezone.utc) + timedelta(hours=8)).strf
 # v3.2 上线 2026-08-26 21:35 (智能优先级 + top 3 推荐)
 
 # 21:42 加 today_picks rank 字段 修复
+
+# 21:44 强制重启 (修缓存)
