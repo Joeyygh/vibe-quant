@@ -22,7 +22,8 @@
       "pct_chg_today": 9.9799,
       "close": 71.3,
       "thesis": "通信设备 涨+9.98% 成交191.2亿",
-      "source": "theme"
+      "source": "theme",
+      "rank": 1
     },
     {
       "code": "688008",
@@ -31,7 +32,8 @@
       "pct_chg_today": 10.0597,
       "close": 221.22,
       "thesis": "半导体 涨+10.06% 成交144.6亿",
-      "source": "theme"
+      "source": "theme",
+      "rank": 2
     },
     {
       "code": "001309",
@@ -40,7 +42,8 @@
       "pct_chg_today": 10.0003,
       "close": 429.76,
       "thesis": "半导体 涨+10.00% 成交87.6亿",
-      "source": "theme"
+      "source": "theme",
+      "rank": 3
     },
     {
       "code": "601869",
@@ -49,7 +52,8 @@
       "pct_chg_today": 9.9995,
       "close": 426.82,
       "thesis": "通信设备 涨+10.00% 成交61.5亿",
-      "source": "theme"
+      "source": "theme",
+      "rank": 4
     },
     {
       "code": "300857",
@@ -58,7 +62,8 @@
       "pct_chg_today": 9.7236,
       "close": 259.2,
       "thesis": "IT设备 涨+9.72% 成交52.6亿",
-      "source": "theme"
+      "source": "theme",
+      "rank": 5
     }
   ],
   "quant_picks": [
@@ -69,7 +74,8 @@
       "pct_chg_today": 5.3832,
       "close": 59.12,
       "thesis": "半导体 涨+5.38% 成交188.4亿",
-      "source": "quant"
+      "source": "quant",
+      "rank": 1
     },
     {
       "code": "603986",
@@ -78,7 +84,8 @@
       "pct_chg_today": 4.7643,
       "close": 411.2,
       "thesis": "半导体 涨+4.76% 成交165.4亿",
-      "source": "quant"
+      "source": "quant",
+      "rank": 2
     },
     {
       "code": "600183",
@@ -87,7 +94,8 @@
       "pct_chg_today": 8.4301,
       "close": 140.97,
       "thesis": "元器件 涨+8.43% 成交143.1亿",
-      "source": "quant"
+      "source": "quant",
+      "rank": 3
     },
     {
       "code": "300394",
@@ -96,7 +104,8 @@
       "pct_chg_today": 5.3553,
       "close": 267.16,
       "thesis": "通信设备 涨+5.36% 成交138.3亿",
-      "source": "quant"
+      "source": "quant",
+      "rank": 4
     },
     {
       "code": "600522",
@@ -105,7 +114,8 @@
       "pct_chg_today": 7.9916,
       "close": 36.08,
       "thesis": "通信设备 涨+7.99% 成交117.8亿",
-      "source": "quant"
+      "source": "quant",
+      "rank": 5
     },
     {
       "code": "002384",
@@ -114,7 +124,8 @@
       "pct_chg_today": 3.2105,
       "close": 200.6,
       "thesis": "元器件 涨+3.21% 成交115.6亿",
-      "source": "quant"
+      "source": "quant",
+      "rank": 6
     },
     {
       "code": "300476",
@@ -123,7 +134,8 @@
       "pct_chg_today": 5.4562,
       "close": 263.05,
       "thesis": "元器件 涨+5.46% 成交102.1亿",
-      "source": "quant"
+      "source": "quant",
+      "rank": 7
     },
     {
       "code": "600176",
@@ -132,7 +144,8 @@
       "pct_chg_today": 7.9494,
       "close": 42.64,
       "thesis": "玻璃 涨+7.95% 成交98.3亿",
-      "source": "quant"
+      "source": "quant",
+      "rank": 8
     },
     {
       "code": "601138",
@@ -141,7 +154,8 @@
       "pct_chg_today": 5.4317,
       "close": 63.86,
       "thesis": "通信设备 涨+5.43% 成交94.3亿",
-      "source": "quant"
+      "source": "quant",
+      "rank": 9
     },
     {
       "code": "002428",
@@ -150,7 +164,8 @@
       "pct_chg_today": 8.4412,
       "close": 101.36,
       "thesis": "小金属 涨+8.44% 成交84.6亿",
-      "source": "quant"
+      "source": "quant",
+      "rank": 10
     }
   ],
   "intersection": [],
