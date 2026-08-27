@@ -1,46 +1,16 @@
 {
-  "date": "2026-08-27",
-  "update_time": "21:07",
-  "version": "3.2-priority (C>弱市, A>震荡, B>普涨)",
+  "date": "2026-08-28",
+  "update_time": "04:04",
+  "version": "3.1-multi-strategy (改进 5 项)",
   "data_source": "20260827 行情 + 资金流 + 板块",
   "market": {
-    "status": "🟢 普涨 (大盘+1.20%, 涨家61%), 全部允许, B 优先",
-    "priority": "B",
+    "status": "🟢 普涨 (大盘+1.20%, 涨家61%), 全部允许",
     "market_pct": 1.2049240929161067,
     "up_ratio": 0.6125935880207334,
     "up_limit": 128,
     "down_limit": 5,
     "hot_industries": []
   },
-  "top_picks": [
-    {
-      "code": "600362",
-      "name": "江西铜业",
-      "pe": 0,
-      "mv_yi": 0,
-      "score": 0.0,
-      "strategy_source": "A_保守稳健",
-      "thesis": "铜 涨 +1.30% 资金 +0.00亿"
-    },
-    {
-      "code": "300602",
-      "name": "飞荣达",
-      "pe": 0,
-      "mv_yi": 0,
-      "score": 0.0,
-      "strategy_source": "A_保守稳健",
-      "thesis": "元器件 涨 +3.05% 资金 +0.00亿"
-    },
-    {
-      "code": "300059",
-      "name": "东方财富",
-      "pe": 0,
-      "mv_yi": 0,
-      "score": 0.0,
-      "strategy_source": "A_保守稳健",
-      "thesis": "证券 涨 +1.34% 资金 +0.00亿"
-    }
-  ],
   "strategies": {
     "A_保守稳健": [
       {
