@@ -938,7 +938,7 @@ with st.sidebar:
     run = st.button("运行分析", type="primary", use_container_width=True)
     st.divider()
     st.header("📊 页面")
-    view_mode = st.radio("页面模式", ["量化选股", "🎯 今日精选", "🎯 双引擎", "📐 实战公式", "🎯 多公式共振", "每日复盘", "📝 我的笔记"], index=0, key="view_mode")
+    view_mode = st.radio("页面模式", ["量化选股", "🎯 今日精选", "🎯 双引擎", "📐 实战公式", "🌟 综合推荐", "🎯 多公式共振", "每日复盘", "📝 我的笔记"], index=0, key="view_mode")
 
 st.markdown("""
 ## Vibe 量化 v2.1 (升级版)
@@ -1277,6 +1277,181 @@ if view_mode == "📐 实战公式":
     
     st.divider()
     st.info("💡 4 个公式可与「量化选股」叠加使用,选择共振票胜率更高")
+    st.stop()
+
+
+
+
+# ============ 🌟 综合推荐 (动态配比) ============
+if view_mode == "🌟 综合推荐":
+    st.header("🌟 综合推荐 (动态配比)")
+    st.caption("💡 按大盘状态自动配比 A/B/C 三策略,直接给出今天 5-6 只重点关注")
+
+    formulas_file = "data/formulas_picks.json"
+    if not os.path.exists(formulas_file):
+        formulas_file = "reports/formulas_picks.json"
+    if not os.path.exists(formulas_file):
+        st.error("❌ 公式 picks 还没生成,等今晚 17:00 daily.yml 跑完就有")
+        st.stop()
+
+    with open(formulas_file, "r", encoding="utf-8") as f:
+        formulas_data = json.load(f)
+
+    # 1. 读大盘状态
+    market = formulas_data.get("market", {})
+    market_pct = float(market.get("market_pct", 0))
+    up_ratio = float(market.get("up_ratio", 0))
+    priority = market.get("priority", "A")  # daily_picks_v2 里给的就是 A/B/C
+    market_status = market.get("status", "中性")
+
+    # 2. 配比表 (按你 8/28 早上定的规则)
+    quota_map = {
+        "C": {"name": "🐻 熊市/下行", "配比": {"C": 4, "A": 2, "B": 0}, "主推": "C 抄底"},
+        "A": {"name": "〰️ 震荡",     "配比": {"A": 3, "C": 2, "B": 0}, "主推": "A 保守"},
+        "B": {"name": "🐂 普涨",     "配比": {"B": 3, "A": 2, "C": 1}, "主推": "B 趋势"},
+    }
+    # 兜底: 算出来一个状态
+    if priority not in quota_map:
+        if market_pct < -0.3 or up_ratio < 0.3:
+            priority = "C"
+        elif market_pct > 0.3 and up_ratio > 0.5:
+            priority = "B"
+        else:
+            priority = "A"
+    cfg = quota_map[priority]
+    quotas = cfg["配比"]
+
+    # 3. 大盘状态卡片
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("📊 大盘平均", f"{market_pct:+.2f}%")
+    c2.metric("📈 涨家比", f"{up_ratio*100:.0f}%")
+    c3.metric("🌡️ 当前状态", cfg["name"])
+    c4.metric("🎯 主推策略", cfg["主推"])
+    st.info(f"🧠 **今日策略**: {market_status} | 配比 A:B:C = {quotas['A']}:{quotas['B']}:{quotas['C']}")
+
+    # 4. 读三策略选股结果
+    strategies = formulas_data.get("strategies", {})
+    a_list = strategies.get("A_保守稳健", [])
+    b_list = strategies.get("B_趋势跟随", [])
+    c_list = strategies.get("C_抄底反弹", [])
+
+    if not a_list and not b_list and not c_list:
+        st.warning("⚠️ 三策略暂无选股结果")
+        st.stop()
+
+    # 5. 持仓去重 (避免重复推荐已有持仓)
+    try:
+        holdings_file = "my_holdings.json"
+        if os.path.exists(holdings_file):
+            with open(holdings_file, "r", encoding="utf-8") as hf:
+                hd = json.load(hf)
+            holdings_codes = set()
+            for h in hd.get("holdings", []):
+                code = str(h.get("code", "")).zfill(6)
+                if code:
+                    holdings_codes.add(code)
+        else:
+            holdings_codes = set()
+    except Exception:
+        holdings_codes = set()
+
+    # 6. 共振去重 + 加权打分
+    pool = {}  # code -> {data, hit_list, score}
+    for strategy, items in [("A", a_list), ("B", b_list), ("C", c_list)]:
+        for p in items:
+            code = str(p.get("code", "")).zfill(6)
+            if not code or code in holdings_codes:
+                continue
+            if code not in pool:
+                # 兼容字段: quant_score / score
+                base = float(p.get("quant_score", p.get("score", 50)))
+                pool[code] = {
+                    "data": p,
+                    "hits": [],
+                    "score": base,
+                }
+            pool[code]["hits"].append(strategy)
+            base = float(p.get("quant_score", p.get("score", 50)))
+            pool[code]["score"] = max(pool[code]["score"], base)
+
+    # 共振加权: 2 策略 +15, 3 策略 +25
+    for info in pool.values():
+        n = len(info["hits"])
+        if n == 3:
+            info["score"] += 25
+        elif n == 2:
+            info["score"] += 15
+        info["resonance"] = "+".join(sorted(info["hits"])) + "共振" if n >= 2 else "单策略"
+        # 标签
+        info["tag"] = "🎯" if n >= 2 else "·"
+
+    # 7. 按配额挑票
+    result = []
+    seen_codes = set()
+    for strategy in ["A", "B", "C"]:
+        q = quotas[strategy]
+        if q == 0:
+            continue
+        # 候选: 命中了该策略的票
+        cands = [info for code, info in pool.items() if strategy in info["hits"]]
+        cands.sort(key=lambda x: -x["score"])
+        for info in cands:
+            code = str(info["data"].get("code", "")).zfill(6)
+            if code in seen_codes:
+                continue
+            info["from"] = strategy
+            result.append(info)
+            seen_codes.add(code)
+            if sum(1 for r in result if r["from"] == strategy) >= q:
+                break
+
+    # 8. 兜底补足到 6 只
+    TARGET = 6
+    if len(result) < TARGET:
+        backup = sorted(pool.values(), key=lambda x: -x["score"])
+        for info in backup:
+            code = str(info["data"].get("code", "")).zfill(6)
+            if code not in seen_codes:
+                info["from"] = info["hits"][0] if info["hits"] else "?"
+                result.append(info)
+                seen_codes.add(code)
+            if len(result) >= TARGET:
+                break
+
+    result = result[:TARGET]
+
+    # 9. 展示
+    st.markdown("### 🎯 今日重点关注 (5-6 只)")
+    import pandas as pd
+    df_combo = pd.DataFrame([{
+        "代码": str(r["data"].get("code", "")).zfill(6),
+        "名称": r["data"].get("name", ""),
+        "涨跌幅": f"{float(r['data'].get('pct_chg', 0)):+.2f}%",
+        "板块": r["data"].get("industry", ""),
+        "来自策略": {"A": "A 保守", "B": "B 趋势", "C": "C 抄底"}.get(r["from"], r["from"]),
+        "共振": r["tag"] + " " + r["resonance"],
+        "综合分": round(r["score"], 1),
+    } for r in result])
+    st.dataframe(df_combo, use_container_width=True, hide_index=True)
+
+    # 10. 详细说明
+    with st.expander("📋 详细理由 (点开看每只票为什么选)"):
+        for r in result:
+            code = str(r["data"].get("code", "")).zfill(6)
+            name = r["data"].get("name", "")
+            industry = r["data"].get("industry", "")
+            pct = float(r["data"].get("pct_chg", 0))
+            money_3d_yi = float(r["data"].get("money_3d", 0)) / 10000
+            vol_ratio = float(r["data"].get("volume_ratio", 0))
+            thesis = (f"{industry} 板块 | 今日 {pct:+.2f}% | "
+                      f"3日资金 {money_3d_yi:+.2f}亿 | 量比 {vol_ratio:.2f}"
+                      + (" 🔥风口行业" if r["data"].get("in_hot_industry") else ""))
+            st.markdown(f"**{code} {name}** — 来自 {r['from']} 策略,综合分 {r['score']:.1f}")
+            st.caption(thesis)
+            st.divider()
+
+    st.success(f"✅ 推荐 {len(result)} 只,按 {cfg['name']} 配比")
+    st.caption("💡 建议开盘 9:35 观察,等回踩不破 MA5/MA10 再介入,严设止损 -5%")
     st.stop()
 
 
