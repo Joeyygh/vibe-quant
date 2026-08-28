@@ -1,6 +1,6 @@
 {
-  "date": "2026-08-28",
-  "update_time": "04:03",
+  "date": "2026-08-29",
+  "update_time": "05:18",
   "version": "1.4-dynamic-auto",
   "weights": {
     "theme": 30,
@@ -13,157 +13,14 @@
     "pct_today_max": 7.0,
     "bias_5_max": 15.0
   },
-  "market_view": "08/28 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
+  "market_view": "08/29 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
   "summary": {
-    "theme_picks": 5,
+    "theme_picks": 0,
     "quant_picks": 0,
     "intersection": 0,
-    "total": 5
+    "total": 0
   },
-  "picks": [
-    {
-      "rank": 1,
-      "code": "600487",
-      "name": "亨通光电",
-      "score": 59,
-      "score_breakdown": {
-        "theme": 30,
-        "money": 4,
-        "tech": 5,
-        "event": 20
-      },
-      "industry": "通信设备",
-      "themes": [
-        "AI算力",
-        "服务器",
-        "光模块",
-        "5G"
-      ],
-      "pct_chg_today": 9.9799,
-      "ret_20d": 0,
-      "close": 71.3,
-      "thesis": "通信设备 行业, 涨幅 +9.98%, 成交 0.19 亿, AI算力, 服务器",
-      "entry": "已涨停 (10.0%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 71.30",
-      "target": "突破前高/MA60 (77.00, +8%)",
-      "stop": "跌破 5日线 (69.16, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🔥 仅精选"
-    },
-    {
-      "rank": 2,
-      "code": "688008",
-      "name": "澜起科技",
-      "score": 59,
-      "score_breakdown": {
-        "theme": 30,
-        "money": 4,
-        "tech": 5,
-        "event": 20
-      },
-      "industry": "半导体",
-      "themes": [
-        "半导体设备",
-        "存储芯片",
-        "AI算力",
-        "国产替代"
-      ],
-      "pct_chg_today": 10.0597,
-      "ret_20d": 0,
-      "close": 221.22,
-      "thesis": "半导体 行业, 涨幅 +10.06%, 成交 0.14 亿, 半导体设备, 存储芯片",
-      "entry": "已涨停 (10.1%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 221.22",
-      "target": "突破前高/MA60 (238.92, +8%)",
-      "stop": "跌破 5日线 (214.58, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🔥 仅精选"
-    },
-    {
-      "rank": 3,
-      "code": "001309",
-      "name": "德明利",
-      "score": 55,
-      "score_breakdown": {
-        "theme": 30,
-        "money": 0,
-        "tech": 5,
-        "event": 20
-      },
-      "industry": "半导体",
-      "themes": [
-        "半导体设备",
-        "存储芯片",
-        "AI算力",
-        "国产替代"
-      ],
-      "pct_chg_today": 10.0003,
-      "ret_20d": 0,
-      "close": 429.76,
-      "thesis": "半导体 行业, 涨幅 +10.00%, 成交 0.09 亿, 半导体设备, 存储芯片",
-      "entry": "已涨停 (10.0%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 429.76",
-      "target": "突破前高/MA60 (464.14, +8%)",
-      "stop": "跌破 5日线 (416.87, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🔥 仅精选"
-    },
-    {
-      "rank": 4,
-      "code": "601869",
-      "name": "长飞光纤",
-      "score": 55,
-      "score_breakdown": {
-        "theme": 30,
-        "money": 0,
-        "tech": 5,
-        "event": 20
-      },
-      "industry": "通信设备",
-      "themes": [
-        "AI算力",
-        "服务器",
-        "光模块",
-        "5G"
-      ],
-      "pct_chg_today": 9.9995,
-      "ret_20d": 0,
-      "close": 426.82,
-      "thesis": "通信设备 行业, 涨幅 +10.00%, 成交 0.06 亿, AI算力, 服务器",
-      "entry": "已涨停 (10.0%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 426.82",
-      "target": "突破前高/MA60 (460.97, +8%)",
-      "stop": "跌破 5日线 (414.02, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🔥 仅精选"
-    },
-    {
-      "rank": 5,
-      "code": "300857",
-      "name": "协创数据",
-      "score": 27,
-      "score_breakdown": {
-        "theme": 14,
-        "money": 0,
-        "tech": 5,
-        "event": 8
-      },
-      "industry": "IT设备",
-      "themes": [
-        "IT设备"
-      ],
-      "pct_chg_today": 9.7236,
-      "ret_20d": 0,
-      "close": 259.2,
-      "thesis": "IT设备 行业, 涨幅 +9.72%, 成交 0.05 亿, IT设备",
-      "entry": "已涨停 (9.7%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 259.20",
-      "target": "突破前高/MA60 (279.94, +8%)",
-      "stop": "跌破 5日线 (251.42, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🔥 仅精选"
-    }
-  ],
+  "picks": [],
   "quant_picks": [],
   "intersection": [],
   "filtered_out": [],
