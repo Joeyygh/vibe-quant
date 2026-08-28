@@ -1434,6 +1434,156 @@ if view_mode == "🌟 综合推荐":
     } for r in result])
     st.dataframe(df_combo, use_container_width=True, hide_index=True)
 
+    # 9.5 📥 一键导出 Excel
+    from io import BytesIO
+    try:
+        from openpyxl import Workbook
+        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+        from openpyxl.utils import get_column_letter
+
+        def build_excel():
+            wb = Workbook()
+            # === Sheet 1: 推荐清单 ===
+            ws = wb.active
+            ws.title = "今日推荐"
+            # 头部
+            headers = ["代码", "名称", "涨跌幅(%)", "板块", "来自策略", "共振", "综合分",
+                       "现价(元)", "3日资金(亿)", "量比", "风口行业", "建议买入区间", "止损价"]
+            ws.append(headers)
+            # 样式: 表头加粗 + 底色
+            header_fill = PatternFill(start_color="FF6B35", end_color="FF6B35", fill_type="solid")
+            header_font = Font(bold=True, color="FFFFFF", size=11)
+            thin = Side(border_style="thin", color="CCCCCC")
+            border = Border(left=thin, right=thin, top=thin, bottom=thin)
+            center = Alignment(horizontal="center", vertical="center")
+            for col_idx in range(1, len(headers) + 1):
+                cell = ws.cell(row=1, column=col_idx)
+                cell.fill = header_fill
+                cell.font = header_font
+                cell.alignment = center
+                cell.border = border
+            # 数据行
+            for r in result:
+                p = r["data"]
+                code = str(p.get("code", "")).zfill(6)
+                close = float(p.get("close", 0))
+                # 买入区间: 现价 * 0.99 ~ 现价 (开盘 1% 内回踩)
+                buy_low = round(close * 0.99, 2) if close > 0 else 0
+                buy_high = round(close, 2) if close > 0 else 0
+                # 止损: 买入区间下限 * 0.95
+                stop = round(buy_low * 0.95, 2) if buy_low > 0 else 0
+                row = [
+                    code,
+                    p.get("name", ""),
+                    round(float(p.get("pct_chg", 0)), 2),
+                    p.get("industry", ""),
+                    {"A": "A 保守", "B": "B 趋势", "C": "C 抄底"}.get(r["from"], r["from"]),
+                    r["resonance"],
+                    round(r["score"], 1),
+                    close,
+                    round(float(p.get("money_3d", 0)) / 10000, 2),
+                    round(float(p.get("volume_ratio", 0)), 2),
+                    "🔥 是" if p.get("in_hot_industry") else "否",
+                    f"{buy_low} ~ {buy_high}",
+                    stop,
+                ]
+                ws.append(row)
+            # 列宽自适应
+            col_widths = [10, 14, 12, 14, 12, 16, 10, 12, 14, 10, 12, 16, 12]
+            for i, w in enumerate(col_widths, 1):
+                ws.column_dimensions[get_column_letter(i)].width = w
+            # 涨跌色: 正绿负红(简版,只染涨跌幅列)
+            green_font = Font(color="00B050")
+            red_font = Font(color="C00000")
+            for row_idx in range(2, ws.max_row + 1):
+                pct_cell = ws.cell(row=row_idx, column=3)
+                if pct_cell.value and float(pct_cell.value) > 0:
+                    pct_cell.font = green_font
+                elif pct_cell.value and float(pct_cell.value) < 0:
+                    pct_cell.font = red_font
+            ws.row_dimensions[1].height = 22
+            # 冻结首行
+            ws.freeze_panes = "A2"
+
+            # === Sheet 2: 大盘环境 ===
+            ws2 = wb.create_sheet("大盘环境")
+            ws2.append(["指标", "数值"])
+            market_rows = [
+                ("数据日期", formulas_data.get("date", "N/A")),
+                ("更新时间", formulas_data.get("update_time", "N/A")),
+                ("版本", formulas_data.get("version", "N/A")),
+                ("大盘平均涨幅", f"{market_pct:+.2f}%"),
+                ("涨家比", f"{up_ratio*100:.1f}%"),
+                ("当前状态", cfg["name"]),
+                ("主推策略", cfg["主推"]),
+                ("市场判定原文", market_status),
+                ("配比 A:B:C", f"{quotas['A']}:{quotas['B']}:{quotas['C']}"),
+                ("风口行业", ", ".join(market.get("hot_industries", []))),
+            ]
+            for k, v in market_rows:
+                ws2.append([k, v])
+            for col_idx in range(1, 3):
+                cell = ws2.cell(row=1, column=col_idx)
+                cell.fill = header_fill
+                cell.font = header_font
+                cell.alignment = center
+                cell.border = border
+            ws2.column_dimensions["A"].width = 20
+            ws2.column_dimensions["B"].width = 40
+            ws2.row_dimensions[1].height = 22
+
+            # === Sheet 3: 详细理由 ===
+            ws3 = wb.create_sheet("详细理由")
+            ws3.append(["代码", "名称", "来自策略", "综合分", "详细理由"])
+            for col_idx in range(1, 6):
+                cell = ws3.cell(row=1, column=col_idx)
+                cell.fill = header_fill
+                cell.font = header_font
+                cell.alignment = center
+                cell.border = border
+            for r in result:
+                p = r["data"]
+                code = str(p.get("code", "")).zfill(6)
+                name = p.get("name", "")
+                industry = p.get("industry", "")
+                pct = float(p.get("pct_chg", 0))
+                money_3d_yi = float(p.get("money_3d", 0)) / 10000
+                vol_ratio = float(p.get("volume_ratio", 0))
+                in_hot = "🔥风口行业" if p.get("in_hot_industry") else ""
+                thesis = (f"{industry} 板块 | 今日 {pct:+.2f}% | "
+                          f"3日资金 {money_3d_yi:+.2f}亿 | 量比 {vol_ratio:.2f} {in_hot}")
+                ws3.append([code, name, r["from"], round(r["score"], 1), thesis])
+            ws3.column_dimensions["A"].width = 10
+            ws3.column_dimensions["B"].width = 14
+            ws3.column_dimensions["C"].width = 12
+            ws3.column_dimensions["D"].width = 10
+            ws3.column_dimensions["E"].width = 80
+            ws3.row_dimensions[1].height = 22
+            ws3.freeze_panes = "A2"
+
+            # 落盘到内存
+            buf = BytesIO()
+            wb.save(buf)
+            buf.seek(0)
+            return buf
+
+        excel_buf = build_excel()
+        date_str = formulas_data.get("date", datetime.now().strftime("%Y%m%d"))
+        filename = f"Vibe推荐清单_{date_str}.xlsx"
+        st.download_button(
+            label="📥 一键导出 Excel (含买入区间 + 止损价)",
+            data=excel_buf,
+            file_name=filename,
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            type="primary",
+            use_container_width=True,
+        )
+        st.caption(f"💡 文件名: `{filename}` | 3 个 sheet: 今日推荐 / 大盘环境 / 详细理由")
+    except ImportError:
+        st.warning("⚠️ openpyxl 没装,Excel 导出暂不可用。已在 requirements.txt 检查?")
+    except Exception as e:
+        st.error(f"❌ Excel 生成失败: {e}")
+
     # 10. 详细说明
     with st.expander("📋 详细理由 (点开看每只票为什么选)"):
         for r in result:
