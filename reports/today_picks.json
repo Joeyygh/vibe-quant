@@ -1,9 +1,9 @@
 {
   "date": "2026-08-31",
   "update_time": "17:30 (盘后)",
-  "actual_run_time": "22:01",
-  "version": "v3.3 (大小盘风格+量能+逆动量+修复iloc[0]bug+持仓嵌套修复)",
-  "data_source": "20260831 收盘真实数据 (Tushare Pro 5206只, 港股02228缺失)",
+  "actual_run_time": "22:21",
+  "version": "v3.3 (修正惠科001399)",
+  "data_source": "20260831 收盘真实数据",
   "market": {
     "status": "🟢 普涨 (大盘+0.79%, 涨家58%, 风格unknown, 量能normal), 全部允许",
     "market_pct": 0.7882715712639262,
@@ -11,14 +11,14 @@
     "up_limit": 124.0,
     "down_limit": 19.0,
     "hot_industries": [
-      "出版业",
-      "元器件",
-      "装修装饰",
-      "机床制造",
       "互联网",
       "机械基件",
       "影视音像",
-      "煤炭开采"
+      "机床制造",
+      "煤炭开采",
+      "装修装饰",
+      "出版业",
+      "元器件"
     ],
     "market_style": "unknown",
     "large_cap_pct": 0.0,
@@ -361,18 +361,18 @@
       "in_hot_industry": false
     },
     {
-      "code": "300752",
+      "code": "001399",
       "name": "惠科股份",
       "cost": 25.741,
-      "close": 11.65,
-      "ret": -54.74146303562411,
-      "pct_today": 3.8324,
+      "close": 22.6,
+      "ret": -12.202323142069066,
+      "pct_today": -0.9641,
       "signals": [
-        "🚨 深套 -54.7%, 慎加仓"
+        "✅ 持有 (浮-12.2%)"
       ],
       "group": "deep_loss",
-      "money_1d": 278.0,
-      "money_3d": 834.0,
+      "money_1d": 153.0,
+      "money_3d": 459.0,
       "in_hot_industry": true
     },
     {
@@ -695,7 +695,6 @@
     "A_count": 15,
     "B_count": 0,
     "C_count": 10,
-    "holdings_count": 26,
-    "total_picks": 25
+    "holdings_count": 26
   }
 }
