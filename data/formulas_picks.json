@@ -1,6 +1,6 @@
 {
-  "date": "2026-08-29",
-  "update_time": "05:18",
+  "date": "2026-08-31",
+  "update_time": "10:15",
   "version": "3.1-multi-strategy (改进 5 项)",
   "data_source": "20260828 行情 + 资金流 + 板块",
   "market": {
@@ -12,188 +12,7 @@
     "hot_industries": []
   },
   "strategies": {
-    "A_保守稳健": [
-      {
-        "code": "600176",
-        "name": "中国巨石",
-        "pct_chg": 1.3133,
-        "industry": "玻璃",
-        "close": 43.2,
-        "money_3d": 9.305475999999997,
-        "money_1d": 9.761072999999998,
-        "volume_ratio": 1.18,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "600095",
-        "name": "湘财股份",
-        "pct_chg": 0.1048,
-        "industry": "证券",
-        "close": 9.55,
-        "money_3d": 5.8925529999999995,
-        "money_1d": 3.6592619999999996,
-        "volume_ratio": 3.09,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "002156",
-        "name": "通富微电",
-        "pct_chg": 0.0314,
-        "industry": "半导体",
-        "close": 63.75,
-        "money_3d": 4.831779000000001,
-        "money_1d": 4.947073000000001,
-        "volume_ratio": 1.14,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "002558",
-        "name": "巨人网络",
-        "pct_chg": 0.1468,
-        "industry": "互联网",
-        "close": 27.28,
-        "money_3d": 3.2793989999999975,
-        "money_1d": 0.7990309999999983,
-        "volume_ratio": 0.93,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "688111",
-        "name": "金山办公",
-        "pct_chg": 1.2929,
-        "industry": "软件服务",
-        "close": 241.3,
-        "money_3d": 2.4474909999999994,
-        "money_1d": 1.676378,
-        "volume_ratio": 1.81,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "002192",
-        "name": "融捷股份",
-        "pct_chg": 1.0042,
-        "industry": "小金属",
-        "close": 74.43,
-        "money_3d": 2.120221000000002,
-        "money_1d": 0.824476000000001,
-        "volume_ratio": 0.81,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "688615",
-        "name": "合合信息",
-        "pct_chg": 1.4799,
-        "industry": "软件服务",
-        "close": 96.0,
-        "money_3d": 1.5747619999999998,
-        "money_1d": 0.5871869999999999,
-        "volume_ratio": 1.28,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "002026",
-        "name": "山东威达",
-        "pct_chg": 2.8317,
-        "industry": "机械基件",
-        "close": 12.71,
-        "money_3d": 1.4742250000000006,
-        "money_1d": 0.24226100000000006,
-        "volume_ratio": 1.6,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "000878",
-        "name": "云南铜业",
-        "pct_chg": 4.0816,
-        "industry": "铜",
-        "close": 17.85,
-        "money_3d": 1.3381879999999997,
-        "money_1d": 0.18538099999999977,
-        "volume_ratio": 1.94,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "002768",
-        "name": "国恩股份",
-        "pct_chg": 0.1387,
-        "industry": "塑料",
-        "close": 64.97,
-        "money_3d": 1.3241180000000001,
-        "money_1d": 0.7340610000000001,
-        "volume_ratio": 0.96,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "301127",
-        "name": "武汉天源",
-        "pct_chg": 1.232,
-        "industry": "环境保护",
-        "close": 19.72,
-        "money_3d": 1.2939090000000002,
-        "money_1d": 0.19411300000000045,
-        "volume_ratio": 1.08,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "688516",
-        "name": "奥特维",
-        "pct_chg": 0.5488,
-        "industry": "专用机械",
-        "close": 45.8,
-        "money_3d": 1.269402,
-        "money_1d": 0.1588029999999999,
-        "volume_ratio": 0.94,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "000807",
-        "name": "云铝股份",
-        "pct_chg": 2.0232,
-        "industry": "铝",
-        "close": 27.23,
-        "money_3d": 0.9781969999999993,
-        "money_1d": 0.5622220000000001,
-        "volume_ratio": 1.5,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "300473",
-        "name": "德尔股份",
-        "pct_chg": 2.974,
-        "industry": "汽车配件",
-        "close": 27.7,
-        "money_3d": 0.954301,
-        "money_1d": 0.3891619999999999,
-        "volume_ratio": 1.15,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "688798",
-        "name": "艾为电子",
-        "pct_chg": 0.9365,
-        "industry": "半导体",
-        "close": 62.51,
-        "money_3d": 0.9306010000000006,
-        "money_1d": 0.9370330000000006,
-        "volume_ratio": 1.91,
-        "in_hot_industry": false,
-        "score": 100
-      }
-    ],
+    "A_保守稳健": [],
     "B_趋势跟随": [],
     "C_抄底反弹": [
       {
@@ -202,7 +21,7 @@
         "pct_chg": -1.1765,
         "industry": "其他商业",
         "close": 12.6,
-        "money_1d": -0.135447,
+        "money_1d": 0.0,
         "volume_ratio": 0.43,
         "in_hot_industry": false,
         "score": 100
@@ -213,7 +32,7 @@
         "pct_chg": -2.9568,
         "industry": "半导体",
         "close": 362.66,
-        "money_1d": 2.3180379999999974,
+        "money_1d": 0.0,
         "volume_ratio": 0.76,
         "in_hot_industry": false,
         "score": 100
@@ -224,7 +43,7 @@
         "pct_chg": -2.224,
         "industry": "航空",
         "close": 60.23,
-        "money_1d": -0.13014400000000023,
+        "money_1d": 0.0,
         "volume_ratio": 0.79,
         "in_hot_industry": false,
         "score": 100
@@ -235,7 +54,7 @@
         "pct_chg": -1.2072,
         "industry": "化工原料",
         "close": 157.95,
-        "money_1d": 0.46109900000000054,
+        "money_1d": 0.0,
         "volume_ratio": 0.91,
         "in_hot_industry": false,
         "score": 100
@@ -246,7 +65,7 @@
         "pct_chg": -2.8283,
         "industry": "软件服务",
         "close": 176.25,
-        "money_1d": 3.158806999999999,
+        "money_1d": 0.0,
         "volume_ratio": 0.92,
         "in_hot_industry": false,
         "score": 100
@@ -257,7 +76,7 @@
         "pct_chg": -1.8637,
         "industry": "半导体",
         "close": 248.01,
-        "money_1d": 3.656631,
+        "money_1d": 0.0,
         "volume_ratio": 0.81,
         "in_hot_industry": false,
         "score": 100
@@ -268,7 +87,7 @@
         "pct_chg": -1.936,
         "industry": "半导体",
         "close": 367.74,
-        "money_1d": -0.17800299999999988,
+        "money_1d": 0.0,
         "volume_ratio": 0.78,
         "in_hot_industry": false,
         "score": 100
@@ -279,7 +98,7 @@
         "pct_chg": -1.8825,
         "industry": "供气供热",
         "close": 43.26,
-        "money_1d": -0.04869599999999991,
+        "money_1d": 0.0,
         "volume_ratio": 0.85,
         "in_hot_industry": false,
         "score": 100
@@ -290,7 +109,7 @@
         "pct_chg": -2.6762,
         "industry": "元器件",
         "close": 134.19,
-        "money_1d": 0.5317670000000002,
+        "money_1d": 0.0,
         "volume_ratio": 0.98,
         "in_hot_industry": false,
         "score": 100
@@ -301,7 +120,7 @@
         "pct_chg": -1.006,
         "industry": "机械基件",
         "close": 31.49,
-        "money_1d": -0.1344580000000002,
+        "money_1d": 0.0,
         "volume_ratio": 0.77,
         "in_hot_industry": false,
         "score": 100
@@ -312,7 +131,7 @@
   "holdings_warnings": [],
   "summary": {
     "strategies": {
-      "A_保守稳健": 15,
+      "A_保守稳健": 0,
       "B_趋势跟随": 0,
       "C_抄底反弹": 10
     },
