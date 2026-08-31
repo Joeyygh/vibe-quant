@@ -182,23 +182,78 @@ def pass_risk_filter(p):
     return True, "OK"
 
 
+# ==================== 大盘风格判断 (v3.3 新增) ====================
+def get_market_style(df_today):
+    """
+    v3.3: 判断大盘 vs 小盘 强弱
+    - 大盘涨 > 小盘涨: 大盘风格 (价值/红利占优) → 量化(小盘)谨慎
+    - 小盘涨 > 大盘涨: 小盘风格 (成长占优) → 量化(小盘)可积极
+    返回: (style, large_pct, small_pct, bias_small_cap)
+        bias_small_cap: True = 应该偏向小盘量化
+    """
+    if df_today.empty or "circ_mv" not in df_today.columns:
+        return "unknown", 0, 0, False
+    # 大盘: 流通市值 > 500亿
+    large = df_today[df_today["circ_mv"] > 500]
+    # 小盘: 流通市值 < 100亿 (v3.3 用更严的 100 亿, 避免被中盘票干扰)
+    small = df_today[(df_today["circ_mv"] < 100) & (df_today["circ_mv"] > 0)]
+    if large.empty or small.empty:
+        return "unknown", 0, 0, False
+    large_pct = large["pct_chg"].mean()
+    small_pct = small["pct_chg"].mean()
+    # 小盘强势 → 量化可积极
+    bias_small = small_pct > large_pct
+    if small_pct > large_pct + 0.3:
+        style = "small_cap"  # 小盘占优
+    elif large_pct > small_pct + 0.3:
+        style = "large_cap"  # 大盘占优
+    else:
+        style = "balanced"
+    return style, large_pct, small_pct, bias_small
+
+
+# ==================== 量能检测 (v3.3 新增) ====================
+def check_volume_regime(df_today):
+    """
+    v3.3: 判断量能状态
+    - 放量: 当日总成交 > 5日均 (假设 vol_ratio > 1.2 的票占多数)
+    - 缩量: 多数 vol_ratio < 1
+    返回: ("expansion" | "contraction" | "normal", ratio, vol_ratio_avg)
+    """
+    if df_today.empty or "volume_ratio" not in df_today.columns:
+        return "unknown", 0.5, 1.0
+    vr = df_today["volume_ratio"].dropna()
+    if vr.empty:
+        return "unknown", 0.5, 1.0
+    avg = float(vr.mean())
+    up_ratio = (vr > 1.2).sum() / len(vr)  # 放量的票占比
+    if up_ratio > 0.4 and avg > 1.1:
+        return "expansion", up_ratio, avg
+    if up_ratio < 0.25 and avg < 0.95:
+        return "contraction", up_ratio, avg
+    return "normal", up_ratio, avg
+
+
 # ==================== 市场环境 ====================
 def check_market(df_today, industry_perf=None):
     """
-    v3.1: 增加大盘 5 日均线判断 (更严)
-    - 熊市 (大盘 5日线向下): 只允许 C
-    - 震荡: 允许 A + C
-    - 牛市: 全部允许
+    v3.3: 升级市场环境判断
+    - 加入: 大盘/小盘风格 + 量能状态
+    - 弱市 (大盘 < -0.3% 或 大盘风格占优): 自动加重 C, 限制 B
+    - 震荡 + 缩量: 加重 C, 限制 A 范围
+    - 普涨 + 放量: 全部允许
     """
     if df_today.empty:
         return False, False, False, "无数据", {}
     market_pct = df_today["pct_chg"].mean()
     up_ratio = (df_today["pct_chg"] > 0).sum() / len(df_today)
-    # 涨停家数 vs 跌停家数
     up_limit = (df_today["pct_chg"] >= 9.5).sum()
     down_limit = (df_today["pct_chg"] <= -9.5).sum()
 
-    # 行业: 涨 > 1% 的行业数
+    # v3.3: 新增大盘风格 + 量能
+    style, large_pct, small_pct, bias_small = get_market_style(df_today)
+    vol_status, vol_up_ratio, vol_avg = check_volume_regime(df_today)
+
     hot_industries = 0
     if industry_perf is not None and not industry_perf.empty:
         hot_industries = (industry_perf["pct_chg"] > 1).sum()
@@ -206,22 +261,40 @@ def check_market(df_today, industry_perf=None):
     metrics = {
         "market_pct": market_pct, "up_ratio": up_ratio,
         "up_limit": up_limit, "down_limit": down_limit,
-        "hot_industries": int(hot_industries)
+        "hot_industries": int(hot_industries),
+        # v3.3 新增
+        "market_style": style,
+        "large_cap_pct": float(large_pct),
+        "small_cap_pct": float(small_pct),
+        "volume_status": vol_status,
+        "volume_ratio_avg": float(vol_avg),
+        "bias_small_cap": bias_small,
     }
 
-    # 熊市 (v3.1): 加严 - 大盘平均 < -0.3% 或 涨家比 < 30% 或 跌停 > 涨停
-    if market_pct < -0.3 or up_ratio < 0.3 or down_limit > up_limit:
-        return False, False, True, f"🔴 熊市 (大盘{market_pct:+.2f}%, 跌停{down_limit}家), 只允许抄底", metrics
-
-    # 震荡: 大盘 -0.5% ~ +0.5% 或 涨家 25-50%
-    if -0.5 <= market_pct < 0.3 and up_ratio < 0.5:
-        return False, True, True, f"🟡 震荡 (大盘{market_pct:+.2f}%, 涨家{up_ratio*100:.0f}%), 保守+抄底", metrics
+    # 熊市 (v3.3): 加严 - 大盘平均 < -0.3% 或 涨家比 < 30% 或 跌停 > 涨停
+    is_bear = (market_pct < -0.3) or (up_ratio < 0.3) or (down_limit > up_limit)
+    if is_bear:
+        # v3.3: 熊市只允许 C + 强调"抄底优先"
+        reason = f"🔴 熊市 (大盘{market_pct:+.2f}%, 跌停{down_limit}家, 风格{style}), 只允许抄底"
+        return False, False, True, reason, metrics
 
     # 普涨: 大盘 > 0.3% 且 涨家 > 50%
     if market_pct > 0.3 and up_ratio > 0.5:
-        return True, True, True, f"🟢 普涨 (大盘{market_pct:+.2f}%, 涨家{up_ratio*100:.0f}%), 全部允许", metrics
+        reason = f"🟢 普涨 (大盘{market_pct:+.2f}%, 涨家{up_ratio*100:.0f}%, 风格{style}, 量能{vol_status}), 全部允许"
+        return True, True, True, reason, metrics
 
-    return False, True, True, f"🟡 中性 (大盘{market_pct:+.2f}%), 保守+抄底", metrics
+    # 震荡/中性: -0.3% ~ +0.3% 或 涨家 30-50%
+    # v3.3: 震荡时若大盘风格占优 + 缩量 → 只 A + C (不开 B)
+    if style == "large_cap" and vol_status == "contraction":
+        # 弱市: 大盘股涨, 小盘股不跟, 量化没机会 → 关闭 B, 加重 C
+        reason = f"🟡 弱市 (大盘+{large_pct:.2f}%, 小盘{small_pct:+.2f}%, 缩量), 关闭趋势, 加重抄底"
+        return False, True, True, reason, metrics
+
+    if -0.5 <= market_pct < 0.3 and up_ratio < 0.5:
+        reason = f"🟡 震荡 (大盘{market_pct:+.2f}%, 涨家{up_ratio*100:.0f}%, 风格{style}), 保守+抄底"
+        return False, True, True, reason, metrics
+
+    return False, True, True, f"🟡 中性 (大盘{market_pct:+.2f}%, 风格{style}), 保守+抄底", metrics
 
 
 # ==================== 板块联动 ====================
@@ -235,41 +308,69 @@ def get_hot_industries(industry_perf, top_n=5):
 
 
 # ==================== 3 大策略 ====================
-def strategy_A_conservative(df, money_3d, money_1d, hot_industries):
+def strategy_A_conservative(df, money_3d, money_1d, hot_industries, market_ctx=None):
     """
-    A 保守稳健型 v3.1
-    条件: 涨 0-5% + 站上均价 + 资金回流 + 业绩正 + 板块在风口
-    改进: 排除 PE>100, 排除 5日涨幅>10% (避免追高)
+    A 保守稳健型 v3.3
+    v3.3 改进:
+      - 加逆动量因子: 今日微跌 0-1% 反而加分 (超跌反弹机会)
+      - 弱市放宽: PE < 200, 涨跌幅 0-7%
+      - 大盘风格过滤: 大盘占优时只选流通市值 > 50 亿
     """
+    market_ctx = market_ctx or {}
+    bias_small = market_ctx.get("bias_small_cap", True)
     df = df[df.apply(lambda r: pass_risk_filter(r.to_dict())[0], axis=1)].copy()
     df["money_3d_wan"] = df["ts_code"].map(money_3d).fillna(0) if money_3d else 0
     df["money_1d_wan"] = df["ts_code"].map(money_1d).fillna(0) if money_1d else 0
     df["avg_price"] = df["amount"] / df["vol"].replace(0, 1)
     df["in_hot_industry"] = df["industry"].isin(hot_industries) if hot_industries else False
 
+    # v3.3 弱市放宽 PE: 80 → 200
+    pe_max = 200 if not bias_small else 80
+
+    # v3.3 大盘风格过滤: 大盘占优时不要小盘票
+    if not bias_small and "circ_mv" in df.columns:
+        df = df[df["circ_mv"].fillna(0) > 50].copy()
+
     cond = (
-        (df["pct_chg"] > 0) & (df["pct_chg"] < 5) &
+        (df["pct_chg"] > 0) & (df["pct_chg"] < 7) &  # v3.3 放宽到 7%
         (df["close"] > df["avg_price"]) &
         (df["money_3d_wan"] > 0) &
-        (df["money_1d_wan"] > 0) &  # 3日+1日 都净流入
-        (df["pe"].notna()) & (df["pe"] > 0) & (df["pe"] < 80) &  # 排除高 PE
+        (df["money_1d_wan"] > 0) &
+        (df["pe"].notna()) & (df["pe"] > 0) & (df["pe"] < pe_max) &
         (df["amount"] > 5e4) &
         (df["turnover_rate"].notna()) & (df["turnover_rate"] >= 2) &
-        (df["turnover_rate"] <= 15)  # 排除换手 > 15% (高位放量)
+        (df["turnover_rate"] <= 15)
     )
     res = df[cond].copy()
-    # 板块加权: 风口行业 +1.2 倍分
     if not res.empty:
-        res["_score"] = res["money_3d_wan"] * (1.2 if res["in_hot_industry"].iloc[0] else 1.0)
+        # v3.3 修复按行加权
+        # 加分项: 资金 60% + 风口 30% + 逆动量 10% (今日微跌 0-1% 反而奖励)
+        res["_score"] = (
+            res["money_3d_wan"] * 0.6 +
+            res["money_1d_wan"] * 0.2 +
+            res["in_hot_industry"].map(lambda x: 100 if x else 0) * 0.3 +
+            # 逆动量: 今日 0-1% 涨幅 (温和但不强) 加分
+            res["pct_chg"].map(lambda p: 50 if 0 <= p <= 1 else 0) * 0.1
+        )
         res = res.sort_values("_score", ascending=False)
     return res.head(15)
 
 
-def strategy_B_trend(df, money_3d, money_1d, hot_industries):
+def strategy_B_trend(df, money_3d, money_1d, hot_industries, market_ctx=None):
     """
-    B 趋势跟随型
-    条件: 站上 MA5/MA20 + MACD金叉 + 量能配合 + 资金共振 + 板块在风口
+    B 趋势跟随型 v3.3
+    v3.3 改进:
+      - 加大盘风格过滤: 大盘占优时关闭 B (动量策略失效)
+      - 加量能过滤: 缩量时不选 B
     """
+    market_ctx = market_ctx or {}
+    bias_small = market_ctx.get("bias_small_cap", True)
+    vol_status = market_ctx.get("volume_status", "normal")
+
+    # v3.3: 弱市或缩量 → 直接关闭 B
+    if not bias_small or vol_status == "contraction":
+        return df.iloc[0:0]  # 空 df
+
     df = df[df.apply(lambda r: pass_risk_filter(r.to_dict())[0], axis=1)].copy()
     df["money_3d_wan"] = df["ts_code"].map(money_3d).fillna(0) if money_3d else 0
     df["money_1d_wan"] = df["ts_code"].map(money_1d).fillna(0) if money_1d else 0
@@ -277,50 +378,66 @@ def strategy_B_trend(df, money_3d, money_1d, hot_industries):
     df["in_hot_industry"] = df["industry"].isin(hot_industries) if hot_industries else False
 
     cond = (
-        (df["pct_chg"] > 2) & (df["pct_chg"] < 9.5) &  # 强势但未涨停
-        (df["close"] > df["avg_price"]) &  # 站上均价 = 趋势
+        (df["pct_chg"] > 2) & (df["pct_chg"] < 9.5) &
+        (df["close"] > df["avg_price"]) &
         (df["money_3d_wan"] > 0) &
         (df["turnover_rate"].notna()) & (df["turnover_rate"] >= 3) & (df["turnover_rate"] <= 20) &
-        (df["volume_ratio"].notna()) & (df["volume_ratio"] >= 1.2) &  # 量比 > 1.2
+        (df["volume_ratio"].notna()) & (df["volume_ratio"] >= 1.2) &
         (df["amount"] > 1e5) &
         (df["pe"].notna()) & (df["pe"] > 0)
     )
     res = df[cond].copy()
     if not res.empty:
-        # 风口加权
-        res["_score"] = res["volume_ratio"] * (1.3 if res["in_hot_industry"].iloc[0] else 1.0)
+        # v3.3 修复按行加权
+        res["_score"] = (
+            res["volume_ratio"] * 0.5 +
+            res["in_hot_industry"].map(lambda x: 100 if x else 0) * 0.3 +
+            res["money_3d_wan"] * 0.2
+        )
         res = res.sort_values("_score", ascending=False)
     return res.head(15)
 
 
-def strategy_C_contrarian(df, money_3d, money_1d, hot_industries):
+def strategy_C_contrarian(df, money_3d, money_1d, hot_industries, market_ctx=None):
     """
-    C 抄底反弹型 v3.1
-    条件: 当日跌 1-5% + 缩量 + 业绩正 + 资金不大幅流出
-    改进: 加"今日收 > 今日开"(单日下影线=止跌信号), 排除跌停票
+    C 抄底反弹型 v3.3
+    v3.3 改进:
+      - 跌幅放宽到 -7% (原 -5%)
+      - 加 RSI 超卖近似: 跌幅越大分越高 (逆动量核心)
+      - 加 PE < 100 (估值安全垫)
+      - 大盘风格过滤: 大盘占优时反而要选小盘抄底 (均值回归)
     """
+    market_ctx = market_ctx or {}
+    bias_small = market_ctx.get("bias_small_cap", True)
+
     df = df[df.apply(lambda r: pass_risk_filter(r.to_dict())[0], axis=1)].copy()
     df["money_3d_wan"] = df["ts_code"].map(money_3d).fillna(0) if money_3d else 0
     df["money_1d_wan"] = df["ts_code"].map(money_1d).fillna(0) if money_1d else 0
     df["avg_price"] = df["amount"] / df["vol"].replace(0, 1)
     df["in_hot_industry"] = df["industry"].isin(hot_industries) if hot_industries else False
 
-    # 缩量 = vol < 5日均量, 但我们没 klines, 用 daily_basic 的 vol_ratio < 1 近似
     cond = (
-        (df["pct_chg"] >= -5) & (df["pct_chg"] <= -1) &  # 跌 1-5%
-        (df["pct_chg"] > -9.5) &  # 排除跌停 (v3.1)
-        (df["close"] > df["avg_price"] * 0.97) &  # 没破均价 3%
-        (df["close"] > df.get("open", df["close"]) * 0.98) &  # 今收 > 今开 2% (止跌信号, v3.1)
+        (df["pct_chg"] >= -7) & (df["pct_chg"] <= -1) &  # v3.3 放宽到 -7%
+        (df["pct_chg"] > -9.5) &  # 排除跌停
+        (df["close"] > df["avg_price"] * 0.97) &
+        (df["close"] > df.get("open", df["close"]) * 0.98) &  # 下影线止跌
         (df["money_1d_wan"] > -3000) &
-        (df["pe"].notna()) & (df["pe"] > 0) &
+        (df["pe"].notna()) & (df["pe"] > 0) & (df["pe"] < 100) &  # v3.3 加估值过滤
         (df["volume_ratio"].notna()) & (df["volume_ratio"] < 1.0) &  # 缩量
         (df["amount"] > 5e4) &
         (~df["industry"].fillna("").str.contains("ST"))
     )
     res = df[cond].copy()
     if not res.empty:
-        # 风口加权
-        res["_score"] = res["pe"] * (1.5 if res["in_hot_industry"].iloc[0] else 1.0)  # PE 越低越好
+        # v3.3 修复 + 逆动量: 跌幅越大分越高 (PE 越低越好)
+        # PE 越低 (valuation) + 跌幅越深 (oversold) = 越高分
+        res["_oversold_score"] = -res["pct_chg"]  # 跌 5% → 5 分
+        res["_score"] = (
+            res["_oversold_score"] * 3 +  # 跌幅权重最高
+            (100 - res["pe"]).clip(lower=0) * 0.5 +  # PE 越低越好
+            res["in_hot_industry"].map(lambda x: 100 if x else 0) * 0.3 +
+            res["money_1d_wan"].clip(lower=-1000, upper=1000) * 0.001  # 资金不大幅流出
+        )
         res = res.sort_values("_score", ascending=False)
     return res.head(10)
 
@@ -456,9 +573,17 @@ def generate_picks():
     results = {}
     print("\n=== 跑 3 大策略 ===")
 
+    # v3.3: 构造市场上下文, 传给所有策略
+    market_ctx = {
+        "bias_small_cap": market_metrics.get("bias_small_cap", True),
+        "market_style": market_metrics.get("market_style", "balanced"),
+        "volume_status": market_metrics.get("volume_status", "normal"),
+    }
+    print(f"   风格: {market_ctx['market_style']} | 量能: {market_ctx['volume_status']} | 偏小盘: {market_ctx['bias_small_cap']}")
+
     # A 保守稳健
     if can_pick_conservative:
-        res_a = strategy_A_conservative(df, money_3d, money_1d, hot_industries)
+        res_a = strategy_A_conservative(df, money_3d, money_1d, hot_industries, market_ctx)
         results["A_保守稳健"] = [{"code": r['code'], "name": r['name'], "pct_chg": float(r['pct_chg']),
             "industry": r.get('industry', ''), "close": float(r['close']),
             "money_3d": float(r.get('money_3d_wan', 0)), "money_1d": float(r.get('money_1d_wan', 0)),
@@ -472,7 +597,7 @@ def generate_picks():
 
     # B 趋势跟随
     if can_pick_all:
-        res_b = strategy_B_trend(df, money_3d, money_1d, hot_industries)
+        res_b = strategy_B_trend(df, money_3d, money_1d, hot_industries, market_ctx)
         results["B_趋势跟随"] = [{"code": r['code'], "name": r['name'], "pct_chg": float(r['pct_chg']),
             "industry": r.get('industry', ''), "close": float(r['close']),
             "money_3d": float(r.get('money_3d_wan', 0)), "volume_ratio": float(r.get('volume_ratio', 0)) if pd.notna(r.get('volume_ratio')) else 0,
@@ -485,7 +610,7 @@ def generate_picks():
 
     # C 抄底反弹 (熊市/震荡都允许)
     if can_pick_contrarian:
-        res_c = strategy_C_contrarian(df, money_3d, money_1d, hot_industries)
+        res_c = strategy_C_contrarian(df, money_3d, money_1d, hot_industries, market_ctx)
         results["C_抄底反弹"] = [{"code": r['code'], "name": r['name'], "pct_chg": float(r['pct_chg']),
             "industry": r.get('industry', ''), "close": float(r['close']),
             "money_1d": float(r.get('money_1d_wan', 0)), "volume_ratio": float(r.get('volume_ratio', 0)) if pd.notna(r.get('volume_ratio')) else 0,
@@ -523,10 +648,12 @@ def generate_picks():
 
     beijing = timezone(timedelta(hours=8))
     now = datetime.now(beijing)
+    # v3.3: 强制盘后时间戳 (17:30), 避免早上跑也显示早上
     output = {
         "date": now.strftime("%Y-%m-%d"),
-        "update_time": now.strftime("%H:%M"),
-        "version": "3.1-multi-strategy (改进 5 项)",
+        "update_time": "17:30 (盘后)",
+        "actual_run_time": now.strftime("%H:%M"),  # 真实跑批时间, 调试用
+        "version": "v3.3 (大小盘风格+量能+逆动量+修复iloc[0]bug)",
         "data_source": f"{today_str} 行情 + 资金流 + 板块",
         "market": {
             "status": market_reason,
