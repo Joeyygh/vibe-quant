@@ -443,9 +443,9 @@ def strategy_C_contrarian(df, money_3d, money_1d, hot_industries, market_ctx=Non
 
 
 # ==================== 持仓风险预警 ====================
-def analyze_holdings_risk(df_today, money_3d, money_1d, hot_industries):
+def analyze_holdings_risk(df_today, money_3d, money_1d, hot_industries, holdings_path="my_holdings.json"):
     """分析持仓, 输出建议"""
-    p = Path("my_holdings.json")
+    p = Path(holdings_path)
     if not p.exists():
         return []
     try:
@@ -455,9 +455,15 @@ def analyze_holdings_risk(df_today, money_3d, money_1d, hot_industries):
         if isinstance(data, list):
             holdings = data
         elif isinstance(data, dict):
+            # v3.3 修复: 嵌套结构兼容 {groups: {deep_loss: [...], ...}}
             for grp, items in data.items():
                 if isinstance(items, list):
                     holdings.extend(items)
+                elif isinstance(items, dict):
+                    # 二层 dict (新版格式: {groups: {deep_loss: [{...}]}})
+                    for sub_grp, sub_items in items.items():
+                        if isinstance(sub_items, list):
+                            holdings.extend(sub_items)
         if not holdings:
             return []
     except Exception:
