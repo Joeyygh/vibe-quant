@@ -50,9 +50,14 @@ for _path in ['data/last_update.txt', '../data/last_update.txt', './last_update.
         try:
             with open(_path, 'r') as _f:
                 _raw = _f.read().strip()
-            # 转 UTC 为北京时间
+            # v3.4 修复: 兼容无时区 ISO 时间
             _dt = datetime.fromisoformat(_raw)
-            _bj = _dt.astimezone(timezone(timedelta(hours=8)))
+            # 如果 naive datetime, 视为北京时间 (不再当作 UTC)
+            if _dt.tzinfo is None:
+                _bj = _dt  # 当作北京时间直接用
+            else:
+                # 带时区, 转到北京时间显示
+                _bj = _dt.astimezone(timezone(timedelta(hours=8)))
             _update_str = _bj.strftime('%Y-%m-%d %H:%M')
         except Exception:
             _update_str = _raw[:16].replace('T', ' ')
