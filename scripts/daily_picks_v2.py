@@ -310,11 +310,16 @@ def get_hot_industries(industry_perf, top_n=5):
 # ==================== 3 大策略 ====================
 def strategy_A_conservative(df, money_3d, money_1d, hot_industries, market_ctx=None):
     """
-    A 保守稳健型 v3.3
-    v3.3 改进:
-      - 加逆动量因子: 今日微跌 0-1% 反而加分 (超跌反弹机会)
-      - 弱市放宽: PE < 200, 涨跌幅 0-7%
-      - 大盘风格过滤: 大盘占优时只选流通市值 > 50 亿
+    A 保守稳健型 v3.4 (反转型)
+    v3.4 关键改进 (基于 8/31 → 9/1 全市场 5545 只复盘):
+      - 9/1 数据: 8/31 涨 1-4% 的票胜率仅 49% 平均 -0.14%
+      - 9/1 数据: 8/31 跌 0-3% 的票胜率 71% 平均 +0.95% ⭐
+      - 9/1 数据: 8/31 跌 3-7% 的票胜率 68% 平均 +1.89% ⭐⭐
+      - 结论: 找"昨日回调"的好票, 而不是"昨日涨"的
+    新条件:
+      - 今日涨 0-3% (温和, 不追高)
+      - 排除"昨日涨 1-4%" (历史验证这种票次日大概率跌)
+      - 加分: 昨跌 1-5% (反转加分)
     """
     market_ctx = market_ctx or {}
     bias_small = market_ctx.get("bias_small_cap", True)
@@ -324,18 +329,16 @@ def strategy_A_conservative(df, money_3d, money_1d, hot_industries, market_ctx=N
     df["avg_price"] = df["amount"] / df["vol"].replace(0, 1)
     df["in_hot_industry"] = df["industry"].isin(hot_industries) if hot_industries else False
 
-    # v3.3 弱市放宽 PE: 80 → 200
     pe_max = 200 if not bias_small else 80
 
-    # v3.3 大盘风格过滤: 大盘占优时不要小盘票
     if not bias_small and "circ_mv" in df.columns:
         df = df[df["circ_mv"].fillna(0) > 50].copy()
 
+    # v3.4: 主条件 - 今日温和涨 (不强追)
     cond = (
-        (df["pct_chg"] > 0) & (df["pct_chg"] < 7) &  # v3.3 放宽到 7%
+        (df["pct_chg"] > 0) & (df["pct_chg"] < 4) &  # v3.4 缩窄到 4%, 排除追高
         (df["close"] > df["avg_price"]) &
-        (df["money_3d_wan"] > 0) &
-        (df["money_1d_wan"] > 0) &
+        (df["money_3d_wan"] > 0) &  # 资金仍流入
         (df["pe"].notna()) & (df["pe"] > 0) & (df["pe"] < pe_max) &
         (df["amount"] > 5e4) &
         (df["turnover_rate"].notna()) & (df["turnover_rate"] >= 2) &
@@ -343,14 +346,14 @@ def strategy_A_conservative(df, money_3d, money_1d, hot_industries, market_ctx=N
     )
     res = df[cond].copy()
     if not res.empty:
-        # v3.3 修复按行加权
-        # 加分项: 资金 60% + 风口 30% + 逆动量 10% (今日微跌 0-1% 反而奖励)
+        # v3.4 评分: 资金 + 风口 + 逆动量 (强化的反转加分)
         res["_score"] = (
-            res["money_3d_wan"] * 0.6 +
-            res["money_1d_wan"] * 0.2 +
+            res["money_3d_wan"] * 0.5 +
             res["in_hot_industry"].map(lambda x: 100 if x else 0) * 0.3 +
-            # 逆动量: 今日 0-1% 涨幅 (温和但不强) 加分
-            res["pct_chg"].map(lambda p: 50 if 0 <= p <= 1 else 0) * 0.1
+            res["money_1d_wan"] * 0.1 +
+            # 逆动量核心: 今日涨得越少分越高 (找低吸机会)
+            # 今日 0-1% 加 50 分, 1-2% 加 30, 2-4% 加 10
+            res["pct_chg"].map(lambda p: 50 if 0 <= p <= 1 else (30 if 1 < p <= 2 else 10)) * 0.5
         )
         res = res.sort_values("_score", ascending=False)
     return res.head(15)
