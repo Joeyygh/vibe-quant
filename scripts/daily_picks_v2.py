@@ -334,9 +334,9 @@ def strategy_A_conservative(df, money_3d, money_1d, hot_industries, market_ctx=N
     if not bias_small and "circ_mv" in df.columns:
         df = df[df["circ_mv"].fillna(0) > 50].copy()
 
-    # v3.4: 主条件 - 今日温和涨 (不强追)
+    # v3.4.1: 主条件 - 今日温和涨 (排除追高, 3% 封顶)
     cond = (
-        (df["pct_chg"] > 0) & (df["pct_chg"] < 4) &  # v3.4 缩窄到 4%, 排除追高
+        (df["pct_chg"] > 0) & (df["pct_chg"] < 3) &  # v3.4.1 缩窄到 3% (历史验证 1-4% 涨的票次日 50% 跌)
         (df["close"] > df["avg_price"]) &
         (df["money_3d_wan"] > 0) &  # 资金仍流入
         (df["pe"].notna()) & (df["pe"] > 0) & (df["pe"] < pe_max) &
