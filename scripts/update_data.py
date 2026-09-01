@@ -3,7 +3,7 @@
 import os
 import json
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 TOKEN = os.environ.get('TUSHARE_TOKEN', '')
 if not TOKEN:
@@ -112,7 +112,8 @@ if df_today is not None and not df_today.empty:
     print(f"  ✅ stock_list.csv 已用 {len(price_map)} 只今日价格填充")
 
 with open('data/last_update.txt', 'w') as f:
-    f.write(datetime.now().isoformat())
+    # v3.4 修复: 强制写"盘后 17:30" 字符串, App 统一显示
+    f.write(f"{datetime.now().strftime('%Y-%m-%d')}T17:30:00")
 
 
 # ========== 顺便生成今日精选 (动态版 v1.4) ==========
