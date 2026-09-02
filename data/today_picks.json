@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-01",
-  "update_time": "22:33",
+  "date": "2026-09-02",
+  "update_time": "22:09",
   "version": "1.4-dynamic-auto",
   "weights": {
     "theme": 30,
@@ -13,7 +13,7 @@
     "pct_today_max": 7.0,
     "bias_5_max": 15.0
   },
-  "market_view": "09/01 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
+  "market_view": "09/02 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
   "summary": {
     "theme_picks": 0,
     "quant_picks": 0,
@@ -25,9 +25,9 @@
   "intersection": [],
   "filtered_out": [
     {
-      "code": "301697",
-      "name": "N贝特利",
-      "reason": "新股首日 (197%, 无 20 日 K 线)"
+      "code": "301688",
+      "name": "N格林生物",
+      "reason": "新股首日 (104%, 无 20 日 K 线)"
     }
   ],
   "risk_warning": "本榜单基于 Tushare 当日真实数据动态生成, 仅供参考, 不构成投资建议. 投资有风险, 入市需谨慎."
