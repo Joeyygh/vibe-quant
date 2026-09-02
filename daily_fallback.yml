@@ -1,0 +1,65 @@
+name: Daily Data Update (Fallback)
+
+# 🆕 2026-09-02 新增: daily.yml 主 cron 漏跑时的兜底
+# 主 cron: 0 9 * * 1-5 (北京 17:00)
+# 兜底 cron: 0 11 * * 1-5 (北京 19:00, 主失败 2 小时后补刀)
+# 智能跳过: 如果 17:00 那个已经推过今天的 commit, 这个 workflow 直接 exit 0
+
+on:
+  schedule:
+    - cron: '0 11 * * 1-5'   # 北京 19:00
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-data-fallback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: 检查今天是否已更新
+        id: check
+        run: |
+          TODAY=$(date +%Y-%m-%d)
+          # 拿最近 5 个 commit 信息
+          LATEST_DATE=$(git log -5 --format="%cd" --date=short | head -1)
+          if [ "$LATEST_DATE" = "$TODAY" ]; then
+            echo "✅ 今天 ($TODAY) 已更新过, fallback 跳过"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️ 今天 ($TODAY) 未更新, fallback 启动"
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Python
+        if: steps.check.outputs.skip != 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        if: steps.check.outputs.skip != 'true'
+        run: |
+          pip install tushare pandas pyarrow
+
+      - name: Update data
+        if: steps.check.outputs.skip != 'true'
+        env:
+          TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
+        run: |
+          mkdir -p data
+          python scripts/update_data.py
+
+      - name: Commit and push
+        if: steps.check.outputs.skip != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git diff --staged --quiet || git commit -m "chore: daily data update (fallback) $(date +%Y-%m-%d)"
+          git push
