@@ -1,13 +1,17 @@
-name: Daily Data Update (Fallback)
+name: Daily Data Update (Fallback v2)
 
-# 🆕 2026-09-02 新增: daily.yml 主 cron 漏跑时的兜底
+# 🆕 2026-09-03 重写: 解决"commit 是新但数据是旧"的判断错误
 # 主 cron: 0 9 * * 1-5 (北京 17:00)
-# 兜底 cron: 0 11 * * 1-5 (北京 19:00, 主失败 2 小时后补刀)
-# 智能跳过: 如果 17:00 那个已经推过今天的 commit, 这个 workflow 直接 exit 0
+# fallback 1: 0 11 * * 1-5 (北京 19:00) - 第一个兜底
+# fallback 2: 0 12 * * 1-5 (北京 20:00) - 第二个兜底
+# fallback 3: 0 13 * * 1-5 (北京 21:00) - 第三个兜底
+# 智能跳过: 检查 klines.parquet 最后日期 == 今天 才跳过, 不只看 commit
 
 on:
   schedule:
     - cron: '0 11 * * 1-5'   # 北京 19:00
+    - cron: '0 12 * * 1-5'   # 北京 20:00
+    - cron: '0 13 * * 1-5'   # 北京 21:00
   workflow_dispatch:
 
 permissions:
@@ -22,17 +26,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: 检查今天是否已更新
+      - name: 检查 parquet 数据日期
         id: check
         run: |
           TODAY=$(date +%Y-%m-%d)
-          # 拿最近 5 个 commit 信息
-          LATEST_DATE=$(git log -5 --format="%cd" --date=short | head -1)
-          if [ "$LATEST_DATE" = "$TODAY" ]; then
-            echo "✅ 今天 ($TODAY) 已更新过, fallback 跳过"
-            echo "skip=true" >> $GITHUB_OUTPUT
+          # 检查 klines.parquet 最后交易日
+          if [ -f data/klines.parquet ]; then
+            LAST_DATE=$(python -c "
+import pandas as pd
+df = pd.read_parquet('data/klines.parquet')
+if 'date' in df.columns:
+    print(df['date'].max())
+else:
+    print('unknown')
+" 2>/dev/null || echo "unknown")
+            echo "  parquet last date: $LAST_DATE"
+            echo "  today: $TODAY"
+            if [ "$LAST_DATE" = "$TODAY" ]; then
+              echo "✅ 数据已是今天, 跳过"
+              echo "skip=true" >> $GITHUB_OUTPUT
+            else
+              echo "⚠️ parquet 是 $LAST_DATE, 不是今天, 启动更新"
+              echo "skip=false" >> $GITHUB_OUTPUT
+            fi
           else
-            echo "⚠️ 今天 ($TODAY) 未更新, fallback 启动"
+            echo "⚠️ parquet 不存在, 启动更新"
             echo "skip=false" >> $GITHUB_OUTPUT
           fi
 
@@ -61,5 +79,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/
-          git diff --staged --quiet || git commit -m "chore: daily data update (fallback) $(date +%Y-%m-%d)"
+          git diff --staged --quiet || git commit -m "chore: daily data update (fallback v2) $(date +%Y-%m-%d)"
           git push
