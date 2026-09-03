@@ -945,6 +945,29 @@ with st.sidebar:
     st.header("📊 页面")
     view_mode = st.radio("页面模式", ["量化选股", "🎯 今日精选", "🎯 双引擎", "📐 实战公式", "🌟 综合推荐", "🎯 多公式共振", "每日复盘", "📝 我的笔记"], index=0, key="view_mode")
 
+    # 🆕 2026-09-03: 一键更新数据 (Streamlit 端跑, 绕过 GitHub Actions 限流)
+    st.divider()
+    st.header("🔧 管理员")
+    if st.button("🔄 一键更新今日数据", type="secondary", use_container_width=True, help="用 App 端 Tushare token 拉数据 + 推 GitHub, 5-8 分钟"):
+        with st.spinner("拉取 Tushare 真实数据中... (5000+ 只股票, 约 5-8 分钟)"):
+            try:
+                import subprocess, sys, os
+                result = subprocess.run(
+                    [sys.executable, 'scripts/update_data.py'],
+                    capture_output=True, text=True, timeout=600,
+                    env={**os.environ, 'TUSHARE_TOKEN': os.environ.get('TUSHARE_TOKEN') or st.secrets.get('TUSHARE_TOKEN', '')},
+                    cwd=os.path.dirname(os.path.abspath(__file__)) if '__file__' in dir() else '.'
+                )
+                if result.returncode == 0:
+                    st.success(f"✅ 数据更新成功! 刷新页面查看新数据")
+                    st.code(result.stdout[-800:], language='bash')
+                else:
+                    st.error(f"❌ 更新失败: {result.stderr[-500:]}")
+            except subprocess.TimeoutExpired:
+                st.error("⏱️ 超过 10 分钟, 可能 Tushare 限流, 请稍后重试")
+            except Exception as e:
+                st.error(f"❌ 异常: {e}")
+
 st.markdown("""
 ## Vibe 量化 v2.1 (升级版)
 - 三策略精选 (胜率 83%)
