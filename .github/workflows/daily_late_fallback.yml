@@ -1,13 +1,14 @@
-name: Daily Data Update (Late Fallback)
+name: Daily Data Update (Late Fallback v2)
 
-# 🆕 2026-09-02 新增: 第二个兜底, 22:00 北京 (主+第一兜底都失败时的最后保险)
+# 🆕 2026-09-03 重写: 22:00 北京最后兜底
 # 主: 17:00 北京 (UTC 9:00)
-# 兜底 1: 19:00 北京 (UTC 11:00) - daily_fallback.yml
-# 兜底 2: 22:00 北京 (UTC 14:00) - 本文件, 最后一道防线
+# 兜底 1: 19:00 / 20:00 / 21:00 北京 - daily_fallback.yml
+# 兜底 2: 22:00 / 23:00 北京 - 本文件
 
 on:
   schedule:
     - cron: '0 14 * * 1-5'   # 北京 22:00
+    - cron: '0 15 * * 1-5'   # 北京 23:00
   workflow_dispatch:
 
 permissions:
@@ -22,42 +23,37 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: 检查今天是否已更新
-        id: check
-        run: |
-          TODAY=$(date +%Y-%m-%d)
-          # 检查 parquet 数据日期 (v2: 改判断逻辑, 不再依赖 git commit 日期)
-          if [ -f data/klines.parquet ]; then
-            LAST_DATE=$(python -c "
-import pandas as pd
-df = pd.read_parquet('data/klines.parquet')
-if 'date' in df.columns:
-    print(df['date'].max())
-else:
-    print('unknown')
-" 2>/dev/null || echo "unknown")
-            if [ "$LAST_DATE" = "$TODAY" ]; then
-              echo "✅ parquet 数据已是今天, late fallback 跳过"
-              echo "skip=true" >> $GITHUB_OUTPUT
-            else
-              echo "🚨 parquet 是 $LAST_DATE, 不是今天, late fallback 最后补救!"
-              echo "skip=false" >> $GITHUB_OUTPUT
-            fi
-          else
-            echo "🚨 parquet 不存在, late fallback 最后补救!"
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
-
       - name: Setup Python
-        if: steps.check.outputs.skip != 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
+      - name: Install pyarrow
+        run: pip install pyarrow pandas --quiet
+
+      - name: 检查 parquet 数据日期
+        id: check
+        run: |
+          TODAY=$(date +%Y-%m-%d)
+          echo "Today: $TODAY"
+          if [ ! -f data/klines.parquet ]; then
+            echo "parquet 不存在, 最后补救!"
+            echo "skip=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          LAST_DATE=$(python -c 'import pandas as pd; df = pd.read_parquet("data/klines.parquet"); print(df["date"].max() if "date" in df.columns else "unknown")' 2>/dev/null || echo "unknown")
+          echo "parquet last date: $LAST_DATE"
+          if [ "$LAST_DATE" = "$TODAY" ]; then
+            echo "数据已是今天, 跳过"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "parquet 是 $LAST_DATE, 不是今天, 最后补救!"
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Install dependencies
         if: steps.check.outputs.skip != 'true'
-        run: |
-          pip install tushare pandas pyarrow
+        run: pip install tushare pandas pyarrow --quiet
 
       - name: Update data
         if: steps.check.outputs.skip != 'true'
@@ -73,5 +69,5 @@ else:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/
-          git diff --staged --quiet || git commit -m "chore: daily data update (late fallback) $(date +%Y-%m-%d)"
+          git diff --staged --quiet || git commit -m "chore: daily data update (late fallback v2) $(date +%Y-%m-%d)"
           git push
