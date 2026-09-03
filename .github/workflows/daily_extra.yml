@@ -1,0 +1,73 @@
+name: Daily Data Update (Last Resort)
+
+# 🆕 2026-09-03 第四个兜底: 23:00 北京 (前 3 个全失败时的最后机会)
+# 17:00 daily.yml (主)
+# 19:00 daily_fallback.yml (兜底 1)
+# 21:00 daily_late_fallback.yml (兜底 2)
+# 23:00 daily_extra.yml (最后兜底)
+
+on:
+  schedule:
+    - cron: '0 15 * * 1-5'   # 北京 23:00
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-data-extra:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pyarrow
+        run: pip install pyarrow pandas --quiet
+
+      - name: 检查 parquet 数据日期
+        id: check
+        run: |
+          TODAY=$(date +%Y-%m-%d)
+          echo "Today: $TODAY"
+          if [ ! -f data/klines.parquet ]; then
+            echo "parquet 不存在, 最后补救!"
+            echo "skip=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          LAST_DATE=$(python -c 'import pandas as pd; df = pd.read_parquet("data/klines.parquet"); print(df["date"].max() if "date" in df.columns else "unknown")' 2>/dev/null || echo "unknown")
+          echo "parquet last date: $LAST_DATE"
+          if [ "$LAST_DATE" = "$TODAY" ]; then
+            echo "数据已是今天, 跳过"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "parquet 是 $LAST_DATE, 最后补救!"
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install dependencies
+        if: steps.check.outputs.skip != 'true'
+        run: pip install tushare pandas pyarrow --quiet
+
+      - name: Update data
+        if: steps.check.outputs.skip != 'true'
+        env:
+          TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
+        run: |
+          mkdir -p data
+          python scripts/update_data.py
+
+      - name: Commit and push
+        if: steps.check.outputs.skip != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git diff --staged --quiet || git commit -m "chore: daily data update (last resort) $(date +%Y-%m-%d)"
+          git push
