@@ -7,8 +7,7 @@ name: Daily Data Update (Late Fallback v2)
 
 on:
   schedule:
-    - cron: '0 14 * * 1-5'   # 北京 22:00
-    - cron: '0 15 * * 1-5'   # 北京 23:00
+    - cron: '0 13 * * 1-5'   # 北京 21:00 (last chance 兜底)
   workflow_dispatch:
 
 permissions:
