@@ -41,6 +41,59 @@ if not check_password():
     st.stop()
 
 
+# 🆕 2026-09-03: 数据陈旧检测 + 一键更新提示
+# 每天第一次打开 App 时, 如果 parquet 数据是昨天的, 顶部弹红 banner 提醒
+def _check_data_freshness():
+    """检查 parquet 最后日期, 弹 banner"""
+    parquet_path = "data/klines.parquet"
+    if not os.path.exists(parquet_path):
+        return None, "parquet 不存在"
+    try:
+        import pandas as pd
+        df = pd.read_parquet(parquet_path)
+        if "date" not in df.columns or df.empty:
+            return None, "无 date 列"
+        last_date = df["date"].max()
+        today = datetime.now().strftime("%Y-%m-%d")
+        return last_date, today
+    except Exception as e:
+        return None, f"读取失败: {e}"
+
+_last_date, _today = _check_data_freshness()
+if _last_date and _last_date != _today:
+    # 数据是昨天的, 弹红 banner
+    st.markdown(f"""
+<div style="background-color: #ff4444; padding: 16px; border-radius: 8px; color: white; margin: 10px 0;">
+  <h3 style="margin: 0 0 8px 0;">⚠️ 数据需要更新 (最后更新 {_last_date})</h3>
+  <p style="margin: 4px 0;">GitHub Actions 今天跑失败了, 数据是 <b>{_last_date}</b> 的, 不是今天 ({_today})</p>
+  <p style="margin: 4px 0;">👉 操作: 打开左侧栏 <b>🔧 管理员 → 🔄 一键更新今日数据</b>, 点一下 5-8 分钟搞定</p>
+</div>
+""", unsafe_allow_html=True)
+    # 提供一个主页面一键更新按钮 (比 sidebar 显眼)
+    if st.button("🔄 一键更新今日数据 (App 端跑, 不靠 GitHub)", type="primary", use_container_width=True, key="main_update_btn"):
+        with st.spinner("拉取 Tushare 真实数据中... 5000+ 只股票, 约 5-8 分钟. 请勿关闭页面."):
+            try:
+                import subprocess, sys
+                result = subprocess.run(
+                    [sys.executable, "scripts/update_data.py"],
+                    capture_output=True, text=True, timeout=600,
+                    env={**os.environ, "TUSHARE_TOKEN": os.environ.get("TUSHARE_TOKEN") or st.secrets.get("TUSHARE_TOKEN", "")}
+                )
+                if result.returncode == 0:
+                    st.success("✅ 数据更新成功! 刷新页面 (F5) 查看新数据")
+                    st.balloons()
+                    st.code(result.stdout[-1500:], language="bash")
+                else:
+                    st.error(f"❌ 更新失败:\n{result.stderr[-1000:]}")
+                    with st.expander("查看 stdout"):
+                        st.code(result.stdout[-2000:], language="bash")
+            except subprocess.TimeoutExpired:
+                st.error("⏱️ 超过 10 分钟, Tushare 限流. 请稍后重试, 或明天 9 点再试")
+            except Exception as e:
+                st.error(f"❌ 异常: {e}")
+    st.divider()
+
+
 st.title("Vibe 股票量化分析 v2.0")
 beijing_now = (datetime.now(timezone.utc) + timedelta(hours=8)).strftime('%Y-%m-%d %H:%M')
 # 动态读 last_update.txt
