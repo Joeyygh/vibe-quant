@@ -26,12 +26,25 @@ jobs:
         id: check
         run: |
           TODAY=$(date +%Y-%m-%d)
-          LATEST_DATE=$(git log -5 --format="%cd" --date=short | head -1)
-          if [ "$LATEST_DATE" = "$TODAY" ]; then
-            echo "✅ 今天 ($TODAY) 已更新, late fallback 跳过"
-            echo "skip=true" >> $GITHUB_OUTPUT
+          # 检查 parquet 数据日期 (v2: 改判断逻辑, 不再依赖 git commit 日期)
+          if [ -f data/klines.parquet ]; then
+            LAST_DATE=$(python -c "
+import pandas as pd
+df = pd.read_parquet('data/klines.parquet')
+if 'date' in df.columns:
+    print(df['date'].max())
+else:
+    print('unknown')
+" 2>/dev/null || echo "unknown")
+            if [ "$LAST_DATE" = "$TODAY" ]; then
+              echo "✅ parquet 数据已是今天, late fallback 跳过"
+              echo "skip=true" >> $GITHUB_OUTPUT
+            else
+              echo "🚨 parquet 是 $LAST_DATE, 不是今天, late fallback 最后补救!"
+              echo "skip=false" >> $GITHUB_OUTPUT
+            fi
           else
-            echo "🚨 警告: 今天 ($TODAY) 17:00 + 19:00 都未更新, late fallback 最后补救!"
+            echo "🚨 parquet 不存在, late fallback 最后补救!"
             echo "skip=false" >> $GITHUB_OUTPUT
           fi
 
