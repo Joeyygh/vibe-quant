@@ -1,14 +1,11 @@
 name: Daily Data Update
 
-# v3: 三个 cron 兜底, 中间留 2-3 小时缓冲 (Tushare 限流恢复)
-# - 17:00 北京 (UTC 9:00)  - 主
-# - 20:00 北京 (UTC 12:00) - 兜底 1
-# - 22:00 北京 (UTC 14:00) - 兜底 2 (与 late_fallback 同步, 但更优先)
+# v4: 简化 - 17:00 主 + 20:00 二次
+# 两次都失败 = 软件 bug, 不再叠 cron 浪费时间
 on:
   schedule:
     - cron: '0 9 * * 1-5'    # 北京 17:00 主
-    - cron: '0 12 * * 1-5'   # 北京 20:00 兜底 1
-    - cron: '0 14 * * 1-5'   # 北京 22:00 兜底 2
+    - cron: '0 12 * * 1-5'   # 北京 20:00 二次
   workflow_dispatch:
 
 permissions:
@@ -17,7 +14,7 @@ permissions:
 jobs:
   update-data:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
