@@ -2,16 +2,16 @@ name: Daily Data Update (Fallback v2)
 
 # 🆕 2026-09-03 重写: 解决"commit 是新但数据是旧"的判断错误
 # 主 cron: 0 9 * * 1-5 (北京 17:00)
-# fallback 1: 0 11 * * 1-5 (北京 19:00) - 第一个兜底
-# fallback 2: 0 12 * * 1-5 (北京 20:00) - 第二个兜底
-# fallback 3: 0 13 * * 1-5 (北京 21:00) - 第三个兜底
+# fallback 1: 0 11 * * 1-5 (北京 19:00)
+# fallback 2: 0 12 * * 1-5 (北京 20:00)
+# fallback 3: 0 13 * * 1-5 (北京 21:00)
 # 智能跳过: 检查 klines.parquet 最后日期 == 今天 才跳过, 不只看 commit
 
 on:
   schedule:
-    - cron: '0 11 * * 1-5'   # 北京 19:00
-    - cron: '0 12 * * 1-5'   # 北京 20:00
-    - cron: '0 13 * * 1-5'   # 北京 21:00
+    - cron: '0 11 * * 1-5'
+    - cron: '0 12 * * 1-5'
+    - cron: '0 13 * * 1-5'
   workflow_dispatch:
 
 permissions:
@@ -26,44 +26,38 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: 检查 parquet 数据日期
-        id: check
-        run: |
-          TODAY=$(date +%Y-%m-%d)
-          # 检查 klines.parquet 最后交易日
-          if [ -f data/klines.parquet ]; then
-            LAST_DATE=$(python -c "
-import pandas as pd
-df = pd.read_parquet('data/klines.parquet')
-if 'date' in df.columns:
-    print(df['date'].max())
-else:
-    print('unknown')
-" 2>/dev/null || echo "unknown")
-            echo "  parquet last date: $LAST_DATE"
-            echo "  today: $TODAY"
-            if [ "$LAST_DATE" = "$TODAY" ]; then
-              echo "✅ 数据已是今天, 跳过"
-              echo "skip=true" >> $GITHUB_OUTPUT
-            else
-              echo "⚠️ parquet 是 $LAST_DATE, 不是今天, 启动更新"
-              echo "skip=false" >> $GITHUB_OUTPUT
-            fi
-          else
-            echo "⚠️ parquet 不存在, 启动更新"
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Setup Python
-        if: steps.check.outputs.skip != 'true'
+      - name: Setup Python (always, cheap)
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
+      - name: Install pyarrow (for parquet check)
+        run: pip install pyarrow pandas --quiet
+
+      - name: 检查 parquet 数据日期
+        id: check
+        run: |
+          TODAY=$(date +%Y-%m-%d)
+          echo "Today: $TODAY"
+          if [ ! -f data/klines.parquet ]; then
+            echo "parquet 不存在, 启动更新"
+            echo "skip=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          # 用 python 单行命令查 parquet 最后日期 (避免 yml 多行语法错)
+          LAST_DATE=$(python -c 'import pandas as pd; df = pd.read_parquet("data/klines.parquet"); print(df["date"].max() if "date" in df.columns else "unknown")' 2>/dev/null || echo "unknown")
+          echo "parquet last date: $LAST_DATE"
+          if [ "$LAST_DATE" = "$TODAY" ]; then
+            echo "数据已是今天, 跳过"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "parquet 是 $LAST_DATE, 不是今天, 启动更新"
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Install dependencies
         if: steps.check.outputs.skip != 'true'
-        run: |
-          pip install tushare pandas pyarrow
+        run: pip install tushare pandas pyarrow --quiet
 
       - name: Update data
         if: steps.check.outputs.skip != 'true'
