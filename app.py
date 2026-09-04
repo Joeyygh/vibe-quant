@@ -1913,7 +1913,54 @@ if run:
             progress.empty()
             st.success(f"完成 - {filter_msg}")
 
-            codes_3, df_3 = results['all_three']
+            # 🆕 2026-09-05: 优先用 formulas_picks.json 真实数据, fallback 到实时算
+            formulas_path = "data/formulas_picks.json"
+            if not os.path.exists(formulas_path):
+                formulas_path = "reports/formulas_picks.json"
+
+            formulas_data = None
+            if os.path.exists(formulas_path):
+                try:
+                    with open(formulas_path, "r", encoding="utf-8") as f:
+                        formulas_data = json.load(f)
+                except Exception:
+                    formulas_data = None
+
+            # 合并 A/B/C 三策略作为"三策略精选"内容
+            if formulas_data and "strategies" in formulas_data:
+                strategies = formulas_data["strategies"]
+                df_3 = pd.DataFrame()
+                rows = []
+                # 真实数据优先级: A → B → C
+                for sec_short, sec_full in [("A", "A_保守稳健"), ("B", "B_趋势跟随"), ("C", "C_抄底反弹")]:
+                    for p in strategies.get(sec_full, []):
+                        rows.append({
+                            "代码": str(p.get("code", "")).zfill(6),
+                            "名称": p.get("name", ""),
+                            "行业": p.get("industry", ""),
+                            "现价": round(float(p.get("close", 0)), 2),
+                            "今日%": round(float(p.get("pct_chg", 0)), 2),
+                            "20日%": 0,  # formulas 没这字段
+                            "波动率": 0,
+                            "综合分": float(p.get("score", 50)),
+                            "风险标签": "",
+                            "_strategy": sec_short,
+                        })
+                if rows:
+                    df_3 = pd.DataFrame(rows)
+                    # 用 score 排序
+                    df_3 = df_3.sort_values("综合分", ascending=False)
+                    formulas_date = formulas_data.get("date", "?")
+                    st.info(f"📅 数据源: formulas_picks.json ({formulas_date}) - A/B/C 三策略合并, A → B → C 优先级")
+            else:
+                df_3 = pd.DataFrame()
+
+            # 如果 formulas 没数据, fallback 到实时算的 all_three
+            if df_3.empty:
+                codes_3, df_3 = results["all_three"]
+                st.warning("⚠️ formulas_picks.json 不可用, fallback 到实时 compute_signals 数据 (Tushare 限流可能不准)")
+            else:
+                codes_3 = df_3["代码"].tolist()
 
             if not df_3.empty:
                 st.markdown(f"### 1. 三策略精选 ({len(df_3)} 只)")
