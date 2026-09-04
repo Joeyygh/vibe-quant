@@ -282,18 +282,19 @@ def generate_picks():
         df.at[idx, 'score'] = s
         df.at[idx, 'score_breakdown'] = json.dumps(br, ensure_ascii=False)
 
-    # 5. 5 企推候选池: 涨停 + 不超买 + 成交 > 5000 万
+    # 5. 5 企推候选池: 9/5 改 - 涨停 + 涨幅 > 5% 高分 + 不超买 + 成交 > 5000 万
+    #    (震荡市涨停少, 扩到 5-9.5% 让 5 企推有票)
     theme_pool = df[
         (~df['_filtered']) &
-        (df['pct_chg'] >= 9.5) &
+        (df['pct_chg'] >= 5.0) &
         (df['amount'] > 5e6)   # 5 千万成交
     ].sort_values('amount', ascending=False).head(20)
 
-    # 6. 量化补充池: 涨幅 3-9.5% (强势但未涨停) + 用户持仓
+    # 6. 量化补充池: 9/5 改 - 适应震荡/微跌市, 涨 -2 到 +9.5% 都算 + 用户持仓
     holdings = get_user_holdings()
     quant_pool = df[
         (~df['_filtered']) &
-        (df['pct_chg'] >= 3) &
+        (df['pct_chg'] >= -2) &    # 微跌 -2% 起, 不抄深跌
         (df['pct_chg'] < 9.5) &
         (df['amount'] > 3e7)  # 3 亿成交
     ].sort_values('amount', ascending=False).head(30)
