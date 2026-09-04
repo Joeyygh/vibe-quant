@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-04",
-  "update_time": "21:39",
+  "date": "2026-09-05",
+  "update_time": "00:39",
   "version": "1.4-dynamic-auto",
   "weights": {
     "theme": 30,
@@ -13,16 +13,97 @@
     "pct_today_max": 7.0,
     "bias_5_max": 15.0
   },
-  "market_view": "09/04 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
+  "market_view": "09/05 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
   "summary": {
-    "theme_picks": 1,
+    "theme_picks": 5,
     "quant_picks": 0,
     "intersection": 0,
-    "total": 1
+    "total": 5
   },
   "picks": [
     {
       "rank": 1,
+      "code": "600150",
+      "name": "中国船舶",
+      "score": 25,
+      "score_breakdown": {
+        "theme": 8,
+        "money": 4,
+        "tech": 5,
+        "event": 8
+      },
+      "industry": "船舶",
+      "themes": [
+        "船舶"
+      ],
+      "pct_chg_today": 9.1783,
+      "ret_20d": 0,
+      "close": 37.47,
+      "thesis": "船舶 行业, 涨幅 +9.18%, 成交 0.12 亿, 船舶",
+      "entry": "现价 37.47, 突破 38.22 加仓",
+      "target": "突破前高/MA60 (40.47, +8%)",
+      "stop": "跌破 5日线 (36.35, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 2,
+      "code": "300058",
+      "name": "蓝色光标",
+      "score": 21,
+      "score_breakdown": {
+        "theme": 8,
+        "money": 0,
+        "tech": 5,
+        "event": 8
+      },
+      "industry": "广告包装",
+      "themes": [
+        "广告包装"
+      ],
+      "pct_chg_today": 5.9136,
+      "ret_20d": 0,
+      "close": 13.97,
+      "thesis": "广告包装 行业, 涨幅 +5.91%, 成交 0.09 亿, 广告包装",
+      "entry": "现价 13.97, 突破 14.25 加仓",
+      "target": "突破前高/MA60 (15.09, +8%)",
+      "stop": "跌破 5日线 (13.55, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 3,
+      "code": "603228",
+      "name": "景旺电子",
+      "score": 49,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 0,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "元器件",
+      "themes": [
+        "MLCC",
+        "元器件",
+        "AI硬件",
+        "消费电子"
+      ],
+      "pct_chg_today": 8.9572,
+      "ret_20d": 0,
+      "close": 96.34,
+      "thesis": "元器件 行业, 涨幅 +8.96%, 成交 0.07 亿, MLCC, 元器件",
+      "entry": "现价 96.34, 突破 98.27 加仓",
+      "target": "突破前高/MA60 (104.05, +8%)",
+      "stop": "跌破 5日线 (93.45, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 4,
       "code": "301171",
       "name": "易点天下",
       "score": 27,
@@ -43,6 +124,32 @@
       "entry": "已涨停 (11.1%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 38.28",
       "target": "突破前高/MA60 (41.34, +8%)",
       "stop": "跌破 5日线 (37.13, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 5,
+      "code": "300413",
+      "name": "芒果超媒",
+      "score": 21,
+      "score_breakdown": {
+        "theme": 8,
+        "money": 0,
+        "tech": 5,
+        "event": 8
+      },
+      "industry": "影视音像",
+      "themes": [
+        "影视音像"
+      ],
+      "pct_chg_today": 5.4591,
+      "ret_20d": 0,
+      "close": 21.25,
+      "thesis": "影视音像 行业, 涨幅 +5.46%, 成交 0.05 亿, 影视音像",
+      "entry": "现价 21.25, 突破 21.68 加仓",
+      "target": "突破前高/MA60 (22.95, +8%)",
+      "stop": "跌破 5日线 (20.61, -3%)",
       "risk_level": "中",
       "source": "theme",
       "tag": "🔥 仅精选"
