@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-03",
-  "update_time": "22:21",
+  "date": "2026-09-04",
+  "update_time": "21:39",
   "version": "1.4-dynamic-auto",
   "weights": {
     "theme": 30,
@@ -13,14 +13,41 @@
     "pct_today_max": 7.0,
     "bias_5_max": 15.0
   },
-  "market_view": "09/03 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
+  "market_view": "09/04 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
   "summary": {
-    "theme_picks": 0,
+    "theme_picks": 1,
     "quant_picks": 0,
     "intersection": 0,
-    "total": 0
+    "total": 1
   },
-  "picks": [],
+  "picks": [
+    {
+      "rank": 1,
+      "code": "301171",
+      "name": "易点天下",
+      "score": 27,
+      "score_breakdown": {
+        "theme": 14,
+        "money": 0,
+        "tech": 5,
+        "event": 8
+      },
+      "industry": "互联网",
+      "themes": [
+        "互联网"
+      ],
+      "pct_chg_today": 11.1176,
+      "ret_20d": 0,
+      "close": 38.28,
+      "thesis": "互联网 行业, 涨幅 +11.12%, 成交 0.06 亿, 互联网",
+      "entry": "已涨停 (11.1%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 38.28",
+      "target": "突破前高/MA60 (41.34, +8%)",
+      "stop": "跌破 5日线 (37.13, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    }
+  ],
   "quant_picks": [],
   "intersection": [],
   "filtered_out": [],
