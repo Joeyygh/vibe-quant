@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
-"""Vibe 量化数据更新 - Tushare Pro 真实数据版"""
+"""Vibe 量化数据更新 - Tushare Pro 真实数据版
+v3.5 优化: 智能增量 (只拉 parquet 之后), 限流重试, 进度可见
+"""
 import os
 import json
+import time
 import pandas as pd
 from datetime import datetime, timedelta, timezone
 
@@ -16,12 +19,39 @@ pro = ts.pro_api()
 os.makedirs('data', exist_ok=True)
 
 print(f"开始更新: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+print(f"Tushare 限流策略: 失败 sleep 2s, 限流 sleep 10s 重试")
 
-print("\n[1/3] 拉取 A 股列表...")
-df_basic = pro.stock_basic(
+# ========== 辅助: Tushare 限流重试 ==========
+def tushare_call(func, max_retry=3, **kwargs):
+    """带限流重试的 Tushare 调用"""
+    for attempt in range(max_retry):
+        try:
+            df = func(**kwargs)
+            return df
+        except Exception as e:
+            err = str(e)
+            if '每分钟' in err or '限流' in err or 'rate' in err.lower() or '600' in err:
+                wait = 15 * (attempt + 1)
+                print(f"  ⚠️ 限流, sleep {wait}s (重试 {attempt+1}/{max_retry})")
+                time.sleep(wait)
+            elif 'token' in err.lower():
+                raise
+            else:
+                wait = 3 * (attempt + 1)
+                print(f"  ⚠️ {err[:80]}, sleep {wait}s (重试 {attempt+1}/{max_retry})")
+                time.sleep(wait)
+    print(f"  ❌ 重试 {max_retry} 次仍失败, 跳过")
+    return None
+
+print("\n[1/4] 拉取 A 股列表...")
+df_basic = tushare_call(
+    pro.stock_basic,
     list_status='L',
     fields='ts_code,symbol,name,industry,market,list_date'
 )
+if df_basic is None or df_basic.empty:
+    print("❌ 拉股票列表失败, 终止")
+    exit(1)
 print(f"  获取 {len(df_basic)} 只")
 
 df_basic = df_basic.rename(columns={'symbol': 'code'})
@@ -42,19 +72,48 @@ with open('data/industry_map.json', 'w', encoding='utf-8') as f:
     json.dump(industry_map, f, ensure_ascii=False)
 print(f"  ✅ industry_map.json ({len(industry_map)} 项)")
 
-print("\n[2/3] 拉取 K 线...")
+# ========== 智能增量: 读已有 parquet 最后日期 ==========
+print("\n[2/4] 拉取 K 线 (智能增量)...")
 end_date = datetime.now().strftime('%Y%m%d')
-start_date = (datetime.now() - timedelta(days=90)).strftime('%Y%m%d')
+
+# 检查已有 parquet
+last_date = None
+df_existing = None
+if os.path.exists('data/klines.parquet'):
+    try:
+        df_existing = pd.read_parquet('data/klines.parquet')
+        if 'date' in df_existing.columns and len(df_existing) > 0:
+            last_date = df_existing['date'].max()
+            # last_date 是 '2026-09-04' 这种格式,转成 YYYYMMDD
+            last_date_str = pd.to_datetime(last_date).strftime('%Y%m%d')
+            print(f"  已有 K 线最后日期: {last_date} ({last_date_str})")
+            # 只拉这个日期之后 1 天起 (覆盖)
+            start_date_dt = pd.to_datetime(last_date) + timedelta(days=1)
+            start_date = start_date_dt.strftime('%Y%m%d')
+            if start_date > end_date:
+                print(f"  数据已最新 (klines 已有 {last_date}), 跳过 K 线拉取")
+                start_date = end_date  # 让循环不执行
+        else:
+            start_date = (datetime.now() - timedelta(days=90)).strftime('%Y%m%d')
+    except Exception as e:
+        print(f"  ⚠️ 读已有 parquet 失败: {e}")
+        start_date = (datetime.now() - timedelta(days=90)).strftime('%Y%m%d')
+else:
+    print("  没有已有 parquet, 拉 90 天历史")
+    start_date = (datetime.now() - timedelta(days=90)).strftime('%Y%m%d')
+
+print(f"  K 线拉取范围: {start_date} ~ {end_date}")
 
 all_klines = []
 codes = df_basic['code'].tolist()
 total = len(codes)
-print(f"  待拉取: {total} 只")
 
-for i, code in enumerate(codes):
-    ts_code = df_basic[df_basic['code'] == code]['ts_code'].iloc[0]
-    try:
-        df = pro.daily(
+if start_date <= end_date:
+    for i, code in enumerate(codes):
+        ts_code = df_basic[df_basic['code'] == code]['ts_code'].iloc[0]
+        df = tushare_call(
+            pro.daily,
+            max_retry=2,
             ts_code=ts_code,
             start_date=start_date,
             end_date=end_date
@@ -62,46 +121,63 @@ for i, code in enumerate(codes):
         if df is not None and not df.empty:
             df['code'] = code
             all_klines.append(df)
-    except Exception as e:
-        pass
+        
+        if (i + 1) % 500 == 0:
+            print(f"  进度: {i+1}/{total} (已拉 {len(all_klines)} 只)")
+        
+        # 每 100 只小睡一下, 主动避免限流
+        if (i + 1) % 100 == 0:
+            time.sleep(0.3)
     
-    if (i + 1) % 1000 == 0:
-        print(f"  进度: {i+1}/{total}")
-
-if all_klines:
-    df_all = pd.concat(all_klines, ignore_index=True)
-    df_all = df_all.loc[:, ~df_all.columns.duplicated()]
-    df_all = df_all.rename(columns={
-        'trade_date': 'date', 'vol': 'volume', 'pct_chg': 'pct_change'
-    })
-    df_all = df_all.loc[:, ~df_all.columns.duplicated()]
-    df_all['date'] = pd.to_datetime(df_all['date'], format='%Y%m%d').dt.strftime('%Y-%m-%d')
-    name_map = dict(zip(df_basic['code'], df_basic['name']))
-    df_all['name'] = df_all['code'].map(name_map)
-    df_all['industry'] = df_all['code'].map(industry_map).fillna('未分类')
-    df_all['code'] = df_all['code'].astype(str).str.zfill(6)
-    df_all = df_all.loc[:, ~df_all.columns.duplicated()]
+    print(f"  拉取完成, 共 {len(all_klines)} 只有新数据")
     
-    try:
-        df_all.to_parquet('data/klines.parquet', index=False)
-        print(f"  ✅ klines.parquet: {len(df_all)} 条")
-    except Exception as e:
-        df_all.to_csv('data/klines.csv', index=False)
-        print(f"  ✅ klines.csv: {len(df_all)} 条")
+    if all_klines:
+        df_new = pd.concat(all_klines, ignore_index=True)
+        df_new = df_new.loc[:, ~df_new.columns.duplicated()]
+        df_new = df_new.rename(columns={
+            'trade_date': 'date', 'vol': 'volume', 'pct_chg': 'pct_change'
+        })
+        df_new['date'] = pd.to_datetime(df_new['date'], format='%Y%m%d').dt.strftime('%Y-%m-%d')
+        name_map = dict(zip(df_basic['code'], df_basic['name']))
+        df_new['name'] = df_new['code'].map(name_map)
+        df_new['industry'] = df_new['code'].map(industry_map).fillna('未分类')
+        df_new['code'] = df_new['code'].astype(str).str.zfill(6)
+        
+        # 合并到已有
+        if df_existing is not None and len(df_existing) > 0:
+            df_all = pd.concat([df_existing, df_new], ignore_index=True)
+            df_all = df_all.drop_duplicates(subset=['ts_code', 'date'], keep='last')
+        else:
+            df_all = df_new
+        
+        try:
+            df_all.to_parquet('data/klines.parquet', index=False)
+            print(f"  ✅ klines.parquet: {len(df_all)} 条 (新增 {len(df_new)})")
+        except Exception as e:
+            df_all.to_csv('data/klines.csv', index=False)
+            print(f"  ✅ klines.csv: {len(df_all)} 条")
+    else:
+        df_all = df_existing if df_existing is not None else pd.DataFrame()
+        print(f"  无新数据")
+else:
+    df_all = df_existing if df_existing is not None else pd.DataFrame()
+    print(f"  跳过 K 线 (已有 {last_date})")
 
-print("\n[3/3] 拉取今日行情...")
-df_today = pro.daily(trade_date=end_date)
+# ========== 今日行情 ==========
+print("\n[3/4] 拉取今日行情...")
+df_today = tushare_call(pro.daily, max_retry=3, trade_date=end_date)
 if df_today is not None and not df_today.empty:
     df_today = df_today.loc[:, ~df_today.columns.duplicated()]
     df_today['code'] = df_today['ts_code'].str.split('.').str[0]
     df_today['code'] = df_today['code'].astype(str).str.zfill(6)
+    name_map = dict(zip(df_basic['code'], df_basic['name']))
     df_today['name'] = df_today['code'].map(name_map)
     df_today['industry'] = df_today['code'].map(industry_map).fillna('未分类')
     df_today = df_today.rename(columns={'pct_chg': 'pct_change', 'vol': 'volume'})
     df_today.to_csv('data/today_quote.csv', index=False, encoding='utf-8-sig')
     print(f"  ✅ today_quote.csv: {len(df_today)} 条")
     
-    # 填充 stock_list.csv 的 price/pct_change (用今日收盘价)
+    # 填充 stock_list
     price_map = dict(zip(df_today['code'], df_today['close']))
     pct_map = dict(zip(df_today['code'], df_today['pct_change']))
     df_basic['price'] = df_basic['code'].map(price_map).fillna(0.0)
@@ -110,18 +186,17 @@ if df_today is not None and not df_today.empty:
         'data/stock_list.csv', index=False, encoding='utf-8-sig'
     )
     print(f"  ✅ stock_list.csv 已用 {len(price_map)} 只今日价格填充")
+else:
+    print(f"  ⚠️ 今日行情拉取失败 (可能非交易日或限流)")
 
 with open('data/last_update.txt', 'w') as f:
-    # v3.4 修复: 强制写"盘后 17:30" 字符串, App 统一显示
     f.write(f"{datetime.now().strftime('%Y-%m-%d')}T17:30:00")
+print(f"  ✅ last_update.txt")
 
-
-# ========== 顺便生成今日精选 (动态版 v1.4) ==========
+# ========== 触发选股脚本 ==========
+print("\n[4/4] 生成今日精选 daily_picks_dynamic.py (动态版)...")
 import subprocess
 try:
-    print('\n[4/4] 生成今日精选 daily_picks_dynamic.py (动态版)...')
-    # 把 picks 写到 data/ 下, 让 git add data/ 能一起 commit
-    # 同时也在 reports/ 下保留一份给 App 看
     os.makedirs('reports', exist_ok=True)
     result = subprocess.run(
         ['python', 'scripts/daily_picks_dynamic.py'],
@@ -129,43 +204,11 @@ try:
         env={**__import__('os').environ, 'VIBE_OUTPUT_DIR': 'data'}
     )
     if result.returncode == 0:
-        print('  ✅ daily_picks_dynamic 成功')
-        print(result.stdout[-500:] if len(result.stdout) > 500 else result.stdout)
+        print(f"  ✅ daily_picks_dynamic 完成")
     else:
-        print(f'  ⚠️ daily_picks_dynamic 失败 (returncode={result.returncode})')
-        print(result.stderr[-500:] if len(result.stderr) > 500 else result.stderr)
+        print(f"  ⚠️ daily_picks_dynamic 失败 (returncode={result.returncode})")
+        print(f"  stderr: {result.stderr[:200]}")
 except Exception as e:
-    print(f'  ⚠️ daily_picks_dynamic 调用异常: {e}')
+    print(f"  ⚠️ daily_picks_dynamic 异常: {e}")
 
-
-try:
-    print('\n[4.5/4] 生成 4 个实战公式 picks (v2.0)...')
-    os.makedirs('reports', exist_ok=True)
-    result2 = subprocess.run(
-        ['python', 'scripts/daily_picks_v2.py'],
-        capture_output=True, text=True, timeout=300,
-        env={**__import__('os').environ, 'VIBE_OUTPUT_DIR': 'data'}
-    )
-    if result2.returncode == 0:
-        print('  ✅ daily_picks_v2 成功 (4 个实战公式)')
-        # 同步到 data/ 让 git commit
-        formulas_data = 'data/formulas_picks.json'
-        formulas_reports = 'reports/formulas_picks.json'
-        if os.path.exists(formulas_data):
-            shutil.copy2(formulas_data, formulas_reports)
-            print(f'  📋 formulas 同步: {formulas_data} -> {formulas_reports}')
-    else:
-        print(f'  ⚠️ daily_picks_v2 失败 (returncode={result2.returncode})')
-        print(result2.stderr[-500:] if len(result2.stderr) > 500 else result2.stderr)
-except Exception as e:
-    print(f'  ⚠️ daily_picks_v2 调用异常: {e}')
-
-print('\n✅ 完成！真实数据！')
-
-# 把 picks 同步到 reports/ 给 App 读 (workflow 走 data/, App 读 reports/)
-import shutil
-src = 'data/today_picks.json'
-dst = 'reports/today_picks.json'
-if os.path.exists(src):
-    shutil.copy2(src, dst)
-    print(f'  📋 picks 同步: {src} -> {dst}')
+print(f"\n🎉 数据更新完成: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
