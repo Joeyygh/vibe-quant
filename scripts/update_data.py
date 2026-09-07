@@ -208,4 +208,20 @@ try:
 except Exception as e:
     print(f"  ⚠️ daily_picks_dynamic 异常: {e}")
 
+# ========== v3 多策略选股 (生成 formulas_picks.json) ==========
+print("\n[5b] 生成 formulas_picks.json (v3 多策略)...")
+try:
+    result = subprocess.run(
+        ['python', 'scripts/daily_picks_v2.py'],
+        capture_output=True, text=True, timeout=300,
+        env={**__import__('os').environ, 'VIBE_OUTPUT_DIR': 'data'}
+    )
+    if result.returncode == 0:
+        print(f"  ✅ daily_picks_v2 完成")
+    else:
+        print(f"  ⚠️ daily_picks_v2 失败 (returncode={result.returncode})")
+        print(f"  stderr: {result.stderr[:200]}")
+except Exception as e:
+    print(f"  ⚠️ daily_picks_v2 异常: {e}")
+
 print(f"\n🎉 数据更新完成: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
