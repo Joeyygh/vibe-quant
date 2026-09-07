@@ -1,14 +1,13 @@
 name: Safety Net - Auto Heal Data
 
-# v1: 保险丝机制
-# 每 4 小时检查一次数据新鲜度,陈旧就自动拉取
-# 解决 GitHub Actions cron 经常漏跑的问题
+# v2: 保险丝
+# 17:00 / 18:30 / 20:00 北京 (UTC 9/10:30/12) 各查一次
+# 数据陈旧就自动跑, 保证 19:30 前数据到位, 21:00 报告能用
 on:
   schedule:
-    - cron: '0 1 * * 1-5'    # 北京 9:00  (盘前)
-    - cron: '0 5 * * 1-5'    # 北京 13:00 (盘中)
-    - cron: '0 9 * * 1-5'    # 北京 17:00 (盘后,主)
-    - cron: '0 13 * * 1-5'   # 北京 21:00 (晚补救)
+    - cron: '0 9 * * 1-5'    # 北京 17:00 (主拉前,保险)
+    - cron: '30 10 * * 1-5'  # 北京 18:30 (首次拉后,补)
+    - cron: '0 12 * * 1-5'   # 北京 20:00 (二次拉后,最终)
   workflow_dispatch:
 
 permissions:
@@ -37,24 +36,24 @@ jobs:
           TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
         run: |
           TODAY=$(date -d 'today' +%Y%m%d)
-          if [ -f data/klines.parquet ]; then
-            # 用 Tushare 验证今天是否有数据
-            python -c "
+          python -c "
           import tushare as ts
           import os
           ts.set_token(os.environ['TUSHARE_TOKEN'])
           pro = ts.pro_api()
           today = '$TODAY'
-          df = pro.daily(trade_date=today, fields='ts_code,trade_date')
-          if len(df) > 0:
-              print('FRESH')
-          else:
+          try:
+              df = pro.daily(trade_date=today, fields='ts_code,trade_date')
+              if len(df) > 100:
+                  print('FRESH')
+              else:
+                  print('STALE')
+          except Exception as e:
               print('STALE')
+              print(f'err: {e}', file=__import__('sys').stderr)
           " > /tmp/freshness.txt 2>&1
-            STATE=$(cat /tmp/freshness.txt | tr -d '\n')
-          else
-            STATE="NOFILE"
-          fi
+          STATE=$(tail -1 /tmp/freshness.txt | tr -d '
+')
           echo "freshness=$STATE"
           echo "freshness=$STATE" >> $GITHUB_OUTPUT
 
