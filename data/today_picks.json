@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-05",
-  "update_time": "00:39",
+  "date": "2026-09-07",
+  "update_time": "20:41",
   "version": "1.4-dynamic-auto",
   "weights": {
     "theme": 30,
@@ -13,7 +13,7 @@
     "pct_today_max": 7.0,
     "bias_5_max": 15.0
   },
-  "market_view": "09/05 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
+  "market_view": "09/07 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
   "summary": {
     "theme_picks": 5,
     "quant_picks": 0,
@@ -23,64 +23,99 @@
   "picks": [
     {
       "rank": 1,
-      "code": "600150",
-      "name": "中国船舶",
-      "score": 25,
+      "code": "300308",
+      "name": "中际旭创",
+      "score": 59,
       "score_breakdown": {
-        "theme": 8,
+        "theme": 30,
         "money": 4,
         "tech": 5,
-        "event": 8
+        "event": 20
       },
-      "industry": "船舶",
+      "industry": "通信设备",
       "themes": [
-        "船舶"
+        "AI算力",
+        "服务器",
+        "光模块",
+        "5G"
       ],
-      "pct_chg_today": 9.1783,
+      "pct_chg_today": 10.3759,
       "ret_20d": 0,
-      "close": 37.47,
-      "thesis": "船舶 行业, 涨幅 +9.18%, 成交 0.12 亿, 船舶",
-      "entry": "现价 37.47, 突破 38.22 加仓",
-      "target": "突破前高/MA60 (40.47, +8%)",
-      "stop": "跌破 5日线 (36.35, -3%)",
+      "close": 898.46,
+      "thesis": "通信设备 行业, 涨幅 +10.38%, 成交 0.38 亿, AI算力, 服务器",
+      "entry": "已涨停 (10.4%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 898.46",
+      "target": "突破前高/MA60 (970.34, +8%)",
+      "stop": "跌破 5日线 (871.51, -3%)",
       "risk_level": "中",
       "source": "theme",
       "tag": "🔥 仅精选"
     },
     {
       "rank": 2,
-      "code": "300058",
-      "name": "蓝色光标",
-      "score": 21,
+      "code": "300502",
+      "name": "新易盛",
+      "score": 53,
       "score_breakdown": {
-        "theme": 8,
-        "money": 0,
+        "theme": 24,
+        "money": 4,
         "tech": 5,
-        "event": 8
+        "event": 20
       },
-      "industry": "广告包装",
+      "industry": "通信设备",
       "themes": [
-        "广告包装"
+        "AI算力",
+        "服务器",
+        "光模块",
+        "5G"
       ],
-      "pct_chg_today": 5.9136,
+      "pct_chg_today": 8.0829,
       "ret_20d": 0,
-      "close": 13.97,
-      "thesis": "广告包装 行业, 涨幅 +5.91%, 成交 0.09 亿, 广告包装",
-      "entry": "现价 13.97, 突破 14.25 加仓",
-      "target": "突破前高/MA60 (15.09, +8%)",
-      "stop": "跌破 5日线 (13.55, -3%)",
+      "close": 417.2,
+      "thesis": "通信设备 行业, 涨幅 +8.08%, 成交 0.21 亿, AI算力, 服务器",
+      "entry": "现价 417.20, 突破 425.54 加仓",
+      "target": "突破前高/MA60 (450.58, +8%)",
+      "stop": "跌破 5日线 (404.68, -3%)",
       "risk_level": "中",
       "source": "theme",
       "tag": "🔥 仅精选"
     },
     {
       "rank": 3,
-      "code": "603228",
-      "name": "景旺电子",
-      "score": 49,
+      "code": "688825",
+      "name": "长鑫科技",
+      "score": 53,
       "score_breakdown": {
         "theme": 24,
-        "money": 0,
+        "money": 4,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "半导体",
+      "themes": [
+        "半导体设备",
+        "存储芯片",
+        "AI算力",
+        "国产替代"
+      ],
+      "pct_chg_today": 6.6971,
+      "ret_20d": 0,
+      "close": 58.47,
+      "thesis": "半导体 行业, 涨幅 +6.70%, 成交 0.20 亿, 半导体设备, 存储芯片",
+      "entry": "现价 58.47, 突破 59.64 加仓",
+      "target": "突破前高/MA60 (63.15, +8%)",
+      "stop": "跌破 5日线 (56.72, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 4,
+      "code": "002384",
+      "name": "东山精密",
+      "score": 53,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 4,
         "tech": 5,
         "event": 20
       },
@@ -91,65 +126,42 @@
         "AI硬件",
         "消费电子"
       ],
-      "pct_chg_today": 8.9572,
+      "pct_chg_today": 6.6491,
       "ret_20d": 0,
-      "close": 96.34,
-      "thesis": "元器件 行业, 涨幅 +8.96%, 成交 0.07 亿, MLCC, 元器件",
-      "entry": "现价 96.34, 突破 98.27 加仓",
-      "target": "突破前高/MA60 (104.05, +8%)",
-      "stop": "跌破 5日线 (93.45, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🔥 仅精选"
-    },
-    {
-      "rank": 4,
-      "code": "301171",
-      "name": "易点天下",
-      "score": 27,
-      "score_breakdown": {
-        "theme": 14,
-        "money": 0,
-        "tech": 5,
-        "event": 8
-      },
-      "industry": "互联网",
-      "themes": [
-        "互联网"
-      ],
-      "pct_chg_today": 11.1176,
-      "ret_20d": 0,
-      "close": 38.28,
-      "thesis": "互联网 行业, 涨幅 +11.12%, 成交 0.06 亿, 互联网",
-      "entry": "已涨停 (11.1%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 38.28",
-      "target": "突破前高/MA60 (41.34, +8%)",
-      "stop": "跌破 5日线 (37.13, -3%)",
+      "close": 190.55,
+      "thesis": "元器件 行业, 涨幅 +6.65%, 成交 0.14 亿, MLCC, 元器件",
+      "entry": "现价 190.55, 突破 194.36 加仓",
+      "target": "突破前高/MA60 (205.79, +8%)",
+      "stop": "跌破 5日线 (184.83, -3%)",
       "risk_level": "中",
       "source": "theme",
       "tag": "🔥 仅精选"
     },
     {
       "rank": 5,
-      "code": "300413",
-      "name": "芒果超媒",
-      "score": 21,
+      "code": "300394",
+      "name": "天孚通信",
+      "score": 53,
       "score_breakdown": {
-        "theme": 8,
-        "money": 0,
+        "theme": 24,
+        "money": 4,
         "tech": 5,
-        "event": 8
+        "event": 20
       },
-      "industry": "影视音像",
+      "industry": "通信设备",
       "themes": [
-        "影视音像"
+        "AI算力",
+        "服务器",
+        "光模块",
+        "5G"
       ],
-      "pct_chg_today": 5.4591,
+      "pct_chg_today": 7.3583,
       "ret_20d": 0,
-      "close": 21.25,
-      "thesis": "影视音像 行业, 涨幅 +5.46%, 成交 0.05 亿, 影视音像",
-      "entry": "现价 21.25, 突破 21.68 加仓",
-      "target": "突破前高/MA60 (22.95, +8%)",
-      "stop": "跌破 5日线 (20.61, -3%)",
+      "close": 267.0,
+      "thesis": "通信设备 行业, 涨幅 +7.36%, 成交 0.14 亿, AI算力, 服务器",
+      "entry": "现价 267.00, 突破 272.34 加仓",
+      "target": "突破前高/MA60 (288.36, +8%)",
+      "stop": "跌破 5日线 (258.99, -3%)",
       "risk_level": "中",
       "source": "theme",
       "tag": "🔥 仅精选"
