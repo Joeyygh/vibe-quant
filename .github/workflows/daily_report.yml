@@ -1,8 +1,10 @@
 name: Daily Report
 
+# v2: 报告改为北京 21:00 出 (UTC 13) - 当天收盘复盘
+# 数据由 daily.yml 20:00 北京 (UTC 12) 提前拉好
 on:
   schedule:
-    - cron: '0 22 * * 1-5'
+    - cron: '0 13 * * 1-5'    # 北京 21:00 当日报告
   workflow_dispatch:
 
 permissions:
