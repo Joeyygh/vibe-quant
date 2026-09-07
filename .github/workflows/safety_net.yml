@@ -1,0 +1,77 @@
+name: Safety Net - Auto Heal Data
+
+# v1: 保险丝机制
+# 每 4 小时检查一次数据新鲜度,陈旧就自动拉取
+# 解决 GitHub Actions cron 经常漏跑的问题
+on:
+  schedule:
+    - cron: '0 1 * * 1-5'    # 北京 9:00  (盘前)
+    - cron: '0 5 * * 1-5'    # 北京 13:00 (盘中)
+    - cron: '0 9 * * 1-5'    # 北京 17:00 (盘后,主)
+    - cron: '0 13 * * 1-5'   # 北京 21:00 (晚补救)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  auto-heal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install tushare pandas pyarrow
+
+      - name: Check data freshness
+        id: check
+        env:
+          TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
+        run: |
+          TODAY=$(date -d 'today' +%Y%m%d)
+          if [ -f data/klines.parquet ]; then
+            # 用 Tushare 验证今天是否有数据
+            python -c "
+          import tushare as ts
+          import os
+          ts.set_token(os.environ['TUSHARE_TOKEN'])
+          pro = ts.pro_api()
+          today = '$TODAY'
+          df = pro.daily(trade_date=today, fields='ts_code,trade_date')
+          if len(df) > 0:
+              print('FRESH')
+          else:
+              print('STALE')
+          " > /tmp/freshness.txt 2>&1
+            STATE=$(cat /tmp/freshness.txt | tr -d '\n')
+          else
+            STATE="NOFILE"
+          fi
+          echo "freshness=$STATE"
+          echo "freshness=$STATE" >> $GITHUB_OUTPUT
+
+      - name: Update data if stale
+        if: steps.check.outputs.freshness != 'FRESH'
+        env:
+          TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
+        run: |
+          mkdir -p data
+          python scripts/update_data.py
+
+      - name: Commit and push
+        if: steps.check.outputs.freshness != 'FRESH'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git diff --staged --quiet || git commit -m "chore: safety-net auto-heal $(date +%Y-%m-%d)"
+          git push
+        continue-on-error: true
