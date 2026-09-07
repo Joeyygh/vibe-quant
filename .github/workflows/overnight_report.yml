@@ -1,0 +1,46 @@
+name: Overnight Report
+
+# v1: 第二天早上 7:00 北京出"外围影响"报告
+# 美股 (凌晨 4:00 收) + 港股 (昨天 16:00 收) + 商品/外汇 + A50 期货
+# 让用户在 9:30 A 股开盘前看到外围预判
+on:
+  schedule:
+    - cron: '0 23 * * 0-4'    # 北京次日 7:00 (UTC 23:00, 周一到周五 5 天)
+                                # 0=周日, 1-5=周一到周五, 用 0-4 避免周六 7 点也跑
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-overseas-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install pandas numpy yfinance
+
+      - name: Generate overnight report
+        env:
+          TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
+        run: |
+          python scripts/overseas_report.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add reports/
+          git diff --staged --quiet || git commit -m "overnight report: $(date +%Y-%m-%d)"
+          git push
+        continue-on-error: true
