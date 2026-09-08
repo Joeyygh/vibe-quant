@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-07",
-  "update_time": "20:44",
+  "date": "2026-09-08",
+  "update_time": "20:36",
   "version": "1.4-dynamic-auto",
   "weights": {
     "theme": 30,
@@ -13,7 +13,7 @@
     "pct_today_max": 7.0,
     "bias_5_max": 15.0
   },
-  "market_view": "09/07 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
+  "market_view": "09/08 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
   "summary": {
     "theme_picks": 5,
     "quant_picks": 0,
@@ -23,95 +23,8 @@
   "picks": [
     {
       "rank": 1,
-      "code": "300308",
-      "name": "中际旭创",
-      "score": 59,
-      "score_breakdown": {
-        "theme": 30,
-        "money": 4,
-        "tech": 5,
-        "event": 20
-      },
-      "industry": "通信设备",
-      "themes": [
-        "AI算力",
-        "服务器",
-        "光模块",
-        "5G"
-      ],
-      "pct_chg_today": 10.3759,
-      "ret_20d": 0,
-      "close": 898.46,
-      "thesis": "通信设备 行业, 涨幅 +10.38%, 成交 0.38 亿, AI算力, 服务器",
-      "entry": "已涨停 (10.4%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 898.46",
-      "target": "突破前高/MA60 (970.34, +8%)",
-      "stop": "跌破 5日线 (871.51, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🔥 仅精选"
-    },
-    {
-      "rank": 2,
-      "code": "300502",
-      "name": "新易盛",
-      "score": 53,
-      "score_breakdown": {
-        "theme": 24,
-        "money": 4,
-        "tech": 5,
-        "event": 20
-      },
-      "industry": "通信设备",
-      "themes": [
-        "AI算力",
-        "服务器",
-        "光模块",
-        "5G"
-      ],
-      "pct_chg_today": 8.0829,
-      "ret_20d": 0,
-      "close": 417.2,
-      "thesis": "通信设备 行业, 涨幅 +8.08%, 成交 0.21 亿, AI算力, 服务器",
-      "entry": "现价 417.20, 突破 425.54 加仓",
-      "target": "突破前高/MA60 (450.58, +8%)",
-      "stop": "跌破 5日线 (404.68, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🔥 仅精选"
-    },
-    {
-      "rank": 3,
-      "code": "688825",
-      "name": "长鑫科技",
-      "score": 53,
-      "score_breakdown": {
-        "theme": 24,
-        "money": 4,
-        "tech": 5,
-        "event": 20
-      },
-      "industry": "半导体",
-      "themes": [
-        "半导体设备",
-        "存储芯片",
-        "AI算力",
-        "国产替代"
-      ],
-      "pct_chg_today": 6.6971,
-      "ret_20d": 0,
-      "close": 58.47,
-      "thesis": "半导体 行业, 涨幅 +6.70%, 成交 0.20 亿, 半导体设备, 存储芯片",
-      "entry": "现价 58.47, 突破 59.64 加仓",
-      "target": "突破前高/MA60 (63.15, +8%)",
-      "stop": "跌破 5日线 (56.72, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🔥 仅精选"
-    },
-    {
-      "rank": 4,
-      "code": "002384",
-      "name": "东山精密",
+      "code": "002436",
+      "name": "兴森科技",
       "score": 53,
       "score_breakdown": {
         "theme": 24,
@@ -126,21 +39,21 @@
         "AI硬件",
         "消费电子"
       ],
-      "pct_chg_today": 6.6491,
+      "pct_chg_today": 9.1701,
       "ret_20d": 0,
-      "close": 190.55,
-      "thesis": "元器件 行业, 涨幅 +6.65%, 成交 0.14 亿, MLCC, 元器件",
-      "entry": "现价 190.55, 突破 194.36 加仓",
-      "target": "突破前高/MA60 (205.79, +8%)",
-      "stop": "跌破 5日线 (184.83, -3%)",
+      "close": 40.12,
+      "thesis": "元器件 行业, 涨幅 +9.17%, 成交 0.11 亿, MLCC, 元器件",
+      "entry": "现价 40.12, 突破 40.92 加仓",
+      "target": "突破前高/MA60 (43.33, +8%)",
+      "stop": "跌破 5日线 (38.92, -3%)",
       "risk_level": "中",
       "source": "theme",
       "tag": "🔥 仅精选"
     },
     {
-      "rank": 5,
-      "code": "300394",
-      "name": "天孚通信",
+      "rank": 2,
+      "code": "603083",
+      "name": "剑桥科技",
       "score": 53,
       "score_breakdown": {
         "theme": 24,
@@ -155,13 +68,97 @@
         "光模块",
         "5G"
       ],
-      "pct_chg_today": 7.3583,
+      "pct_chg_today": 7.3291,
       "ret_20d": 0,
-      "close": 267.0,
-      "thesis": "通信设备 行业, 涨幅 +7.36%, 成交 0.14 亿, AI算力, 服务器",
-      "entry": "现价 267.00, 突破 272.34 加仓",
-      "target": "突破前高/MA60 (288.36, +8%)",
-      "stop": "跌破 5日线 (258.99, -3%)",
+      "close": 222.3,
+      "thesis": "通信设备 行业, 涨幅 +7.33%, 成交 0.11 亿, AI算力, 服务器",
+      "entry": "现价 222.30, 突破 226.75 加仓",
+      "target": "突破前高/MA60 (240.08, +8%)",
+      "stop": "跌破 5日线 (215.63, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 3,
+      "code": "600869",
+      "name": "远东股份",
+      "score": 49,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 0,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "电气设备",
+      "themes": [
+        "储能",
+        "电池",
+        "钠电池",
+        "新型电力"
+      ],
+      "pct_chg_today": 8.5249,
+      "ret_20d": 0,
+      "close": 22.66,
+      "thesis": "电气设备 行业, 涨幅 +8.52%, 成交 0.07 亿, 储能, 电池",
+      "entry": "现价 22.66, 突破 23.11 加仓",
+      "target": "突破前高/MA60 (24.47, +8%)",
+      "stop": "跌破 5日线 (21.98, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 4,
+      "code": "603618",
+      "name": "杭电股份",
+      "score": 49,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 0,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "电气设备",
+      "themes": [
+        "储能",
+        "电池",
+        "钠电池",
+        "新型电力"
+      ],
+      "pct_chg_today": 8.5227,
+      "ret_20d": 0,
+      "close": 40.11,
+      "thesis": "电气设备 行业, 涨幅 +8.52%, 成交 0.06 亿, 储能, 电池",
+      "entry": "现价 40.11, 突破 40.91 加仓",
+      "target": "突破前高/MA60 (43.32, +8%)",
+      "stop": "跌破 5日线 (38.91, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 5,
+      "code": "600362",
+      "name": "江西铜业",
+      "score": 21,
+      "score_breakdown": {
+        "theme": 8,
+        "money": 0,
+        "tech": 5,
+        "event": 8
+      },
+      "industry": "铜",
+      "themes": [
+        "铜"
+      ],
+      "pct_chg_today": 5.4542,
+      "ret_20d": 0,
+      "close": 48.53,
+      "thesis": "铜 行业, 涨幅 +5.45%, 成交 0.06 亿, 铜",
+      "entry": "现价 48.53, 突破 49.50 加仓",
+      "target": "突破前高/MA60 (52.41, +8%)",
+      "stop": "跌破 5日线 (47.07, -3%)",
       "risk_level": "中",
       "source": "theme",
       "tag": "🔥 仅精选"
