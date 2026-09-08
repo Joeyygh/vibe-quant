@@ -94,6 +94,78 @@ if _last_date and _last_date != _today:
     st.divider()
 
 
+# 🆕 2026-09-08: App 端"自动更新"开关 — 完全脱离 GitHub cron
+# 默认开启, 启动 App 时自动跑一次 update_data.py (增量, 30 秒)
+st.markdown("### ⚙️ 自动更新设置 (不靠 GitHub Actions)")
+_auto_col1, _auto_col2 = st.columns(2)
+with _auto_col1:
+    _auto_on_open = st.checkbox(
+        "✅ 启动时自动更新数据",
+        value=st.session_state.get("auto_on_open", True),
+        help="打开 App 就自动跑 update_data.py, 增量只需 30-60 秒, 不用手动点"
+    )
+    st.session_state["auto_on_open"] = _auto_on_open
+with _auto_col2:
+    _auto_interval = st.checkbox(
+        "✅ 每 5 分钟后台轮询",
+        value=st.session_state.get("auto_interval", False),
+        help="App 一直开时, 每 5 分钟检查, 陈旧就自动拉 (Streamlit 限制可能不准时)"
+    )
+    st.session_state["auto_interval"] = _auto_interval
+
+# 启动时自动更新
+if _auto_on_open and _last_date != _today:
+    if not st.session_state.get("auto_ran_this_session", False):
+        st.session_state["auto_ran_this_session"] = True
+        with st.spinner(f"🚀 启动时自动更新数据 (上次: {_last_date}, 目标: {_today})... 约 30-60 秒, 请勿关闭"):
+            try:
+                import subprocess, sys
+                result = subprocess.run(
+                    [sys.executable, "scripts/update_data.py"],
+                    capture_output=True, text=True, timeout=600,
+                    env={**os.environ, "TUSHARE_TOKEN": os.environ.get("TUSHARE_TOKEN") or st.secrets.get("TUSHARE_TOKEN", "")}
+                )
+                if result.returncode == 0:
+                    st.success(f"✅ 启动自动更新完成! 数据已到 {_today}")
+                    st.balloons()
+                    import time; time.sleep(2)
+                    st.rerun()  # 强制刷新页面用新数据
+                else:
+                    st.error(f"❌ 启动自动更新失败:
+{result.stderr[-500:]}")
+            except subprocess.TimeoutExpired:
+                st.warning("⏱️ 超过 10 分钟, Tushare 限流, 请稍后手动点一键更新")
+            except Exception as e:
+                st.error(f"❌ 启动自动更新异常: {e}")
+
+# 后台轮询 (App 一直开着, 每 5 分钟检查一次)
+if _auto_interval:
+    import time as _time
+    _now_ts = _time.time()
+    _last_check = st.session_state.get("auto_last_check", 0)
+    if _now_ts - _last_check > 300:  # 5 分钟
+        st.session_state["auto_last_check"] = _now_ts
+        with st.spinner("⏰ 后台轮询检查数据新鲜度..."):
+            try:
+                _cur_last, _cur_today = _check_data_freshness()
+                if _cur_last != _cur_today:
+                    import subprocess, sys
+                    result = subprocess.run(
+                        [sys.executable, "scripts/update_data.py"],
+                        capture_output=True, text=True, timeout=600,
+                        env={**os.environ, "TUSHARE_TOKEN": os.environ.get("TUSHARE_TOKEN") or st.secrets.get("TUSHARE_TOKEN", "")}
+                    )
+                    if result.returncode == 0:
+                        st.toast(f"✅ 后台自动更新: {_cur_last} → {_cur_today}", icon="🟢")
+                        st.rerun()
+                    else:
+                        st.toast(f"⚠️ 后台更新失败: {result.stderr[:100]}", icon="🔴")
+                else:
+                    st.toast(f"✅ 数据最新 ({_cur_last})", icon="🟢")
+            except Exception as e:
+                st.toast(f"⚠️ 后台检查异常: {str(e)[:80]}", icon="🔴")
+
+
 st.title("Vibe 股票量化分析 v2.0")
 beijing_now = (datetime.now(timezone.utc) + timedelta(hours=8)).strftime('%Y-%m-%d %H:%M')
 # 动态读 last_update.txt
