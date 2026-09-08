@@ -131,8 +131,7 @@ if _auto_on_open and _last_date != _today:
                     import time; time.sleep(2)
                     st.rerun()  # 强制刷新页面用新数据
                 else:
-                    st.error(f"❌ 启动自动更新失败:
-{result.stderr[-500:]}")
+                    st.error(f"❌ 启动自动更新失败: {result.stderr[-500:]}")
             except subprocess.TimeoutExpired:
                 st.warning("⏱️ 超过 10 分钟, Tushare 限流, 请稍后手动点一键更新")
             except Exception as e:
