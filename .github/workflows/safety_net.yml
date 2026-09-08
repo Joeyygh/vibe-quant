@@ -1,12 +1,15 @@
 name: Safety Net - Auto Heal Data
 
-# v3: 保险丝, 错开 daily.yml 30 分钟, 避免 Tushare 限流撞车
-# daily.yml 拉完后 30 分钟才检查
+# v4: 扩大兜底, 周末也跑 (原来 1-5 太严, 9/5-9/7 整个周末 + 周一全漏)
+# 平时每 2 小时检查一次, 发现数据陈旧就自动拉
 on:
   schedule:
-    - cron: '0 9 * * 1-5'    # 北京 17:00 (开盘中, 不拉数据只检查)
-    - cron: '30 10 * * 1-5'  # 北京 18:30 (daily 18:00 拉完后 30 分钟)
-    - cron: '0 12 * * 1-5'   # 北京 20:00 (daily 19:30 拉完后 30 分钟)
+    # 工作日 (北京 17-23 点, 跟 daily/report 错开)
+    - cron: '0 9 * * 1-5'    # 北京 17:00
+    - cron: '0 11 * * 1-5'   # 北京 19:00 (daily 19:30 跑前, 提前补)
+    - cron: '0 13 * * 1-5'   # 北京 21:00 (跟 daily_report 同时, 报告后 1 小时)
+    # 周末/节假日 (8-23 点每小时, 兜底)
+    - cron: '0 0-15 * * 0,6' # 北京 8-23 点每小时 (周末 16 次/天, 必中)
   workflow_dispatch:
 
 permissions:
@@ -15,7 +18,7 @@ permissions:
 jobs:
   auto-heal:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
