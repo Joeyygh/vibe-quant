@@ -129,6 +129,23 @@ if _auto_on_open and _last_date != _today:
                     st.success(f"✅ 启动自动更新完成! 数据已到 {_today}")
                     st.balloons()
                     import time; time.sleep(2)
+                    # 跑完 update_data.py 后, 立刻跑两个选股脚本
+                    try:
+                        subprocess.run(
+                            [sys.executable, "scripts/daily_picks_dynamic.py"],
+                            capture_output=True, text=True, timeout=120,
+                            env={**os.environ, "TUSHARE_TOKEN": os.environ.get("TUSHARE_TOKEN") or st.secrets.get("TUSHARE_TOKEN", "")}
+                        )
+                    except Exception as e:
+                        st.warning(f"双引擎 picks 异常 (不影响主流程): {e}")
+                    try:
+                        subprocess.run(
+                            [sys.executable, "scripts/daily_picks_v2.py"],
+                            capture_output=True, text=True, timeout=120,
+                            env={**os.environ, "TUSHARE_TOKEN": os.environ.get("TUSHARE_TOKEN") or st.secrets.get("TUSHARE_TOKEN", "")}
+                        )
+                    except Exception as e:
+                        st.warning(f"多公式 picks 异常 (不影响主流程): {e}")
                     st.rerun()  # 强制刷新页面用新数据
                 else:
                     st.error(f"❌ 启动自动更新失败: {result.stderr[-500:]}")
