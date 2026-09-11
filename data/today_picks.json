@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-10",
-  "update_time": "23:06",
+  "date": "2026-09-11",
+  "update_time": "21:24",
   "version": "1.4-dynamic-auto",
   "weights": {
     "theme": 30,
@@ -13,18 +13,134 @@
     "pct_today_max": 7.0,
     "bias_5_max": 15.0
   },
-  "market_view": "09/10 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
+  "market_view": "09/11 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
   "summary": {
-    "theme_picks": 2,
+    "theme_picks": 5,
     "quant_picks": 0,
     "intersection": 0,
-    "total": 2
+    "total": 5
   },
   "picks": [
     {
       "rank": 1,
-      "code": "603083",
-      "name": "剑桥科技",
+      "code": "000636",
+      "name": "风华高科",
+      "score": 55,
+      "score_breakdown": {
+        "theme": 30,
+        "money": 0,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "元器件",
+      "themes": [
+        "MLCC",
+        "元器件",
+        "AI硬件",
+        "消费电子"
+      ],
+      "pct_chg_today": 10.0,
+      "ret_20d": 0,
+      "close": 55.99,
+      "thesis": "元器件 行业, 涨幅 +10.00%, 成交 0.10 亿, MLCC, 元器件",
+      "entry": "已涨停 (10.0%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 55.99",
+      "target": "突破前高/MA60 (60.47, +8%)",
+      "stop": "跌破 5日线 (54.31, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 2,
+      "code": "300408",
+      "name": "三环集团",
+      "score": 49,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 0,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "元器件",
+      "themes": [
+        "MLCC",
+        "元器件",
+        "AI硬件",
+        "消费电子"
+      ],
+      "pct_chg_today": 5.6585,
+      "ret_20d": 0,
+      "close": 124.36,
+      "thesis": "元器件 行业, 涨幅 +5.66%, 成交 0.09 亿, MLCC, 元器件",
+      "entry": "现价 124.36, 突破 126.85 加仓",
+      "target": "突破前高/MA60 (134.31, +8%)",
+      "stop": "跌破 5日线 (120.63, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 3,
+      "code": "600869",
+      "name": "远东股份",
+      "score": 49,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 0,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "电气设备",
+      "themes": [
+        "储能",
+        "电池",
+        "钠电池",
+        "新型电力"
+      ],
+      "pct_chg_today": 5.1867,
+      "ret_20d": 0,
+      "close": 25.35,
+      "thesis": "电气设备 行业, 涨幅 +5.19%, 成交 0.09 亿, 储能, 电池",
+      "entry": "现价 25.35, 突破 25.86 加仓",
+      "target": "突破前高/MA60 (27.38, +8%)",
+      "stop": "跌破 5日线 (24.59, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 4,
+      "code": "002636",
+      "name": "金安国纪",
+      "score": 49,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 0,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "元器件",
+      "themes": [
+        "MLCC",
+        "元器件",
+        "AI硬件",
+        "消费电子"
+      ],
+      "pct_chg_today": 7.8613,
+      "ret_20d": 0,
+      "close": 82.46,
+      "thesis": "元器件 行业, 涨幅 +7.86%, 成交 0.09 亿, MLCC, 元器件",
+      "entry": "现价 82.46, 突破 84.11 加仓",
+      "target": "突破前高/MA60 (89.06, +8%)",
+      "stop": "跌破 5日线 (79.99, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 5,
+      "code": "601869",
+      "name": "长飞光纤",
       "score": 49,
       "score_breakdown": {
         "theme": 24,
@@ -39,39 +155,13 @@
         "光模块",
         "5G"
       ],
-      "pct_chg_today": 7.0506,
+      "pct_chg_today": 8.7782,
       "ret_20d": 0,
-      "close": 234.43,
-      "thesis": "通信设备 行业, 涨幅 +7.05%, 成交 0.07 亿, AI算力, 服务器",
-      "entry": "现价 234.43, 突破 239.12 加仓",
-      "target": "突破前高/MA60 (253.18, +8%)",
-      "stop": "跌破 5日线 (227.40, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🔥 仅精选"
-    },
-    {
-      "rank": 2,
-      "code": "301526",
-      "name": "国际复材",
-      "score": 21,
-      "score_breakdown": {
-        "theme": 8,
-        "money": 0,
-        "tech": 5,
-        "event": 8
-      },
-      "industry": "玻璃",
-      "themes": [
-        "玻璃"
-      ],
-      "pct_chg_today": 6.7877,
-      "ret_20d": 0,
-      "close": 29.42,
-      "thesis": "玻璃 行业, 涨幅 +6.79%, 成交 0.06 亿, 玻璃",
-      "entry": "现价 29.42, 突破 30.01 加仓",
-      "target": "突破前高/MA60 (31.77, +8%)",
-      "stop": "跌破 5日线 (28.54, -3%)",
+      "close": 473.99,
+      "thesis": "通信设备 行业, 涨幅 +8.78%, 成交 0.08 亿, AI算力, 服务器",
+      "entry": "现价 473.99, 突破 483.47 加仓",
+      "target": "突破前高/MA60 (511.91, +8%)",
+      "stop": "跌破 5日线 (459.77, -3%)",
       "risk_level": "中",
       "source": "theme",
       "tag": "🔥 仅精选"
@@ -81,9 +171,9 @@
   "intersection": [],
   "filtered_out": [
     {
-      "code": "301689",
-      "name": "N电科思仪",
-      "reason": "新股首日 (238%, 无 20 日 K 线)"
+      "code": "688801",
+      "name": "N燧原",
+      "reason": "新股首日 (179%, 无 20 日 K 线)"
     }
   ],
   "risk_warning": "本榜单基于 Tushare 当日真实数据动态生成, 仅供参考, 不构成投资建议. 投资有风险, 入市需谨慎."
