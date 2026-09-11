@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-11",
-  "update_time": "23:09",
+  "date": "2026-09-12",
+  "update_time": "00:01",
   "version": "1.4-dynamic-auto",
   "weights": {
     "theme": 30,
@@ -13,7 +13,7 @@
     "pct_today_max": 7.0,
     "bias_5_max": 15.0
   },
-  "market_view": "09/11 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
+  "market_view": "09/12 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
   "summary": {
     "theme_picks": 5,
     "quant_picks": 0,
