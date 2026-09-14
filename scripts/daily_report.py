@@ -56,11 +56,85 @@ _name_cache = {}
 
 
 def get_target_date():
+    """智能判定报告日期 — 支持任意时间调用 (盘前/盘中/盘后)
+
+    优先级:
+    1. 环境变量 VIBE_AS_OF_DATE 显式指定 (如 2026-09-11)
+    2. data/last_update.txt 记录的最近数据日期 (推荐 — 用最新可得数据)
+    3. 兜底: 17:00 后用今天,否则用昨天 (旧逻辑)
+    """
+    # 1. 环境变量优先
+    as_of = os.environ.get('VIBE_AS_OF_DATE')
+    if as_of:
+        try:
+            target = datetime.strptime(as_of, '%Y-%m-%d').date()
+            while target.weekday() >= 5:
+                target -= timedelta(days=1)
+            return target.strftime('%Y-%m-%d')
+        except ValueError:
+            print(f"  ⚠️ VIBE_AS_OF_DATE 格式错误: {as_of},回退到 last_update.txt")
+
+    # 2. 读 last_update.txt (data/last_update.txt 格式: 2026-09-11T17:30:00)
+    try:
+        last_update_path = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))) if False else '.',
+            'data', 'last_update.txt'
+        )
+        if os.path.exists(last_update_path):
+            with open(last_update_path, 'r', encoding='utf-8') as f:
+                raw = f.read().strip()
+            # 解析 "2026-09-11T17:30:00" 或 "2026-09-11" 都行
+            date_part = raw.split('T')[0].split()[0]
+            target = datetime.strptime(date_part, '%Y-%m-%d').date()
+            # 数据龄期警告 (不阻止)
+            age = (now.date() - target).days
+            if age == 0:
+                pass  # 当天数据,正常
+            elif age == 1:
+                print(f"  ℹ️ 数据为昨日 ({target}),今天数据将在 22:00 北京前自动更新")
+            else:
+                print(f"  ⚠️ 数据已陈旧 {age} 天 ({target}),请检查 daily.yml 是否正常")
+            while target.weekday() >= 5:
+                target -= timedelta(days=1)
+            return target.strftime('%Y-%m-%d')
+    except Exception as e:
+        print(f"  ⚠️ 读 last_update.txt 失败: {e}")
+
+    # 3. 兜底: 17:00 后用今天,否则用昨天 (旧逻辑)
     today = now.date()
     target = today if now.hour >= 17 else (today - timedelta(days=1))
     while target.weekday() >= 5:
         target -= timedelta(days=1)
     return target.strftime('%Y-%m-%d')
+
+
+def get_session_label():
+    """根据 VIBE_SESSION 环境变量返回报告后缀;未设则根据当前时间自动判断"""
+    session = os.environ.get('VIBE_SESSION')
+    if session:
+        mapping = {
+            'pre_market': '盘前预判',
+            'intraday_morning': '盘中快报(上午)',
+            'lunch': '午间快报',
+            'intraday_afternoon': '盘中快报(下午)',
+            'post_close': '盘后复盘',
+            'after_hours': '盘后分析',
+        }
+        return mapping.get(session, session)
+    # 自动判断
+    h = now.hour
+    if h < 9:
+        return '盘前预判'
+    elif 9 <= h < 11.5:
+        return '盘中快报(上午)'
+    elif 11.5 <= h < 13:
+        return '午间快报'
+    elif 13 <= h < 15:
+        return '盘中快报(下午)'
+    elif 15 <= h < 17:
+        return '盘后复盘'
+    else:
+        return '盘后分析'
 
 
 def extract_holdings_list(raw):
@@ -1013,8 +1087,15 @@ def generate_report():
 
 
 if __name__ == '__main__':
+    # 智能 wrapper 支持:任意时段调用,不再硬性要求"今天数据"
+    # 用法:
+    #   python scripts/daily_report.py                                          # 自动判断
+    #   VIBE_AS_OF_DATE=2026-09-11 python scripts/daily_report.py              # 指定日期
+    #   VIBE_SESSION=intraday_afternoon python scripts/daily_report.py          # 指定时段
     try:
         path, date = generate_report()
+        session_label = get_session_label()
+        print(f"\n📊 报告类型: {session_label} | 报告日期: {date}")
     except Exception as e:
         import traceback
         print(f"\n❌ 失败: {e}")
