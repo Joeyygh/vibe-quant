@@ -1,134 +1,315 @@
 {
   "date": "2026-09-14",
   "update_time": "17:30 (盘后)",
-  "actual_run_time": "09:08",
+  "actual_run_time": "22:05",
   "version": "v3.3 (大小盘风格+量能+逆动量+修复iloc[0]bug)",
-  "data_source": "20260911 行情 + 资金流 + 板块",
+  "data_source": "20260914 行情 + 资金流 + 板块",
   "market": {
-    "status": "🔴 熊市 (大盘-1.95%, 跌停33家, 风格unknown), 只允许抄底",
-    "market_pct": -1.945482869214519,
-    "up_ratio": 0.1161897445746111,
-    "up_limit": 47,
-    "down_limit": 33,
+    "status": "🟢 普涨 (大盘+0.56%, 涨家56%, 风格unknown, 量能contraction), 全部允许",
+    "market_pct": 0.5565037833685423,
+    "up_ratio": 0.564432494718648,
+    "up_limit": 87,
+    "down_limit": 21,
     "hot_industries": [],
     "market_style": "unknown",
     "large_cap_pct": 0.0,
     "small_cap_pct": 0.0,
-    "volume_status": "normal",
-    "volume_ratio_avg": 1.1318028060734193,
+    "volume_status": "contraction",
+    "volume_ratio_avg": 0.9351191391237509,
     "bias_small_cap": false
   },
   "strategies": {
-    "A_保守稳健": [],
-    "B_趋势跟随": [],
-    "C_抄底反弹": [
+    "A_保守稳健": [
       {
-        "code": "601336",
-        "name": "新华保险",
-        "pct_chg": -2.3778,
-        "industry": "保险",
-        "close": 58.3,
+        "code": "688002",
+        "name": "睿创微纳",
+        "pct_chg": 0.5028,
+        "industry": "通信设备",
+        "close": 177.89,
+        "money_3d": 6.223545999999999,
         "money_1d": 0.0,
-        "volume_ratio": 0.92,
+        "volume_ratio": 0.78,
         "in_hot_industry": false,
         "score": 100
       },
       {
-        "code": "601997",
-        "name": "贵阳银行",
-        "pct_chg": -1.7483,
-        "industry": "银行",
-        "close": 5.62,
+        "code": "603186",
+        "name": "华正新材",
+        "pct_chg": 0.4215,
+        "industry": "元器件",
+        "close": 228.7,
+        "money_3d": 1.5986640000000014,
+        "money_1d": 0.0,
+        "volume_ratio": 0.88,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "002600",
+        "name": "领益智造",
+        "pct_chg": 0.6107,
+        "industry": "元器件",
+        "close": 13.18,
+        "money_3d": 1.0974020000000004,
+        "money_1d": 0.0,
+        "volume_ratio": 1.3,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "605258",
+        "name": "协和电子",
+        "pct_chg": 0.8341,
+        "industry": "元器件",
+        "close": 35.06,
+        "money_3d": 0.7476849999999998,
+        "money_1d": 0.0,
+        "volume_ratio": 3.17,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "603267",
+        "name": "鸿远电子",
+        "pct_chg": 0.3586,
+        "industry": "元器件",
+        "close": 50.38,
+        "money_3d": 0.4350699999999999,
+        "money_1d": 0.0,
+        "volume_ratio": 2.02,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "600988",
+        "name": "赤峰黄金",
+        "pct_chg": 0.2027,
+        "industry": "黄金",
+        "close": 44.48,
+        "money_3d": 0.4134430000000008,
+        "money_1d": 0.0,
+        "volume_ratio": 0.85,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "601778",
+        "name": "晶科科技",
+        "pct_chg": 0.8523,
+        "industry": "新型电力",
+        "close": 3.55,
+        "money_3d": 0.33601400000000015,
+        "money_1d": 0.0,
+        "volume_ratio": 1.01,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "600026",
+        "name": "中远海能",
+        "pct_chg": 0.1918,
+        "industry": "水运",
+        "close": 20.9,
+        "money_3d": 0.2997139999999999,
+        "money_1d": 0.0,
+        "volume_ratio": 1.17,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "300410",
+        "name": "正业科技",
+        "pct_chg": 0.8092,
+        "industry": "专用机械",
+        "close": 8.72,
+        "money_3d": 0.286804,
+        "money_1d": 0.0,
+        "volume_ratio": 2.01,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "301550",
+        "name": "斯菱智驱",
+        "pct_chg": 0.5362,
+        "industry": "汽车配件",
+        "close": 90.0,
+        "money_3d": 0.2685220000000001,
+        "money_1d": 0.0,
+        "volume_ratio": 0.84,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "688025",
+        "name": "杰普特",
+        "pct_chg": 0.3088,
+        "industry": "专用机械",
+        "close": 393.0,
+        "money_3d": 0.20637500000000072,
+        "money_1d": 0.0,
+        "volume_ratio": 0.71,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "000554",
+        "name": "泰山石油",
+        "pct_chg": 0.1502,
+        "industry": "石油贸易",
+        "close": 6.67,
+        "money_3d": 0.13491400000000003,
+        "money_1d": 0.0,
+        "volume_ratio": 0.85,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "000539",
+        "name": "粤电力A",
+        "pct_chg": 0.1862,
+        "industry": "火力发电",
+        "close": 5.38,
+        "money_3d": 0.13216100000000006,
         "money_1d": 0.0,
         "volume_ratio": 0.97,
         "in_hot_industry": false,
         "score": 100
       },
       {
-        "code": "601601",
-        "name": "中国太保",
-        "pct_chg": -1.9625,
-        "industry": "保险",
-        "close": 32.97,
+        "code": "000690",
+        "name": "宝新能源",
+        "pct_chg": 0.1901,
+        "industry": "火力发电",
+        "close": 5.27,
+        "money_3d": 0.11613000000000011,
         "money_1d": 0.0,
-        "volume_ratio": 0.9,
+        "volume_ratio": 0.71,
         "in_hot_industry": false,
         "score": 100
       },
       {
-        "code": "601577",
-        "name": "长沙银行",
-        "pct_chg": -1.7804,
-        "industry": "银行",
-        "close": 9.93,
+        "code": "600551",
+        "name": "时代出版",
+        "pct_chg": 0.8011,
+        "industry": "出版业",
+        "close": 7.55,
+        "money_3d": 0.1157,
         "money_1d": 0.0,
-        "volume_ratio": 0.93,
+        "volume_ratio": 0.39,
+        "in_hot_industry": false,
+        "score": 100
+      }
+    ],
+    "B_趋势跟随": [],
+    "C_抄底反弹": [
+      {
+        "code": "002432",
+        "name": "九安医疗",
+        "pct_chg": -3.5831,
+        "industry": "医疗保健",
+        "close": 59.2,
+        "money_1d": 0.0,
+        "volume_ratio": 0.78,
         "in_hot_industry": false,
         "score": 100
       },
       {
-        "code": "603833",
-        "name": "欧派家居",
-        "pct_chg": -2.4116,
-        "industry": "家居用品",
-        "close": 29.54,
+        "code": "002379",
+        "name": "宏桥控股",
+        "pct_chg": -3.1938,
+        "industry": "铝",
+        "close": 17.58,
         "money_1d": 0.0,
-        "volume_ratio": 0.91,
+        "volume_ratio": 0.69,
         "in_hot_industry": false,
         "score": 100
       },
       {
-        "code": "002572",
-        "name": "索菲亚",
-        "pct_chg": -2.086,
-        "industry": "家居用品",
-        "close": 7.51,
+        "code": "603112",
+        "name": "华翔股份",
+        "pct_chg": -2.9394,
+        "industry": "机械基件",
+        "close": 15.85,
         "money_1d": 0.0,
-        "volume_ratio": 0.76,
+        "volume_ratio": 0.85,
         "in_hot_industry": false,
         "score": 100
       },
       {
-        "code": "600015",
-        "name": "华夏银行",
-        "pct_chg": -1.2442,
-        "industry": "银行",
-        "close": 6.35,
+        "code": "000902",
+        "name": "新洋丰",
+        "pct_chg": -2.0451,
+        "industry": "农药化肥",
+        "close": 13.89,
         "money_1d": 0.0,
-        "volume_ratio": 0.89,
+        "volume_ratio": 0.71,
         "in_hot_industry": false,
         "score": 100
       },
       {
-        "code": "603613",
-        "name": "国联股份",
-        "pct_chg": -2.3737,
-        "industry": "互联网",
-        "close": 19.33,
+        "code": "603486",
+        "name": "科沃斯",
+        "pct_chg": -2.9343,
+        "industry": "家用电器",
+        "close": 49.95,
         "money_1d": 0.0,
-        "volume_ratio": 0.48,
+        "volume_ratio": 0.92,
         "in_hot_industry": false,
         "score": 100
       },
       {
-        "code": "002948",
-        "name": "青岛银行",
-        "pct_chg": -1.7323,
-        "industry": "银行",
-        "close": 6.24,
+        "code": "600269",
+        "name": "赣粤高速",
+        "pct_chg": -1.2853,
+        "industry": "路桥",
+        "close": 3.84,
         "money_1d": 0.0,
-        "volume_ratio": 0.96,
+        "volume_ratio": 0.95,
         "in_hot_industry": false,
         "score": 100
       },
       {
-        "code": "601390",
-        "name": "中国中铁",
-        "pct_chg": -1.3483,
-        "industry": "建筑工程",
-        "close": 4.39,
+        "code": "002758",
+        "name": "浙农股份",
+        "pct_chg": -1.1325,
+        "industry": "批发业",
+        "close": 8.73,
         "money_1d": 0.0,
-        "volume_ratio": 0.84,
+        "volume_ratio": 0.62,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "600598",
+        "name": "北大荒",
+        "pct_chg": -2.7607,
+        "industry": "种植业",
+        "close": 12.68,
+        "money_1d": 0.0,
+        "volume_ratio": 0.56,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "601600",
+        "name": "中国铝业",
+        "pct_chg": -1.589,
+        "industry": "铝",
+        "close": 9.29,
+        "money_1d": 0.0,
+        "volume_ratio": 0.85,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "600711",
+        "name": "盛屯矿业",
+        "pct_chg": -2.3894,
+        "industry": "小金属",
+        "close": 11.03,
+        "money_1d": 0.0,
+        "volume_ratio": 0.49,
         "in_hot_industry": false,
         "score": 100
       }
@@ -140,11 +321,11 @@
       "code": "000756",
       "name": "新华制药",
       "cost": 14.595,
-      "close": 12.81,
-      "ret": -12.23021582733813,
-      "pct_today": -2.4372,
+      "close": 13.0,
+      "ret": -10.928400137033234,
+      "pct_today": 1.4832,
       "signals": [
-        "✅ 持有 (浮-12.2%)"
+        "✅ 持有 (浮-10.9%)"
       ],
       "group": "deep_loss",
       "money_1d": 0,
@@ -155,11 +336,11 @@
       "code": "000963",
       "name": "华东医药",
       "cost": 29.923,
-      "close": 26.26,
-      "ret": -12.241419643752288,
-      "pct_today": -1.3524,
+      "close": 26.46,
+      "ret": -11.573037462821233,
+      "pct_today": 0.7616,
       "signals": [
-        "✅ 持有 (浮-12.2%)"
+        "✅ 持有 (浮-11.6%)"
       ],
       "group": "deep_loss",
       "money_1d": 0,
@@ -170,11 +351,11 @@
       "code": "300383",
       "name": "光环新网",
       "cost": 13.72,
-      "close": 10.91,
-      "ret": -20.48104956268222,
-      "pct_today": -1.6231,
+      "close": 10.95,
+      "ret": -20.18950437317785,
+      "pct_today": 0.3666,
       "signals": [
-        "🚨 深套 -20.5%, 慎加仓"
+        "🚨 深套 -20.2%, 慎加仓"
       ],
       "group": "deep_loss",
       "money_1d": 0,
@@ -185,11 +366,11 @@
       "code": "603259",
       "name": "药明康德",
       "cost": 170.902,
-      "close": 151.24,
-      "ret": -11.50483903055551,
-      "pct_today": -2.11,
+      "close": 158.86,
+      "ret": -7.046143403822058,
+      "pct_today": 5.0383,
       "signals": [
-        "✅ 持有 (浮-11.5%)"
+        "✅ 持有 (浮-7.0%)"
       ],
       "group": "deep_loss",
       "money_1d": 0,
@@ -200,12 +381,11 @@
       "code": "001399",
       "name": "惠科股份",
       "cost": 25.741,
-      "close": 19.44,
-      "ret": -24.478458490346135,
-      "pct_today": -3.7147,
+      "close": 20.26,
+      "ret": -21.2928790645274,
+      "pct_today": 4.2181,
       "signals": [
-        "🚨 深套 -24.5%, 慎加仓",
-        "⚠️ 继续下跌, 考虑止损"
+        "🚨 深套 -21.3%, 慎加仓"
       ],
       "group": "deep_loss",
       "money_1d": 0,
@@ -216,11 +396,11 @@
       "code": "002326",
       "name": "永太科技",
       "cost": 21.801,
-      "close": 16.96,
-      "ret": -22.205403421861373,
-      "pct_today": -2.135,
+      "close": 17.1,
+      "ret": -21.56323104444749,
+      "pct_today": 0.8255,
       "signals": [
-        "🚨 深套 -22.2%, 慎加仓"
+        "🚨 深套 -21.6%, 慎加仓"
       ],
       "group": "deep_loss",
       "money_1d": 0,
@@ -231,11 +411,11 @@
       "code": "600143",
       "name": "金发科技",
       "cost": 16.333,
-      "close": 13.23,
-      "ret": -18.99834690503887,
-      "pct_today": -1.4158,
+      "close": 13.15,
+      "ret": -19.488152819445283,
+      "pct_today": -0.6047,
       "signals": [
-        "🚨 深套 -19.0%, 慎加仓"
+        "🚨 深套 -19.5%, 慎加仓"
       ],
       "group": "deep_loss",
       "money_1d": 0,
@@ -246,12 +426,11 @@
       "code": "300759",
       "name": "康龙化成",
       "cost": 50.626,
-      "close": 40.28,
-      "ret": -20.436139533046255,
-      "pct_today": -3.0566,
+      "close": 42.65,
+      "ret": -15.754750523446448,
+      "pct_today": 5.8838,
       "signals": [
-        "🚨 深套 -20.4%, 慎加仓",
-        "⚠️ 继续下跌, 考虑止损"
+        "🚨 深套 -15.8%, 慎加仓"
       ],
       "group": "deep_loss",
       "money_1d": 0,
@@ -262,9 +441,9 @@
       "code": "300766",
       "name": "智立方",
       "cost": 82.97,
-      "close": 22.06,
-      "ret": -73.41207665421237,
-      "pct_today": -2.6049,
+      "close": 22.1,
+      "ret": -73.3638664577558,
+      "pct_today": 0.1813,
       "signals": [
         "🚨 深套 -73.4%, 慎加仓"
       ],
@@ -277,11 +456,11 @@
       "code": "300239",
       "name": "东宝生物",
       "cost": 5.273,
-      "close": 4.93,
-      "ret": -6.504835956760857,
-      "pct_today": -2.7613,
+      "close": 4.99,
+      "ret": -5.3669637777356245,
+      "pct_today": 1.217,
       "signals": [
-        "✅ 持有 (浮-6.5%)"
+        "✅ 持有 (浮-5.4%)"
       ],
       "group": "shallow_loss",
       "money_1d": 0,
@@ -292,11 +471,11 @@
       "code": "002812",
       "name": "恩捷股份",
       "cost": 54.72,
-      "close": 47.17,
-      "ret": -13.797514619883037,
-      "pct_today": -2.9224,
+      "close": 48.09,
+      "ret": -12.116228070175431,
+      "pct_today": 1.9504,
       "signals": [
-        "✅ 持有 (浮-13.8%)"
+        "✅ 持有 (浮-12.1%)"
       ],
       "group": "shallow_loss",
       "money_1d": 0,
@@ -307,11 +486,11 @@
       "code": "001206",
       "name": "依依股份",
       "cost": 17.085,
-      "close": 15.98,
-      "ret": -6.467661691542291,
-      "pct_today": -3.2688,
+      "close": 16.12,
+      "ret": -5.648229441030142,
+      "pct_today": 0.8761,
       "signals": [
-        "⚠️ 继续下跌, 考虑止损"
+        "✅ 持有 (浮-5.6%)"
       ],
       "group": "shallow_loss",
       "money_1d": 0,
@@ -322,11 +501,11 @@
       "code": "002023",
       "name": "海特高新",
       "cost": 10.61,
-      "close": 9.67,
-      "ret": -8.859566446748346,
-      "pct_today": 0.5198,
+      "close": 9.56,
+      "ret": -9.896324222431659,
+      "pct_today": -1.1375,
       "signals": [
-        "✅ 持有 (浮-8.9%)"
+        "✅ 持有 (浮-9.9%)"
       ],
       "group": "shallow_loss",
       "money_1d": 0,
@@ -337,11 +516,11 @@
       "code": "600563",
       "name": "法拉电子",
       "cost": 136.541,
-      "close": 123.01,
-      "ret": -9.909843929662147,
-      "pct_today": 0.77,
+      "close": 124.82,
+      "ret": -8.584234771973257,
+      "pct_today": 1.4714,
       "signals": [
-        "✅ 持有 (浮-9.9%)"
+        "✅ 持有 (浮-8.6%)"
       ],
       "group": "shallow_loss",
       "money_1d": 0,
@@ -352,11 +531,11 @@
       "code": "300470",
       "name": "中密控股",
       "cost": 30.49,
-      "close": 27.19,
-      "ret": -10.823220728107568,
-      "pct_today": -0.8388,
+      "close": 27.14,
+      "ret": -10.987208920957684,
+      "pct_today": -0.1839,
       "signals": [
-        "✅ 持有 (浮-10.8%)"
+        "✅ 持有 (浮-11.0%)"
       ],
       "group": "shallow_loss",
       "money_1d": 0,
@@ -367,11 +546,11 @@
       "code": "002073",
       "name": "软控股份",
       "cost": 5.958,
-      "close": 5.71,
-      "ret": -4.162470627727429,
-      "pct_today": -1.5517,
+      "close": 5.72,
+      "ret": -3.9946290701577785,
+      "pct_today": 0.1751,
       "signals": [
-        "✅ 持有 (浮-4.2%)"
+        "✅ 持有 (浮-4.0%)"
       ],
       "group": "mild_profit",
       "money_1d": 0,
@@ -382,11 +561,11 @@
       "code": "002518",
       "name": "科士达",
       "cost": 35.733,
-      "close": 34.74,
-      "ret": -2.778943833431268,
-      "pct_today": -1.5864,
+      "close": 37.1,
+      "ret": 3.825595388016692,
+      "pct_today": 6.7933,
       "signals": [
-        "✅ 持有 (浮-2.8%)"
+        "✅ 持有 (浮+3.8%)"
       ],
       "group": "mild_profit",
       "money_1d": 0,
@@ -397,11 +576,11 @@
       "code": "000683",
       "name": "博源化工",
       "cost": 6.216,
-      "close": 5.91,
-      "ret": -4.922779922779923,
-      "pct_today": -3.5889,
+      "close": 5.88,
+      "ret": -5.40540540540541,
+      "pct_today": -0.5076,
       "signals": [
-        "✅ 持有 (浮-4.9%)"
+        "✅ 持有 (浮-5.4%)"
       ],
       "group": "mild_profit",
       "money_1d": 0,
@@ -412,11 +591,11 @@
       "code": "002837",
       "name": "英维克",
       "cost": 67.267,
-      "close": 60.55,
-      "ret": -9.985579853419953,
-      "pct_today": -0.8677,
+      "close": 60.01,
+      "ret": -10.788350900144199,
+      "pct_today": -0.8918,
       "signals": [
-        "✅ 持有 (浮-10.0%)"
+        "✅ 持有 (浮-10.8%)"
       ],
       "group": "mild_profit",
       "money_1d": 0,
@@ -427,11 +606,11 @@
       "code": "300154",
       "name": "瑞凌股份",
       "cost": 12.326,
-      "close": 12.63,
-      "ret": 2.466331332143439,
-      "pct_today": -3.8813,
+      "close": 13.74,
+      "ret": 11.47168586727243,
+      "pct_today": 8.7886,
       "signals": [
-        "✅ 持有 (浮+2.5%)"
+        "✅ 持有 (浮+11.5%)"
       ],
       "group": "mild_profit",
       "money_1d": 0,
@@ -442,11 +621,11 @@
       "code": "600309",
       "name": "万华化学",
       "cost": 75.181,
-      "close": 74.5,
-      "ret": -0.9058139689549186,
-      "pct_today": -2.4103,
+      "close": 73.51,
+      "ret": -2.2226360383607457,
+      "pct_today": -1.3289,
       "signals": [
-        "✅ 持有 (浮-0.9%)"
+        "✅ 持有 (浮-2.2%)"
       ],
       "group": "mild_profit",
       "money_1d": 0,
@@ -457,11 +636,11 @@
       "code": "600444",
       "name": "国机通用",
       "cost": 14.524,
-      "close": 13.89,
-      "ret": -4.365188653263554,
-      "pct_today": -2.5947,
+      "close": 13.93,
+      "ret": -4.089782429082893,
+      "pct_today": 0.288,
       "signals": [
-        "✅ 持有 (浮-4.4%)"
+        "✅ 持有 (浮-4.1%)"
       ],
       "group": "mild_profit",
       "money_1d": 0,
@@ -472,11 +651,11 @@
       "code": "002241",
       "name": "歌尔股份",
       "cost": 23.863,
-      "close": 22.24,
-      "ret": -6.801324225788882,
-      "pct_today": -1.2872,
+      "close": 22.06,
+      "ret": -7.555630054896706,
+      "pct_today": -0.8094,
       "signals": [
-        "✅ 持有 (浮-6.8%)"
+        "✅ 持有 (浮-7.6%)"
       ],
       "group": "mild_profit",
       "money_1d": 0,
@@ -487,11 +666,11 @@
       "code": "601975",
       "name": "招商南油",
       "cost": 4.083,
-      "close": 4.65,
-      "ret": 13.88684790595151,
-      "pct_today": -3.7267,
+      "close": 4.58,
+      "ret": 12.172422238550082,
+      "pct_today": -1.5054,
       "signals": [
-        "✅ 持有 (浮+13.9%)"
+        "✅ 持有 (浮+12.2%)"
       ],
       "group": "mild_profit",
       "money_1d": 0,
@@ -502,11 +681,11 @@
       "code": "600096",
       "name": "云天化",
       "cost": 30.258,
-      "close": 29.31,
-      "ret": -3.133055720801112,
-      "pct_today": -4.4343,
+      "close": 29.01,
+      "ret": -4.124529050168543,
+      "pct_today": -1.0235,
       "signals": [
-        "✅ 持有 (浮-3.1%)"
+        "✅ 持有 (浮-4.1%)"
       ],
       "group": "mild_profit",
       "money_1d": 0,
@@ -517,11 +696,11 @@
       "code": "301387",
       "name": "强达电路",
       "cost": 91.619,
-      "close": 53.85,
-      "ret": -41.22398192514653,
-      "pct_today": -2.1798,
+      "close": 54.6,
+      "ret": -40.40537443106779,
+      "pct_today": 1.3928,
       "signals": [
-        "🚨 深套 -41.2%, 慎加仓"
+        "🚨 深套 -40.4%, 慎加仓"
       ],
       "group": "high_profit",
       "money_1d": 0,
@@ -531,7 +710,7 @@
   ],
   "summary": {
     "strategies": {
-      "A_保守稳健": 0,
+      "A_保守稳健": 15,
       "B_趋势跟随": 0,
       "C_抄底反弹": 10
     },
