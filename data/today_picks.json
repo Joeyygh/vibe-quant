@@ -1,6 +1,6 @@
 {
   "date": "2026-09-15",
-  "update_time": "02:04",
+  "update_time": "19:39",
   "version": "1.4-dynamic-auto",
   "weights": {
     "theme": 30,
@@ -15,20 +15,78 @@
   },
   "market_view": "09/15 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
   "summary": {
-    "theme_picks": 2,
+    "theme_picks": 3,
     "quant_picks": 0,
     "intersection": 0,
-    "total": 2
+    "total": 3
   },
   "picks": [
     {
       "rank": 1,
-      "code": "000636",
-      "name": "风华高科",
-      "score": 53,
+      "code": "000657",
+      "name": "中钨高新",
+      "score": 49,
       "score_breakdown": {
         "theme": 24,
-        "money": 4,
+        "money": 0,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "小金属",
+      "themes": [
+        "钨",
+        "稀土",
+        "战略金属",
+        "军工"
+      ],
+      "pct_chg_today": 5.1715,
+      "ret_20d": 0,
+      "close": 62.23,
+      "thesis": "小金属 行业, 涨幅 +5.17%, 成交 0.06 亿, 钨, 稀土",
+      "entry": "现价 62.23, 突破 63.47 加仓",
+      "target": "突破前高/MA60 (67.21, +8%)",
+      "stop": "跌破 5日线 (60.36, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 2,
+      "code": "002491",
+      "name": "通鼎互联",
+      "score": 55,
+      "score_breakdown": {
+        "theme": 30,
+        "money": 0,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "通信设备",
+      "themes": [
+        "AI算力",
+        "服务器",
+        "光模块",
+        "5G"
+      ],
+      "pct_chg_today": 9.9951,
+      "ret_20d": 0,
+      "close": 22.23,
+      "thesis": "通信设备 行业, 涨幅 +10.00%, 成交 0.06 亿, AI算力, 服务器",
+      "entry": "已涨停 (10.0%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 22.23",
+      "target": "突破前高/MA60 (24.01, +8%)",
+      "stop": "跌破 5日线 (21.56, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 3,
+      "code": "000823",
+      "name": "超声电子",
+      "score": 49,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 0,
         "tech": 5,
         "event": 20
       },
@@ -39,39 +97,13 @@
         "AI硬件",
         "消费电子"
       ],
-      "pct_chg_today": 5.1974,
+      "pct_chg_today": 5.612,
       "ret_20d": 0,
-      "close": 58.9,
-      "thesis": "元器件 行业, 涨幅 +5.20%, 成交 0.13 亿, MLCC, 元器件",
-      "entry": "现价 58.90, 突破 60.08 加仓",
-      "target": "突破前高/MA60 (63.61, +8%)",
-      "stop": "跌破 5日线 (57.13, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🔥 仅精选"
-    },
-    {
-      "rank": 2,
-      "code": "603259",
-      "name": "药明康德",
-      "score": 21,
-      "score_breakdown": {
-        "theme": 8,
-        "money": 0,
-        "tech": 5,
-        "event": 8
-      },
-      "industry": "化学制药",
-      "themes": [
-        "化学制药"
-      ],
-      "pct_chg_today": 5.0383,
-      "ret_20d": 0,
-      "close": 158.86,
-      "thesis": "化学制药 行业, 涨幅 +5.04%, 成交 0.07 亿, 化学制药",
-      "entry": "现价 158.86, 突破 162.04 加仓",
-      "target": "突破前高/MA60 (171.57, +8%)",
-      "stop": "跌破 5日线 (154.09, -3%)",
+      "close": 23.9,
+      "thesis": "元器件 行业, 涨幅 +5.61%, 成交 0.06 亿, MLCC, 元器件",
+      "entry": "现价 23.90, 突破 24.38 加仓",
+      "target": "突破前高/MA60 (25.81, +8%)",
+      "stop": "跌破 5日线 (23.18, -3%)",
       "risk_level": "中",
       "source": "theme",
       "tag": "🔥 仅精选"
