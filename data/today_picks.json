@@ -1,6 +1,6 @@
 {
   "date": "2026-09-16",
-  "update_time": "07:04",
+  "update_time": "22:32",
   "version": "1.4-dynamic-auto",
   "weights": {
     "theme": 30,
@@ -15,49 +15,20 @@
   },
   "market_view": "09/16 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
   "summary": {
-    "theme_picks": 3,
+    "theme_picks": 5,
     "quant_picks": 0,
     "intersection": 0,
-    "total": 3
+    "total": 5
   },
   "picks": [
     {
       "rank": 1,
-      "code": "000657",
-      "name": "中钨高新",
-      "score": 49,
+      "code": "300308",
+      "name": "中际旭创",
+      "score": 53,
       "score_breakdown": {
         "theme": 24,
-        "money": 0,
-        "tech": 5,
-        "event": 20
-      },
-      "industry": "小金属",
-      "themes": [
-        "钨",
-        "稀土",
-        "战略金属",
-        "军工"
-      ],
-      "pct_chg_today": 5.1715,
-      "ret_20d": 0,
-      "close": 62.23,
-      "thesis": "小金属 行业, 涨幅 +5.17%, 成交 0.06 亿, 钨, 稀土",
-      "entry": "现价 62.23, 突破 63.47 加仓",
-      "target": "突破前高/MA60 (67.21, +8%)",
-      "stop": "跌破 5日线 (60.36, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🔥 仅精选"
-    },
-    {
-      "rank": 2,
-      "code": "002491",
-      "name": "通鼎互联",
-      "score": 55,
-      "score_breakdown": {
-        "theme": 30,
-        "money": 0,
+        "money": 4,
         "tech": 5,
         "event": 20
       },
@@ -68,25 +39,83 @@
         "光模块",
         "5G"
       ],
-      "pct_chg_today": 9.9951,
+      "pct_chg_today": 5.0682,
       "ret_20d": 0,
-      "close": 22.23,
-      "thesis": "通信设备 行业, 涨幅 +10.00%, 成交 0.06 亿, AI算力, 服务器",
-      "entry": "已涨停 (10.0%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 22.23",
-      "target": "突破前高/MA60 (24.01, +8%)",
-      "stop": "跌破 5日线 (21.56, -3%)",
+      "close": 907.8,
+      "thesis": "通信设备 行业, 涨幅 +5.07%, 成交 0.21 亿, AI算力, 服务器",
+      "entry": "现价 907.80, 突破 925.96 加仓",
+      "target": "突破前高/MA60 (980.42, +8%)",
+      "stop": "跌破 5日线 (880.57, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 2,
+      "code": "300502",
+      "name": "新易盛",
+      "score": 53,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 4,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "通信设备",
+      "themes": [
+        "AI算力",
+        "服务器",
+        "光模块",
+        "5G"
+      ],
+      "pct_chg_today": 6.7202,
+      "ret_20d": 0,
+      "close": 423.69,
+      "thesis": "通信设备 行业, 涨幅 +6.72%, 成交 0.16 亿, AI算力, 服务器",
+      "entry": "现价 423.69, 突破 432.16 加仓",
+      "target": "突破前高/MA60 (457.59, +8%)",
+      "stop": "跌破 5日线 (410.98, -3%)",
       "risk_level": "中",
       "source": "theme",
       "tag": "🔥 仅精选"
     },
     {
       "rank": 3,
-      "code": "000823",
-      "name": "超声电子",
-      "score": 49,
+      "code": "688256",
+      "name": "寒武纪",
+      "score": 53,
       "score_breakdown": {
         "theme": 24,
-        "money": 0,
+        "money": 4,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "半导体",
+      "themes": [
+        "半导体设备",
+        "存储芯片",
+        "AI算力",
+        "国产替代"
+      ],
+      "pct_chg_today": 5.5977,
+      "ret_20d": 0,
+      "close": 1136.01,
+      "thesis": "半导体 行业, 涨幅 +5.60%, 成交 0.15 亿, 半导体设备, 存储芯片",
+      "entry": "现价 1136.01, 突破 1158.73 加仓",
+      "target": "突破前高/MA60 (1226.89, +8%)",
+      "stop": "跌破 5日线 (1101.93, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 4,
+      "code": "002384",
+      "name": "东山精密",
+      "score": 53,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 4,
         "tech": 5,
         "event": 20
       },
@@ -97,13 +126,42 @@
         "AI硬件",
         "消费电子"
       ],
-      "pct_chg_today": 5.612,
+      "pct_chg_today": 5.0213,
       "ret_20d": 0,
-      "close": 23.9,
-      "thesis": "元器件 行业, 涨幅 +5.61%, 成交 0.06 亿, MLCC, 元器件",
-      "entry": "现价 23.90, 突破 24.38 加仓",
-      "target": "突破前高/MA60 (25.81, +8%)",
-      "stop": "跌破 5日线 (23.18, -3%)",
+      "close": 192.0,
+      "thesis": "元器件 行业, 涨幅 +5.02%, 成交 0.12 亿, MLCC, 元器件",
+      "entry": "现价 192.00, 突破 195.84 加仓",
+      "target": "突破前高/MA60 (207.36, +8%)",
+      "stop": "跌破 5日线 (186.24, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 5,
+      "code": "688012",
+      "name": "中微公司",
+      "score": 49,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 0,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "半导体",
+      "themes": [
+        "半导体设备",
+        "存储芯片",
+        "AI算力",
+        "国产替代"
+      ],
+      "pct_chg_today": 6.6546,
+      "ret_20d": 0,
+      "close": 352.6,
+      "thesis": "半导体 行业, 涨幅 +6.65%, 成交 0.07 亿, 半导体设备, 存储芯片",
+      "entry": "现价 352.60, 突破 359.65 加仓",
+      "target": "突破前高/MA60 (380.81, +8%)",
+      "stop": "跌破 5日线 (342.02, -3%)",
       "risk_level": "中",
       "source": "theme",
       "tag": "🔥 仅精选"
@@ -111,6 +169,12 @@
   ],
   "quant_picks": [],
   "intersection": [],
-  "filtered_out": [],
+  "filtered_out": [
+    {
+      "code": "688837",
+      "name": "N信诺维",
+      "reason": "新股首日 (46%, 无 20 日 K 线)"
+    }
+  ],
   "risk_warning": "本榜单基于 Tushare 当日真实数据动态生成, 仅供参考, 不构成投资建议. 投资有风险, 入市需谨慎."
 }
