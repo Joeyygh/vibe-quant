@@ -2,6 +2,7 @@ name: Daily Report
 
 # v2: 报告改为北京 21:00 出 (UTC 13) - 当天收盘复盘
 # 数据由 daily.yml 19:30 北京 (UTC 11:30) 提前拉好
+# v3 (2026-09-18): 增加 my_holdings.json 健康检查
 on:
   schedule:
     - cron: '0 13 * * 1-5'    # 北京 21:00 当日报告
@@ -27,6 +28,12 @@ jobs:
       - name: Install dependencies
         run: |
           pip install tushare pandas pyarrow yfinance numpy
+
+      - name: Health check: my_holdings.json
+        id: holdings
+        run: |
+          python scripts/check_holdings.py
+        continue-on-error: false
 
       - name: Fetch news & announcements
         env:
