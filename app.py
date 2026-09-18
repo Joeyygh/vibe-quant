@@ -209,31 +209,56 @@ HOLDINGS_FILE = 'my_holdings.json'
 
 
 def load_holdings():
-    if os.path.exists(HOLDINGS_FILE):
-        try:
-            with open(HOLDINGS_FILE, 'r', encoding='utf-8') as f:
-                raw = json.load(f)
-            # 兼容两种结构: 1) list of dict (老格式)  2) {"holdings": [...], "closed_holdings": [...]} (新格式)
-            if isinstance(raw, dict):
-                holdings = raw.get('holdings', [])
-            else:
-                holdings = raw
-            # 字段归一化: 兼容 cost / cost_price 两种命名
-            normalized = []
-            for h in holdings:
-                if not isinstance(h, dict):
+    """读取持仓,兼容三种格式:
+    1) list of dict                            (老老格式)
+    2) {"holdings": [...], ...}                (旧 v2 格式)
+    3) {"groups": {"深亏": [...], "浅亏": [...]}, "summary": {...}}  (当前线上格式)
+    返回: 展平后的 list[dict],每只带 'group' 字段。
+    """
+    if not os.path.exists(HOLDINGS_FILE):
+        return []
+    try:
+        with open(HOLDINGS_FILE, 'r', encoding='utf-8') as f:
+            raw = json.load(f)
+    except Exception as e:
+        print(f"load_holdings 失败: {e}")
+        return []
+
+    # 1) list of dict
+    if isinstance(raw, list):
+        flat = raw
+    # 2) dict 格式
+    elif isinstance(raw, dict):
+        # 优先用 holdings
+        if 'holdings' in raw and isinstance(raw['holdings'], list):
+            flat = raw['holdings']
+        # 其次用 groups (按分组嵌套,带 group 名字)
+        elif 'groups' in raw and isinstance(raw['groups'], dict):
+            flat = []
+            for gname, items in raw['groups'].items():
+                if not isinstance(items, list):
                     continue
-                nh = dict(h)
-                # cost -> cost_price
-                if 'cost_price' not in nh and 'cost' in nh:
-                    nh['cost_price'] = nh.pop('cost')
-                # current 字段保留
-                normalized.append(nh)
-            return normalized
-        except Exception as e:
-            print(f"load_holdings 失败: {e}")
-            return []
-    return []
+                for h in items:
+                    if not isinstance(h, dict):
+                        continue
+                    nh = dict(h)
+                    nh['group'] = gname  # 补上 group 字段
+                    flat.append(nh)
+        else:
+            flat = []
+    else:
+        flat = []
+
+    # 字段归一化: 兼容 cost / cost_price 两种命名
+    normalized = []
+    for h in flat:
+        if not isinstance(h, dict):
+            continue
+        nh = dict(h)
+        if 'cost_price' not in nh and 'cost' in nh:
+            nh['cost_price'] = nh.pop('cost')
+        normalized.append(nh)
+    return normalized
 
 
 def save_holdings(holdings):
