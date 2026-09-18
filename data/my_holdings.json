@@ -1,0 +1,58 @@
+{
+  "version": "2026-09-18",
+  "currency": "CNY",
+  "note": "本币 RMB;港股单独 HKD 计价",
+  "groups": {
+    "深亏": [
+      {"name": "强达电路", "code": "301426.SZ", "cost": 124.790, "price": 115.000, "shares": 100, "mkt_value": 11500.00, "pnl_pct": -7.845},
+      {"name": "新华保险", "code": "601336.SH", "cost": 62.801, "price": 58.180, "shares": 200, "mkt_value": 11636.00, "pnl_pct": -7.358},
+      {"name": "东宝生物", "code": "300239.SZ", "cost": 5.273, "price": 4.910, "shares": 3200, "mkt_value": 15712.00, "pnl_pct": -6.884},
+      {"name": "蓝色光标", "code": "300058.SZ", "cost": 14.051, "price": 13.150, "shares": 1000, "mkt_value": 13150.00, "pnl_pct": -6.412},
+      {"name": "华策影视", "code": "300133.SZ", "cost": 7.644, "price": 7.170, "shares": 1700, "mkt_value": 12189.00, "pnl_pct": -6.201},
+      {"name": "药明康德", "code": "603259.SH", "cost": 170.392, "price": 160.000, "shares": 100, "mkt_value": 16000.00, "pnl_pct": -6.099},
+      {"name": "生益科技", "code": "600183.SH", "cost": 150.802, "price": 143.930, "shares": 100, "mkt_value": 14393.00, "pnl_pct": -4.557},
+      {"name": "国机通用", "code": "600444.SH", "cost": 14.524, "price": 13.880, "shares": 1200, "mkt_value": 16656.00, "pnl_pct": -4.434}
+    ],
+    "浅亏": [
+      {"name": "中国海油", "code": "600938.SH", "cost": 34.245, "price": 32.300, "shares": 200, "mkt_value": 6460.00, "pnl_pct": -5.680},
+      {"name": "飞龙股份", "code": "002536.SZ", "cost": 56.590, "price": 53.640, "shares": 200, "mkt_value": 10728.00, "pnl_pct": -5.213},
+      {"name": "江山股份", "code": "600389.SH", "cost": 19.919, "price": 18.900, "shares": 600, "mkt_value": 11340.00, "pnl_pct": -5.116},
+      {"name": "中证红利", "code": "100922.CSI", "cost": 1.578, "price": 1.539, "shares": 16800, "mkt_value": 25855.20, "pnl_pct": -2.471, "asset_class": "ETF"},
+      {"name": "工业富联", "code": "601138.SH", "cost": 64.281, "price": 62.710, "shares": 200, "mkt_value": 12542.00, "pnl_pct": -2.444},
+      {"name": "中文在线", "code": "300364.SZ", "cost": 25.008, "price": 24.400, "shares": 400, "mkt_value": 9760.00, "pnl_pct": -2.431},
+      {"name": "山东黄金", "code": "600547.SH", "cost": 33.374, "price": 32.770, "shares": 300, "mkt_value": 9831.00, "pnl_pct": -1.810},
+      {"name": "大金重工", "code": "002487.SZ", "cost": 40.040, "price": 39.600, "shares": 700, "mkt_value": 27720.00, "pnl_pct": -1.099},
+      {"name": "新媒股份", "code": "300770.SZ", "cost": 34.797, "price": 34.550, "shares": 300, "mkt_value": 10365.00, "pnl_pct": -0.710},
+      {"name": "格力电器", "code": "000651.SZ", "cost": 38.765, "price": 38.560, "shares": 400, "mkt_value": 15424.00, "pnl_pct": -0.529},
+      {"name": "紫江企业", "code": "600210.SH", "cost": 6.252, "price": 6.230, "shares": 1300, "mkt_value": 8099.00, "pnl_pct": -0.352},
+      {"name": "亨通光电", "code": "600487.SH", "cost": 69.691, "price": 69.490, "shares": 100, "mkt_value": 6949.00, "pnl_pct": -0.288}
+    ],
+    "保本": [
+      {"name": "景顺科创", "code": "159995.SZ", "cost": 1.715, "price": 1.731, "shares": 2600, "mkt_value": 4500.60, "pnl_pct": 0.933, "asset_class": "ETF"},
+      {"name": "京东方A", "code": "000725.SZ", "cost": 5.862, "price": 5.920, "shares": 1700, "mkt_value": 10064.00, "pnl_pct": 0.989},
+      {"name": "华工科技", "code": "000988.SZ", "cost": 107.603, "price": 107.800, "shares": 300, "mkt_value": 32340.00, "pnl_pct": 0.183}
+    ],
+    "温和盈利": [
+      {"name": "光迅科技", "code": "002281.SZ", "cost": 191.925, "price": 195.400, "shares": 100, "mkt_value": 19540.00, "pnl_pct": 1.811},
+      {"name": "立昂微", "code": "605358.SH", "cost": 45.564, "price": 46.500, "shares": 300, "mkt_value": 13950.00, "pnl_pct": 2.054},
+      {"name": "晶泰控股", "code": "2228.HK", "cost": 7.721, "price": 8.020, "shares": 2000, "mkt_value": 13715.80, "pnl_pct": 3.878, "currency": "HKD", "mkt_value_cny": 12560.00, "fx_hkd_cny": 0.916},
+      {"name": "新洁能", "code": "605111.SH", "cost": 60.101, "price": 62.850, "shares": 300, "mkt_value": 18855.00, "pnl_pct": 4.574},
+      {"name": "德赛西威", "code": "002920.SZ", "cost": 80.740, "price": 84.730, "shares": 100, "mkt_value": 8473.00, "pnl_pct": 4.942}
+    ],
+    "高盈利": [
+      {"name": "嘉元科技", "code": "688388.SH", "cost": 28.959, "price": 30.880, "shares": 486, "mkt_value": 15007.68, "pnl_pct": 6.634},
+      {"name": "兆易创新", "code": "603986.SH", "cost": 361.977, "price": 388.180, "shares": 100, "mkt_value": 38818.00, "pnl_pct": 7.239},
+      {"name": "科士达", "code": "002518.SZ", "cost": 36.517, "price": 39.310, "shares": 700, "mkt_value": 27517.00, "pnl_pct": 7.648},
+      {"name": "圣邦股份", "code": "300661.SZ", "cost": 110.105, "price": 125.130, "shares": 200, "mkt_value": 25026.00, "pnl_pct": 13.646},
+      {"name": "实益达", "code": "002137.SZ", "cost": 6.518, "price": 8.670, "shares": 1000, "mkt_value": 8670.00, "pnl_pct": 33.016}
+    ]
+  },
+  "summary": {
+    "total_count": 41,
+    "removed": ["华胜天成 (2026-09-18 清仓)"],
+    "total_mkt_value_cny_estimate": 501630,
+    "total_mkt_value_account": 502786.28,
+    "diff_pct": 0.23,
+    "note": "总市值含晶泰控股按 0.916 汇率折算;实际账户市值 502,786.28(差 0.23% 在四舍五入误差内)"
+  }
+}
