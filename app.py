@@ -258,6 +258,7 @@ def load_holdings():
         if 'cost_price' not in nh and 'cost' in nh:
             nh['cost_price'] = nh.pop('cost')
         normalized.append(nh)
+    print(f"DEBUG load_holdings: {len(normalized)} 只")
     return normalized
 
 
