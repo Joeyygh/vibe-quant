@@ -209,20 +209,36 @@ HOLDINGS_FILE = 'my_holdings.json'
 
 
 def load_holdings():
-    """读取持仓,兼容三种格式:
+    """读取持仓,优先 GitHub raw, 兜底本地文件。兼容三种格式:
     1) list of dict                            (老老格式)
     2) {"holdings": [...], ...}                (旧 v2 格式)
     3) {"groups": {"深亏": [...], "浅亏": [...]}, "summary": {...}}  (当前线上格式)
     返回: 展平后的 list[dict],每只带 'group' 字段。
     """
-    if not os.path.exists(HOLDINGS_FILE):
-        return []
+    raw = None
+    # 1) 优先 GitHub raw (绕过 Streamlit Cloud 本地文件缓存)
     try:
-        with open(HOLDINGS_FILE, 'r', encoding='utf-8') as f:
-            raw = json.load(f)
+        import urllib.request
+        req = urllib.request.Request(
+            "https://raw.githubusercontent.com/Joeyygh/vibe-quant/main/data/my_holdings.json",
+            headers={"Cache-Control": "no-cache", "Pragma": "no-cache"}
+        )
+        raw_text = urllib.request.urlopen(req, timeout=10).read().decode('utf-8')
+        raw = json.loads(raw_text)
+        print(f"load_holdings: 从 GitHub 拉到 {sum(len(v) for v in raw.get('groups', {}).values())} 只")
     except Exception as e:
-        print(f"load_holdings 失败: {e}")
-        return []
+        print(f"load_holdings: GitHub 拉失败 {e}, 兜底本地")
+
+    # 2) 兜底: 本地文件
+    if raw is None:
+        if not os.path.exists(HOLDINGS_FILE):
+            return []
+        try:
+            with open(HOLDINGS_FILE, 'r', encoding='utf-8') as f:
+                raw = json.load(f)
+        except Exception as e:
+            print(f"load_holdings 失败: {e}")
+            return []
 
     # 1) list of dict
     if isinstance(raw, list):
