@@ -2081,16 +2081,41 @@ if run:
                 # 真实数据优先级: A → B → C
                 for sec_short, sec_full in [("A", "A_保守稳健"), ("B", "B_趋势跟随"), ("C", "C_抄底反弹")]:
                     for p in strategies.get(sec_full, []):
+                        code6 = str(p.get("code", "")).zfill(6)
+                        # 从 df_sub 实时补 20日% / 波动率 / 风险标签 (formulas 没存这些)
+                        ret_20 = 0.0
+                        vol_std = 0.0
+                        warnings = []
+                        try:
+                            sub = df_sub[df_sub["code"] == code6].sort_values("date")
+                            if len(sub) >= 20:
+                                ret_20 = (float(sub["close"].iloc[-1]) / float(sub["close"].iloc[-20]) - 1) * 100
+                                vol_std = float(sub["pct_change"].std())
+                                # 动量天花板保护
+                                if ret_20 > 80:
+                                    warnings.append("🔥20日>80%")
+                                elif ret_20 > 50:
+                                    warnings.append("⚠️20日>50%")
+                                pct_today = float(sub["pct_change"].iloc[-1]) if len(sub) else 0
+                                if pct_today > 7:
+                                    warnings.append("⚡今日>7%")
+                                ma5 = sub["close"].iloc[-5:].mean() if len(sub) >= 5 else 0
+                                if ma5 > 0:
+                                    bias_5 = (float(sub["close"].iloc[-1]) / ma5 - 1) * 100
+                                    if bias_5 > 15:
+                                        warnings.append("📈乖离>15%")
+                        except Exception:
+                            pass
                         rows.append({
-                            "代码": str(p.get("code", "")).zfill(6),
+                            "代码": code6,
                             "名称": p.get("name", ""),
                             "行业": p.get("industry", ""),
                             "现价": round(float(p.get("close", 0)), 2),
                             "今日%": round(float(p.get("pct_chg", 0)), 2),
-                            "20日%": 0,  # formulas 没这字段
-                            "波动率": 0,
+                            "20日%": round(ret_20, 2),
+                            "波动率": round(vol_std, 2),
                             "综合分": float(p.get("score", 50)),
-                            "风险标签": "",
+                            "风险标签": " / ".join(warnings) if warnings else "✅正常",
                             "_strategy": sec_short,
                         })
                 if rows:

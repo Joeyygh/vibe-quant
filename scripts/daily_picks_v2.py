@@ -598,7 +598,7 @@ def generate_picks():
             "money_3d": float(r.get('money_3d_wan', 0)), "money_1d": float(r.get('money_1d_wan', 0)),
             "volume_ratio": float(r.get('volume_ratio', 0)) if pd.notna(r.get('volume_ratio')) else 0,
             "in_hot_industry": bool(r.get('in_hot_industry', False)),
-            "score": 100} for _, r in res_a.iterrows()]
+            "score": round(float(r.get('_score', 0)), 2)} for _, r in res_a.iterrows()]
         print(f"   A 保守稳健: {len(results['A_保守稳健'])} 只")
     else:
         results["A_保守稳健"] = []
@@ -611,7 +611,7 @@ def generate_picks():
             "industry": r.get('industry', ''), "close": float(r['close']),
             "money_3d": float(r.get('money_3d_wan', 0)), "volume_ratio": float(r.get('volume_ratio', 0)) if pd.notna(r.get('volume_ratio')) else 0,
             "in_hot_industry": bool(r.get('in_hot_industry', False)),
-            "score": 100} for _, r in res_b.iterrows()]
+            "score": round(float(r.get('_score', 0)), 2)} for _, r in res_b.iterrows()]
         print(f"   B 趋势跟随: {len(results['B_趋势跟随'])} 只")
     else:
         results["B_趋势跟随"] = []
@@ -624,7 +624,7 @@ def generate_picks():
             "industry": r.get('industry', ''), "close": float(r['close']),
             "money_1d": float(r.get('money_1d_wan', 0)), "volume_ratio": float(r.get('volume_ratio', 0)) if pd.notna(r.get('volume_ratio')) else 0,
             "in_hot_industry": bool(r.get('in_hot_industry', False)),
-            "score": 100} for _, r in res_c.iterrows()]
+            "score": round(float(r.get('_score', 0)), 2)} for _, r in res_c.iterrows()]
         print(f"   C 抄底反弹: {len(results['C_抄底反弹'])} 只")
     else:
         results["C_抄底反弹"] = []
