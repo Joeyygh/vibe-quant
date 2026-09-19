@@ -2114,12 +2114,40 @@ if run:
                             "今日%": round(float(p.get("pct_chg", 0)), 2),
                             "20日%": round(ret_20, 2),
                             "波动率": round(vol_std, 2),
-                            "综合分": float(p.get("score", 50)),
+                            # 把 json 里其他字段也带进 row, 后面 fallback 重算要用
+                            "_money3d": float(p.get("money_3d", 0)),
+                            "_money1d": float(p.get("money_1d", 0)),
+                            "_vol_ratio": float(p.get("volume_ratio", 0)),
+                            "_hot": bool(p.get("in_hot_industry", False)),
+                            "综合分": float(p.get("score", 0)),
                             "风险标签": " / ".join(warnings) if warnings else "✅正常",
                             "_strategy": sec_short,
                         })
                 if rows:
                     df_3 = pd.DataFrame(rows)
+                    # 🆕 2026-09-19 修复: 检测 score 是否全 100/0 (历史 bug 脏数据 → daily_picks_v2.py 硬编码 100)
+                    # 是则用 json 里其他字段 (money_3d/money_1d/volume_ratio/in_hot_industry/pct_chg) 按策略公式重算
+                    _uniq = df_3["综合分"].nunique()
+                    if _uniq <= 1 and df_3["综合分"].iloc[0] in (0, 100):
+                        def _rescore(row):
+                            money3 = row.get("_money3d", 0)
+                            money1 = row.get("_money1d", 0)
+                            volr = row.get("_vol_ratio", 0)
+                            hot = row.get("_hot", False)
+                            pct = row.get("今日%", 0)
+                            strat = row.get("_strategy", "")
+                            hot_s = 30 if hot else 0
+                            if strat == "A":
+                                bucket = 50 if 0 <= pct <= 1 else (30 if 1 < pct <= 2 else 10)
+                                return money3 * 0.5 + hot_s + money1 * 0.1 + bucket * 0.5
+                            if strat == "B":
+                                return volr * 0.5 + hot_s + money3 * 0.2
+                            if strat == "C":
+                                return abs(pct) * 3 + hot_s + max(min(money1, 1000), -1000) * 0.001
+                            return money3 * 0.3 + hot_s
+                        df_3["综合分"] = df_3.apply(_rescore, axis=1).round(2)
+                    # 清理临时字段
+                    df_3 = df_3.drop(columns=["_money3d", "_money1d", "_vol_ratio", "_hot"], errors="ignore")
                     # 用 score 排序
                     df_3 = df_3.sort_values("综合分", ascending=False)
                     formulas_date = formulas_data.get("date", "?")
