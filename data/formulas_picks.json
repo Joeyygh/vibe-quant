@@ -1,7 +1,7 @@
 {
   "date": "2026-09-19",
   "update_time": "17:30 (盘后)",
-  "actual_run_time": "07:02",
+  "actual_run_time": "09:07",
   "version": "v3.3 (大小盘风格+量能+逆动量+修复iloc[0]bug)",
   "data_source": "20260918 行情 + 资金流 + 板块",
   "market": {
@@ -26,8 +26,8 @@
         "pct_chg": 0.845,
         "industry": "专用机械",
         "close": 105.02,
-        "money_3d": 3.0210459999999992,
-        "money_1d": 1.442839,
+        "money_3d": 4.465762,
+        "money_1d": 1.6990020000000003,
         "volume_ratio": 1.55,
         "in_hot_industry": false,
         "score": 100
@@ -38,45 +38,21 @@
         "pct_chg": 0.1899,
         "industry": "电气设备",
         "close": 79.15,
-        "money_3d": 1.7351409999999996,
-        "money_1d": 1.3860479999999995,
+        "money_3d": 2.696325,
+        "money_1d": 0.6504300000000003,
         "volume_ratio": 0.88,
         "in_hot_industry": false,
         "score": 100
       },
       {
-        "code": "603000",
-        "name": "人民网",
-        "pct_chg": 0.347,
-        "industry": "互联网",
-        "close": 17.35,
-        "money_3d": 1.908197,
-        "money_1d": 0.06099200000000019,
-        "volume_ratio": 0.84,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "603920",
-        "name": "世运电路",
-        "pct_chg": 0.2991,
-        "industry": "元器件",
-        "close": 43.6,
-        "money_3d": 1.6285120000000002,
-        "money_1d": 1.163511,
-        "volume_ratio": 0.79,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "002886",
-        "name": "沃特股份",
-        "pct_chg": 0.8789,
-        "industry": "塑料",
-        "close": 26.4,
-        "money_3d": 1.9256130000000007,
-        "money_1d": -0.33498100000000014,
-        "volume_ratio": 0.74,
+        "code": "300857",
+        "name": "协创数据",
+        "pct_chg": 0.3408,
+        "industry": "IT设备",
+        "close": 267.89,
+        "money_3d": 1.3478390000000042,
+        "money_1d": -0.4666619999999995,
+        "volume_ratio": 1.08,
         "in_hot_industry": false,
         "score": 100
       },
@@ -86,45 +62,21 @@
         "pct_chg": 0.1682,
         "industry": "汽车配件",
         "close": 11.91,
-        "money_3d": 1.1094989999999998,
-        "money_1d": 1.4120559999999998,
+        "money_3d": 1.1229069999999999,
+        "money_1d": -0.10079799999999996,
         "volume_ratio": 1.31,
         "in_hot_industry": false,
         "score": 100
       },
       {
-        "code": "000735",
-        "name": "罗牛山",
-        "pct_chg": 0.3367,
-        "industry": "农业综合",
-        "close": 5.96,
-        "money_3d": 0.872271,
-        "money_1d": 0.40173700000000007,
-        "volume_ratio": 0.78,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "301630",
-        "name": "同宇新材",
-        "pct_chg": 0.6689,
-        "industry": "化工原料",
-        "close": 203.16,
-        "money_3d": 0.9448669999999996,
-        "money_1d": -0.10996599999999998,
-        "volume_ratio": 0.79,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "002145",
-        "name": "钛能化学",
-        "pct_chg": 0.4367,
-        "industry": "化工原料",
-        "close": 4.6,
-        "money_3d": 0.799819,
-        "money_1d": 0.4550959999999999,
-        "volume_ratio": 1.47,
+        "code": "002975",
+        "name": "博杰股份",
+        "pct_chg": 0.1528,
+        "industry": "专用机械",
+        "close": 104.86,
+        "money_3d": 0.9642009999999995,
+        "money_1d": 0.26140899999999967,
+        "volume_ratio": 0.97,
         "in_hot_industry": false,
         "score": 100
       },
@@ -134,33 +86,9 @@
         "pct_chg": 0.5794,
         "industry": "机械基件",
         "close": 64.23,
-        "money_3d": 0.9165339999999993,
-        "money_1d": -0.15827500000000072,
+        "money_3d": 0.8786959999999993,
+        "money_1d": 0.3487949999999997,
         "volume_ratio": 0.86,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "600609",
-        "name": "金杯汽车",
-        "pct_chg": 0.2793,
-        "industry": "汽车配件",
-        "close": 3.59,
-        "money_3d": 0.7179719999999999,
-        "money_1d": 0.78334,
-        "volume_ratio": 1.73,
-        "in_hot_industry": false,
-        "score": 100
-      },
-      {
-        "code": "002552",
-        "name": "宝鼎科技",
-        "pct_chg": 0.0923,
-        "industry": "元器件",
-        "close": 54.24,
-        "money_3d": 0.9171750000000014,
-        "money_1d": -0.34853499999999915,
-        "volume_ratio": 0.56,
         "in_hot_industry": false,
         "score": 100
       },
@@ -170,8 +98,8 @@
         "pct_chg": 0.1241,
         "industry": "汽车配件",
         "close": 24.2,
-        "money_3d": 0.6373699999999998,
-        "money_1d": 0.8157069999999998,
+        "money_3d": 0.9126,
+        "money_1d": 0.08545900000000002,
         "volume_ratio": 1.56,
         "in_hot_industry": false,
         "score": 100
@@ -182,21 +110,93 @@
         "pct_chg": 0.9174,
         "industry": "电气设备",
         "close": 24.2,
-        "money_3d": 0.6927800000000003,
-        "money_1d": 0.39107200000000014,
+        "money_3d": 0.8604470000000004,
+        "money_1d": 0.21779899999999996,
         "volume_ratio": 1.51,
         "in_hot_industry": false,
         "score": 100
       },
       {
-        "code": "603200",
-        "name": "上海洗霸",
-        "pct_chg": 0.5764,
-        "industry": "环境保护",
-        "close": 40.13,
-        "money_3d": 0.786399,
-        "money_1d": -0.153191,
-        "volume_ratio": 0.69,
+        "code": "301132",
+        "name": "满坤科技",
+        "pct_chg": 0.5839,
+        "industry": "元器件",
+        "close": 60.29,
+        "money_3d": 0.86033,
+        "money_1d": 0.07554199999999983,
+        "volume_ratio": 0.87,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "002827",
+        "name": "高争民爆",
+        "pct_chg": 0.3241,
+        "industry": "化工原料",
+        "close": 68.1,
+        "money_3d": 0.6095089999999999,
+        "money_1d": 0.5697200000000001,
+        "volume_ratio": 0.92,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "603960",
+        "name": "克来机电",
+        "pct_chg": 0.7059,
+        "industry": "汽车配件",
+        "close": 17.12,
+        "money_3d": 0.640474,
+        "money_1d": 0.14614799999999994,
+        "volume_ratio": 1.83,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "600609",
+        "name": "金杯汽车",
+        "pct_chg": 0.2793,
+        "industry": "汽车配件",
+        "close": 3.59,
+        "money_3d": 0.6464659999999998,
+        "money_1d": -0.09565100000000021,
+        "volume_ratio": 1.73,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "600095",
+        "name": "湘财股份",
+        "pct_chg": 0.6969,
+        "industry": "证券",
+        "close": 8.67,
+        "money_3d": 0.4540069999999998,
+        "money_1d": -0.05509300000000003,
+        "volume_ratio": 1.19,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "300987",
+        "name": "川网传媒",
+        "pct_chg": 0.5937,
+        "industry": "互联网",
+        "close": 15.25,
+        "money_3d": 0.4243469999999999,
+        "money_1d": 0.02402599999999993,
+        "volume_ratio": 1.92,
+        "in_hot_industry": false,
+        "score": 100
+      },
+      {
+        "code": "600345",
+        "name": "长江通信",
+        "pct_chg": 0.2576,
+        "industry": "通信设备",
+        "close": 54.49,
+        "money_3d": 0.4322040000000001,
+        "money_1d": -0.02326399999999994,
+        "volume_ratio": 1.05,
         "in_hot_industry": false,
         "score": 100
       }
@@ -209,7 +209,7 @@
         "pct_chg": -1.3453,
         "industry": "银行",
         "close": 4.4,
-        "money_1d": 0.14067300000000005,
+        "money_1d": -0.07281199999999999,
         "volume_ratio": 0.77,
         "in_hot_industry": false,
         "score": 100
@@ -220,7 +220,7 @@
         "pct_chg": -1.3699,
         "industry": "银行",
         "close": 5.76,
-        "money_1d": 0.02948200000000006,
+        "money_1d": 0.024121000000000004,
         "volume_ratio": 0.63,
         "in_hot_industry": false,
         "score": 100
@@ -231,7 +231,7 @@
         "pct_chg": -1.1881,
         "industry": "银行",
         "close": 4.99,
-        "money_1d": 0.03981900000000001,
+        "money_1d": 0.017627999999999998,
         "volume_ratio": 0.58,
         "in_hot_industry": false,
         "score": 100
@@ -242,7 +242,7 @@
         "pct_chg": -1.1933,
         "industry": "银行",
         "close": 4.14,
-        "money_1d": -0.11716300000000002,
+        "money_1d": -0.034554999999999926,
         "volume_ratio": 0.88,
         "in_hot_industry": false,
         "score": 100
@@ -253,7 +253,7 @@
         "pct_chg": -1.1299,
         "industry": "银行",
         "close": 3.5,
-        "money_1d": 0.04111299999999996,
+        "money_1d": -0.03125200000000002,
         "volume_ratio": 0.87,
         "in_hot_industry": false,
         "score": 100
@@ -264,7 +264,7 @@
         "pct_chg": -2.4582,
         "industry": "路桥",
         "close": 9.92,
-        "money_1d": -0.12748599999999996,
+        "money_1d": 0.11978700000000003,
         "volume_ratio": 0.78,
         "in_hot_industry": false,
         "score": 100
@@ -275,7 +275,7 @@
         "pct_chg": -1.2121,
         "industry": "专用机械",
         "close": 4.89,
-        "money_1d": -0.050172,
+        "money_1d": -0.058006000000000016,
         "volume_ratio": 0.65,
         "in_hot_industry": false,
         "score": 100
@@ -286,7 +286,7 @@
         "pct_chg": -1.0449,
         "industry": "水运",
         "close": 16.1,
-        "money_1d": 1.102268,
+        "money_1d": -0.667171,
         "volume_ratio": 0.91,
         "in_hot_industry": false,
         "score": 100
@@ -297,7 +297,7 @@
         "pct_chg": -1.6807,
         "industry": "港口",
         "close": 3.51,
-        "money_1d": -0.019680999999999994,
+        "money_1d": 0.019387000000000012,
         "volume_ratio": 0.95,
         "in_hot_industry": false,
         "score": 100
@@ -308,7 +308,7 @@
         "pct_chg": -1.8374,
         "industry": "机械基件",
         "close": 28.85,
-        "money_1d": -0.07935099999999948,
+        "money_1d": -0.26288500000000004,
         "volume_ratio": 0.68,
         "in_hot_industry": false,
         "score": 100
@@ -328,8 +328,8 @@
         "✅ 持有 (浮-8.6%)"
       ],
       "group": "deep_loss",
-      "money_1d": -0.037799,
-      "money_3d": -0.15756,
+      "money_1d": 0.22432699999999994,
+      "money_3d": 0.17492999999999995,
       "in_hot_industry": false
     },
     {
@@ -343,8 +343,8 @@
         "✅ 持有 (浮-12.8%)"
       ],
       "group": "deep_loss",
-      "money_1d": -0.3177839999999999,
-      "money_3d": -0.5682539999999998,
+      "money_1d": 0.030102999999999883,
+      "money_3d": -0.264973,
       "in_hot_industry": false
     },
     {
@@ -358,8 +358,8 @@
         "🚨 深套 -17.6%, 慎加仓"
       ],
       "group": "deep_loss",
-      "money_1d": 0.18812200000000012,
-      "money_3d": -0.10057200000000012,
+      "money_1d": -0.1831369999999999,
+      "money_3d": -0.18411099999999989,
       "in_hot_industry": false
     },
     {
@@ -373,8 +373,8 @@
         "✅ 持有 (浮-6.4%)"
       ],
       "group": "deep_loss",
-      "money_1d": 5.013054000000004,
-      "money_3d": 9.111289000000001,
+      "money_1d": 0.7939600000000034,
+      "money_3d": 8.850069000000007,
       "in_hot_industry": false
     },
     {
@@ -388,8 +388,8 @@
         "⚡ 今日涨停, 注意次日回调"
       ],
       "group": "deep_loss",
-      "money_1d": -0.19866399999999976,
-      "money_3d": 1.3345949999999998,
+      "money_1d": 5.129972,
+      "money_3d": 4.986942,
       "in_hot_industry": false
     },
     {
@@ -403,8 +403,8 @@
         "🚨 深套 -20.5%, 慎加仓"
       ],
       "group": "deep_loss",
-      "money_1d": -0.022764999999999962,
-      "money_3d": -0.3224070000000002,
+      "money_1d": -0.09535100000000002,
+      "money_3d": -0.3238760000000002,
       "in_hot_industry": false
     },
     {
@@ -418,8 +418,8 @@
         "🚨 深套 -19.4%, 慎加仓"
       ],
       "group": "deep_loss",
-      "money_1d": 0.049185000000000034,
-      "money_3d": -0.49394899999999986,
+      "money_1d": -0.06284499999999989,
+      "money_3d": -0.17441799999999968,
       "in_hot_industry": false
     },
     {
@@ -433,8 +433,8 @@
         "✅ 持有 (浮-14.5%)"
       ],
       "group": "deep_loss",
-      "money_1d": 1.774926999999999,
-      "money_3d": 4.421552999999999,
+      "money_1d": 0.24548199999999926,
+      "money_3d": 3.533994999999998,
       "in_hot_industry": false
     },
     {
@@ -448,8 +448,8 @@
         "🚨 深套 -73.6%, 慎加仓"
       ],
       "group": "shallow_loss",
-      "money_1d": -0.217033,
-      "money_3d": -0.744176,
+      "money_1d": -0.19148100000000004,
+      "money_3d": -0.59858,
       "in_hot_industry": false
     },
     {
@@ -463,8 +463,8 @@
         "✅ 持有 (浮-6.9%)"
       ],
       "group": "shallow_loss",
-      "money_1d": 0.011806000000000002,
-      "money_3d": -0.0009829999999999908,
+      "money_1d": -0.015884000000000002,
+      "money_3d": 0.0010410000000000029,
       "in_hot_industry": false
     },
     {
@@ -478,8 +478,8 @@
         "✅ 持有 (浮-11.2%)"
       ],
       "group": "shallow_loss",
-      "money_1d": 0.07006200000000008,
-      "money_3d": -1.0343860000000002,
+      "money_1d": 0.20990799999999998,
+      "money_3d": -0.5807880000000001,
       "in_hot_industry": false
     },
     {
@@ -493,8 +493,8 @@
         "✅ 持有 (浮-2.9%)"
       ],
       "group": "shallow_loss",
-      "money_1d": 0.019234000000000005,
-      "money_3d": 0.02394700000000001,
+      "money_1d": -0.035635,
+      "money_3d": -0.014733999999999994,
       "in_hot_industry": false
     },
     {
@@ -508,8 +508,8 @@
         "✅ 持有 (浮-10.6%)"
       ],
       "group": "shallow_loss",
-      "money_1d": -0.01301500000000001,
-      "money_3d": -0.03615300000000002,
+      "money_1d": -0.08839299999999999,
+      "money_3d": -0.13235,
       "in_hot_industry": false
     },
     {
@@ -523,8 +523,8 @@
         "✅ 持有 (浮-8.8%)"
       ],
       "group": "shallow_loss",
-      "money_1d": -0.42377099999999973,
-      "money_3d": -0.34361999999999987,
+      "money_1d": 0.1262970000000001,
+      "money_3d": -0.2163739999999998,
       "in_hot_industry": false
     },
     {
@@ -538,8 +538,8 @@
         "✅ 持有 (浮-8.6%)"
       ],
       "group": "shallow_loss",
-      "money_1d": -0.04022100000000001,
-      "money_3d": -0.048772,
+      "money_1d": 0.08996499999999999,
+      "money_3d": 0.04335299999999999,
       "in_hot_industry": false
     },
     {
@@ -553,8 +553,8 @@
         "✅ 持有 (浮-4.0%)"
       ],
       "group": "mild_profit",
-      "money_1d": 0.019126,
-      "money_3d": 0.012022999999999982,
+      "money_1d": 0.00206400000000001,
+      "money_3d": 0.008102999999999999,
       "in_hot_industry": false
     },
     {
@@ -568,8 +568,8 @@
         "✅ 持有 (浮+10.0%)"
       ],
       "group": "mild_profit",
-      "money_1d": 0.737143,
-      "money_3d": 0.9434269999999997,
+      "money_1d": 2.0792629999999996,
+      "money_3d": 2.881359,
       "in_hot_industry": false
     },
     {
@@ -583,8 +583,8 @@
         "✅ 持有 (浮-8.3%)"
       ],
       "group": "mild_profit",
-      "money_1d": 0.05014300000000021,
-      "money_3d": 0.21146900000000005,
+      "money_1d": 0.32717700000000005,
+      "money_3d": 0.3987710000000001,
       "in_hot_industry": false
     },
     {
@@ -598,8 +598,8 @@
         "✅ 持有 (浮-5.9%)"
       ],
       "group": "mild_profit",
-      "money_1d": -0.4452850000000006,
-      "money_3d": 1.047729999999999,
+      "money_1d": 2.132725,
+      "money_3d": 2.8729759999999995,
       "in_hot_industry": false
     },
     {
@@ -613,8 +613,8 @@
         "✅ 持有 (浮+13.6%)"
       ],
       "group": "mild_profit",
-      "money_1d": -0.053542000000000006,
-      "money_3d": 0.257694,
+      "money_1d": -0.06992599999999993,
+      "money_3d": -0.14147199999999993,
       "in_hot_industry": false
     },
     {
@@ -628,8 +628,8 @@
         "✅ 持有 (浮-5.4%)"
       ],
       "group": "mild_profit",
-      "money_1d": -1.7789989999999998,
-      "money_3d": -4.797470000000001,
+      "money_1d": 0.5528309999999997,
+      "money_3d": -3.3374530000000004,
       "in_hot_industry": false
     },
     {
@@ -643,8 +643,8 @@
         "✅ 持有 (浮-4.4%)"
       ],
       "group": "mild_profit",
-      "money_1d": 0.014651000000000004,
-      "money_3d": -0.0008339999999999919,
+      "money_1d": 0.017928,
+      "money_3d": 0.024777000000000007,
       "in_hot_industry": false
     },
     {
@@ -658,8 +658,8 @@
         "✅ 持有 (浮-2.2%)"
       ],
       "group": "mild_profit",
-      "money_1d": 2.652856,
-      "money_3d": 0.011799000000000337,
+      "money_1d": 1.7380759999999995,
+      "money_3d": 3.937113999999999,
       "in_hot_industry": false
     },
     {
@@ -673,8 +673,8 @@
         "✅ 持有 (浮+13.6%)"
       ],
       "group": "mild_profit",
-      "money_1d": 0.11176800000000003,
-      "money_3d": -2.3616149999999996,
+      "money_1d": -0.7423979999999996,
+      "money_3d": -2.940734999999999,
       "in_hot_industry": false
     },
     {
@@ -688,8 +688,8 @@
         "✅ 持有 (浮-7.1%)"
       ],
       "group": "mild_profit",
-      "money_1d": -0.4649119999999999,
-      "money_3d": -1.3948019999999999,
+      "money_1d": 0.25751100000000005,
+      "money_3d": -0.4904,
       "in_hot_industry": false
     },
     {
@@ -703,8 +703,8 @@
         "🚨 深套 -37.5%, 慎加仓"
       ],
       "group": "high_profit",
-      "money_1d": 0.057007000000000016,
-      "money_3d": -0.014845999999999979,
+      "money_1d": -0.033022000000000024,
+      "money_3d": -0.034315000000000005,
       "in_hot_industry": false
     }
   ],
