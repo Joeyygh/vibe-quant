@@ -1,7 +1,7 @@
 {
-  "date": "2026-09-19",
+  "date": "2026-09-20",
   "update_time": "17:30 (盘后)",
-  "actual_run_time": "09:07",
+  "actual_run_time": "01:03",
   "version": "v3.3 (大小盘风格+量能+逆动量+修复iloc[0]bug)",
   "data_source": "20260918 行情 + 资金流 + 板块",
   "market": {
@@ -30,7 +30,7 @@
         "money_1d": 1.6990020000000003,
         "volume_ratio": 1.55,
         "in_hot_industry": false,
-        "score": 100
+        "score": 27.4
       },
       {
         "code": "688503",
@@ -42,7 +42,7 @@
         "money_1d": 0.6504300000000003,
         "volume_ratio": 0.88,
         "in_hot_industry": false,
-        "score": 100
+        "score": 26.41
       },
       {
         "code": "300857",
@@ -54,7 +54,7 @@
         "money_1d": -0.4666619999999995,
         "volume_ratio": 1.08,
         "in_hot_industry": false,
-        "score": 100
+        "score": 25.63
       },
       {
         "code": "000700",
@@ -66,7 +66,7 @@
         "money_1d": -0.10079799999999996,
         "volume_ratio": 1.31,
         "in_hot_industry": false,
-        "score": 100
+        "score": 25.55
       },
       {
         "code": "002975",
@@ -78,7 +78,7 @@
         "money_1d": 0.26140899999999967,
         "volume_ratio": 0.97,
         "in_hot_industry": false,
-        "score": 100
+        "score": 25.51
       },
       {
         "code": "002046",
@@ -90,7 +90,7 @@
         "money_1d": 0.3487949999999997,
         "volume_ratio": 0.86,
         "in_hot_industry": false,
-        "score": 100
+        "score": 25.47
       },
       {
         "code": "605088",
@@ -102,7 +102,7 @@
         "money_1d": 0.08545900000000002,
         "volume_ratio": 1.56,
         "in_hot_industry": false,
-        "score": 100
+        "score": 25.46
       },
       {
         "code": "603507",
@@ -114,7 +114,7 @@
         "money_1d": 0.21779899999999996,
         "volume_ratio": 1.51,
         "in_hot_industry": false,
-        "score": 100
+        "score": 25.45
       },
       {
         "code": "301132",
@@ -126,7 +126,7 @@
         "money_1d": 0.07554199999999983,
         "volume_ratio": 0.87,
         "in_hot_industry": false,
-        "score": 100
+        "score": 25.44
       },
       {
         "code": "002827",
@@ -138,7 +138,7 @@
         "money_1d": 0.5697200000000001,
         "volume_ratio": 0.92,
         "in_hot_industry": false,
-        "score": 100
+        "score": 25.36
       },
       {
         "code": "603960",
@@ -150,7 +150,7 @@
         "money_1d": 0.14614799999999994,
         "volume_ratio": 1.83,
         "in_hot_industry": false,
-        "score": 100
+        "score": 25.33
       },
       {
         "code": "600609",
@@ -162,7 +162,7 @@
         "money_1d": -0.09565100000000021,
         "volume_ratio": 1.73,
         "in_hot_industry": false,
-        "score": 100
+        "score": 25.31
       },
       {
         "code": "600095",
@@ -174,7 +174,7 @@
         "money_1d": -0.05509300000000003,
         "volume_ratio": 1.19,
         "in_hot_industry": false,
-        "score": 100
+        "score": 25.22
       },
       {
         "code": "300987",
@@ -186,7 +186,7 @@
         "money_1d": 0.02402599999999993,
         "volume_ratio": 1.92,
         "in_hot_industry": false,
-        "score": 100
+        "score": 25.21
       },
       {
         "code": "600345",
@@ -198,7 +198,7 @@
         "money_1d": -0.02326399999999994,
         "volume_ratio": 1.05,
         "in_hot_industry": false,
-        "score": 100
+        "score": 25.21
       }
     ],
     "B_趋势跟随": [],
@@ -212,7 +212,7 @@
         "money_1d": -0.07281199999999999,
         "volume_ratio": 0.77,
         "in_hot_industry": false,
-        "score": 100
+        "score": 51.65
       },
       {
         "code": "600908",
@@ -223,7 +223,7 @@
         "money_1d": 0.024121000000000004,
         "volume_ratio": 0.63,
         "in_hot_industry": false,
-        "score": 100
+        "score": 51.37
       },
       {
         "code": "601528",
@@ -234,7 +234,7 @@
         "money_1d": 0.017627999999999998,
         "volume_ratio": 0.58,
         "in_hot_industry": false,
-        "score": 100
+        "score": 51.07
       },
       {
         "code": "002807",
@@ -245,7 +245,7 @@
         "money_1d": -0.034554999999999926,
         "volume_ratio": 0.88,
         "in_hot_industry": false,
-        "score": 100
+        "score": 50.85
       },
       {
         "code": "600928",
@@ -256,7 +256,7 @@
         "money_1d": -0.03125200000000002,
         "volume_ratio": 0.87,
         "in_hot_industry": false,
-        "score": 100
+        "score": 50.45
       },
       {
         "code": "001965",
@@ -267,7 +267,7 @@
         "money_1d": 0.11978700000000003,
         "volume_ratio": 0.78,
         "in_hot_industry": false,
-        "score": 100
+        "score": 50.06
       },
       {
         "code": "600582",
@@ -278,7 +278,7 @@
         "money_1d": -0.058006000000000016,
         "volume_ratio": 0.65,
         "in_hot_industry": false,
-        "score": 100
+        "score": 49.5
       },
       {
         "code": "601919",
@@ -289,7 +289,7 @@
         "money_1d": -0.667171,
         "volume_ratio": 0.91,
         "in_hot_industry": false,
-        "score": 100
+        "score": 49.15
       },
       {
         "code": "601326",
@@ -300,7 +300,7 @@
         "money_1d": 0.019387000000000012,
         "volume_ratio": 0.95,
         "in_hot_industry": false,
-        "score": 100
+        "score": 48.94
       },
       {
         "code": "300850",
@@ -311,7 +311,7 @@
         "money_1d": -0.26288500000000004,
         "volume_ratio": 0.68,
         "in_hot_industry": false,
-        "score": 100
+        "score": 48.21
       }
     ]
   },
