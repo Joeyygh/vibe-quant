@@ -2017,9 +2017,26 @@ if run:
             status.text("应用筛选...")
             progress.progress(30)
             if scan_mode == "我的持仓":
-                codes = [h['code'] for h in holdings]
-                codes = [str(c).zfill(6) for c in codes]
-                filter_msg = f"持仓 {len(codes)} 只"
+                # 兼容 "301426.SZ" / "301426" / 301426 / "00700.HK" 等格式
+                # 1) 去后缀 (.SH/.SZ/.HK)
+                # 2) 补 0 到 6 位
+                # 3) 过滤非 A 股 6 位数字 (港股 .HK / 债券 12xxxx / 北交所 8x 开头排除)
+                raw_codes = []
+                excluded_names = []
+                for h in holdings:
+                    name = h.get('name', '?')
+                    raw = str(h.get('code', '')).split('.')[0]
+                    padded = raw.zfill(6)
+                    if padded.isdigit() and len(padded) == 6:
+                        raw_codes.append(padded)
+                    else:
+                        excluded_names.append(name)
+                codes = raw_codes
+                filter_msg = f"持仓 {len(codes)} 只 A 股"
+                if excluded_names:
+                    preview = ', '.join(excluded_names[:3])
+                    more = f" 等{len(excluded_names)}只" if len(excluded_names) > 3 else ""
+                    filter_msg += f" (已跳过非 A 股: {preview}{more})"
             elif selected_industry == '全部':
                 codes = smart_sample(df_stocks, n_stocks)
                 filter_msg = f"全部 智能采样 {len(codes)} 只 (主板+创业板+科创板)"
