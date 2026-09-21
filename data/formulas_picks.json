@@ -1,7 +1,7 @@
 {
   "date": "2026-09-21",
   "update_time": "17:30 (盘后)",
-  "actual_run_time": "06:04",
+  "actual_run_time": "08:07",
   "version": "v3.3 (大小盘风格+量能+逆动量+修复iloc[0]bug)",
   "data_source": "20260918 行情 + 资金流 + 板块",
   "market": {
@@ -26,11 +26,23 @@
         "pct_chg": 0.845,
         "industry": "专用机械",
         "close": 105.02,
-        "money_3d": 3.1418410000000003,
+        "money_3d": 1.6990020000000003,
         "money_1d": 0.0,
         "volume_ratio": 1.55,
         "in_hot_industry": false,
-        "score": 26.57
+        "score": 25.85
+      },
+      {
+        "code": "688809",
+        "name": "强一股份",
+        "pct_chg": 0.6232,
+        "industry": "半导体",
+        "close": 532.8,
+        "money_3d": 0.9006899999999994,
+        "money_1d": 0.0,
+        "volume_ratio": 0.86,
+        "in_hot_industry": false,
+        "score": 25.45
       },
       {
         "code": "688503",
@@ -38,59 +50,11 @@
         "pct_chg": 0.1899,
         "industry": "电气设备",
         "close": 79.15,
-        "money_3d": 2.036478,
+        "money_3d": 0.6504300000000003,
         "money_1d": 0.0,
         "volume_ratio": 0.88,
         "in_hot_industry": false,
-        "score": 26.02
-      },
-      {
-        "code": "000700",
-        "name": "模塑科技",
-        "pct_chg": 0.1682,
-        "industry": "汽车配件",
-        "close": 11.91,
-        "money_3d": 1.3112579999999998,
-        "money_1d": 0.0,
-        "volume_ratio": 1.31,
-        "in_hot_industry": false,
-        "score": 25.66
-      },
-      {
-        "code": "605088",
-        "name": "冠盛股份",
-        "pct_chg": 0.1241,
-        "industry": "汽车配件",
-        "close": 24.2,
-        "money_3d": 0.9011659999999999,
-        "money_1d": 0.0,
-        "volume_ratio": 1.56,
-        "in_hot_industry": false,
-        "score": 25.45
-      },
-      {
-        "code": "600609",
-        "name": "金杯汽车",
-        "pct_chg": 0.2793,
-        "industry": "汽车配件",
-        "close": 3.59,
-        "money_3d": 0.6876889999999998,
-        "money_1d": 0.0,
-        "volume_ratio": 1.73,
-        "in_hot_industry": false,
-        "score": 25.34
-      },
-      {
-        "code": "000833",
-        "name": "粤桂股份",
-        "pct_chg": 0.7523,
-        "industry": "综合类",
-        "close": 20.09,
-        "money_3d": 0.625499,
-        "money_1d": 0.0,
-        "volume_ratio": 0.76,
-        "in_hot_industry": false,
-        "score": 25.31
+        "score": 25.33
       },
       {
         "code": "002827",
@@ -98,47 +62,59 @@
         "pct_chg": 0.3241,
         "industry": "化工原料",
         "close": 68.1,
-        "money_3d": 0.6218549999999999,
+        "money_3d": 0.5697200000000001,
         "money_1d": 0.0,
         "volume_ratio": 0.92,
         "in_hot_industry": false,
-        "score": 25.31
+        "score": 25.28
       },
       {
-        "code": "603507",
-        "name": "振江股份",
-        "pct_chg": 0.9174,
-        "industry": "电气设备",
-        "close": 24.2,
-        "money_3d": 0.6088710000000002,
+        "code": "603228",
+        "name": "景旺电子",
+        "pct_chg": 0.1822,
+        "industry": "元器件",
+        "close": 104.45,
+        "money_3d": 0.434,
         "money_1d": 0.0,
-        "volume_ratio": 1.51,
+        "volume_ratio": 0.83,
         "in_hot_industry": false,
-        "score": 25.3
+        "score": 25.22
       },
       {
-        "code": "603960",
-        "name": "克来机电",
-        "pct_chg": 0.7059,
+        "code": "301607",
+        "name": "富特科技",
+        "pct_chg": 0.4972,
         "industry": "汽车配件",
-        "close": 17.12,
-        "money_3d": 0.534575,
+        "close": 44.47,
+        "money_3d": 0.3579740000000002,
         "money_1d": 0.0,
-        "volume_ratio": 1.83,
+        "volume_ratio": 0.93,
         "in_hot_industry": false,
-        "score": 25.27
+        "score": 25.18
       },
       {
-        "code": "601016",
-        "name": "节能风电",
-        "pct_chg": 0.5865,
-        "industry": "新型电力",
-        "close": 3.43,
-        "money_3d": 0.5099030000000002,
+        "code": "002046",
+        "name": "国机精工",
+        "pct_chg": 0.5794,
+        "industry": "机械基件",
+        "close": 64.23,
+        "money_3d": 0.3487949999999997,
         "money_1d": 0.0,
-        "volume_ratio": 0.77,
+        "volume_ratio": 0.86,
         "in_hot_industry": false,
-        "score": 25.25
+        "score": 25.17
+      },
+      {
+        "code": "002886",
+        "name": "沃特股份",
+        "pct_chg": 0.8789,
+        "industry": "塑料",
+        "close": 26.4,
+        "money_3d": 0.3017199999999997,
+        "money_1d": 0.0,
+        "volume_ratio": 0.74,
+        "in_hot_industry": false,
+        "score": 25.15
       },
       {
         "code": "002975",
@@ -146,59 +122,83 @@
         "pct_chg": 0.1528,
         "industry": "专用机械",
         "close": 104.86,
-        "money_3d": 0.46289800000000036,
+        "money_3d": 0.26140899999999967,
         "money_1d": 0.0,
         "volume_ratio": 0.97,
         "in_hot_industry": false,
-        "score": 25.23
+        "score": 25.13
       },
       {
-        "code": "603920",
-        "name": "世运电路",
-        "pct_chg": 0.2991,
-        "industry": "元器件",
-        "close": 43.6,
-        "money_3d": 0.45288300000000004,
+        "code": "601016",
+        "name": "节能风电",
+        "pct_chg": 0.5865,
+        "industry": "新型电力",
+        "close": 3.43,
+        "money_3d": 0.25691800000000037,
         "money_1d": 0.0,
-        "volume_ratio": 0.79,
+        "volume_ratio": 0.77,
         "in_hot_industry": false,
-        "score": 25.23
+        "score": 25.13
       },
       {
-        "code": "300987",
-        "name": "川网传媒",
-        "pct_chg": 0.5937,
+        "code": "000712",
+        "name": "锦龙股份",
+        "pct_chg": 0.8065,
+        "industry": "证券",
+        "close": 10.0,
+        "money_3d": 0.25557299999999994,
+        "money_1d": 0.0,
+        "volume_ratio": 0.94,
+        "in_hot_industry": false,
+        "score": 25.13
+      },
+      {
+        "code": "603456",
+        "name": "九洲药业",
+        "pct_chg": 0.2584,
+        "industry": "医疗保健",
+        "close": 15.52,
+        "money_3d": 0.23605300000000007,
+        "money_1d": 0.0,
+        "volume_ratio": 1.53,
+        "in_hot_industry": false,
+        "score": 25.12
+      },
+      {
+        "code": "000833",
+        "name": "粤桂股份",
+        "pct_chg": 0.7523,
+        "industry": "综合类",
+        "close": 20.09,
+        "money_3d": 0.22831299999999993,
+        "money_1d": 0.0,
+        "volume_ratio": 0.76,
+        "in_hot_industry": false,
+        "score": 25.11
+      },
+      {
+        "code": "000681",
+        "name": "视觉中国",
+        "pct_chg": 0.8653,
         "industry": "互联网",
-        "close": 15.25,
-        "money_3d": 0.41484599999999994,
+        "close": 16.32,
+        "money_3d": 0.2278669999999999,
         "money_1d": 0.0,
-        "volume_ratio": 1.92,
+        "volume_ratio": 1.02,
         "in_hot_industry": false,
-        "score": 25.21
+        "score": 25.11
       },
       {
-        "code": "600345",
-        "name": "长江通信",
-        "pct_chg": 0.2576,
-        "industry": "通信设备",
-        "close": 54.49,
-        "money_3d": 0.3625980000000003,
+        "code": "600864",
+        "name": "哈投股份",
+        "pct_chg": 0.8591,
+        "industry": "证券",
+        "close": 5.87,
+        "money_3d": 0.22472699999999987,
         "money_1d": 0.0,
-        "volume_ratio": 1.05,
+        "volume_ratio": 0.8,
         "in_hot_industry": false,
-        "score": 25.18
-      },
-      {
-        "code": "000735",
-        "name": "罗牛山",
-        "pct_chg": 0.3367,
-        "industry": "农业综合",
-        "close": 5.96,
-        "money_3d": 0.3307010000000002,
-        "money_1d": 0.0,
-        "volume_ratio": 0.78,
-        "in_hot_industry": false,
-        "score": 25.17
+        "score": 25.11
       }
     ],
     "B_趋势跟随": [],
@@ -329,7 +329,7 @@
       ],
       "group": "deep_loss",
       "money_1d": 0,
-      "money_3d": 0.18652799999999994,
+      "money_3d": 0.22432699999999994,
       "in_hot_industry": false
     },
     {
@@ -344,7 +344,7 @@
       ],
       "group": "deep_loss",
       "money_1d": 0,
-      "money_3d": -0.287681,
+      "money_3d": 0.030102999999999883,
       "in_hot_industry": false
     },
     {
@@ -359,7 +359,7 @@
       ],
       "group": "deep_loss",
       "money_1d": 0,
-      "money_3d": 0.0049850000000002115,
+      "money_3d": -0.1831369999999999,
       "in_hot_industry": false
     },
     {
@@ -374,7 +374,7 @@
       ],
       "group": "deep_loss",
       "money_1d": 0,
-      "money_3d": 5.807014000000008,
+      "money_3d": 0.7939600000000034,
       "in_hot_industry": false
     },
     {
@@ -389,7 +389,7 @@
       ],
       "group": "deep_loss",
       "money_1d": 0,
-      "money_3d": 4.9313080000000005,
+      "money_3d": 5.129972,
       "in_hot_industry": false
     },
     {
@@ -404,7 +404,7 @@
       ],
       "group": "deep_loss",
       "money_1d": 0,
-      "money_3d": -0.11811599999999998,
+      "money_3d": -0.09535100000000002,
       "in_hot_industry": false
     },
     {
@@ -419,7 +419,7 @@
       ],
       "group": "deep_loss",
       "money_1d": 0,
-      "money_3d": -0.013659999999999853,
+      "money_3d": -0.06284499999999989,
       "in_hot_industry": false
     },
     {
@@ -434,7 +434,7 @@
       ],
       "group": "deep_loss",
       "money_1d": 0,
-      "money_3d": 2.020408999999998,
+      "money_3d": 0.24548199999999926,
       "in_hot_industry": false
     },
     {
@@ -449,7 +449,7 @@
       ],
       "group": "shallow_loss",
       "money_1d": 0,
-      "money_3d": -0.40851400000000004,
+      "money_3d": -0.19148100000000004,
       "in_hot_industry": false
     },
     {
@@ -464,7 +464,7 @@
       ],
       "group": "shallow_loss",
       "money_1d": 0,
-      "money_3d": -0.004078,
+      "money_3d": -0.015884000000000002,
       "in_hot_industry": false
     },
     {
@@ -479,7 +479,7 @@
       ],
       "group": "shallow_loss",
       "money_1d": 0,
-      "money_3d": 0.27997000000000005,
+      "money_3d": 0.20990799999999998,
       "in_hot_industry": false
     },
     {
@@ -494,7 +494,7 @@
       ],
       "group": "shallow_loss",
       "money_1d": 0,
-      "money_3d": -0.016400999999999995,
+      "money_3d": -0.035635,
       "in_hot_industry": false
     },
     {
@@ -509,7 +509,7 @@
       ],
       "group": "shallow_loss",
       "money_1d": 0,
-      "money_3d": -0.101408,
+      "money_3d": -0.08839299999999999,
       "in_hot_industry": false
     },
     {
@@ -524,7 +524,7 @@
       ],
       "group": "shallow_loss",
       "money_1d": 0,
-      "money_3d": -0.2974739999999996,
+      "money_3d": 0.1262970000000001,
       "in_hot_industry": false
     },
     {
@@ -539,7 +539,7 @@
       ],
       "group": "shallow_loss",
       "money_1d": 0,
-      "money_3d": 0.04974399999999998,
+      "money_3d": 0.08996499999999999,
       "in_hot_industry": false
     },
     {
@@ -554,7 +554,7 @@
       ],
       "group": "mild_profit",
       "money_1d": 0,
-      "money_3d": 0.02119000000000001,
+      "money_3d": 0.00206400000000001,
       "in_hot_industry": false
     },
     {
@@ -569,7 +569,7 @@
       ],
       "group": "mild_profit",
       "money_1d": 0,
-      "money_3d": 2.8164059999999997,
+      "money_3d": 2.0792629999999996,
       "in_hot_industry": false
     },
     {
@@ -584,7 +584,7 @@
       ],
       "group": "mild_profit",
       "money_1d": 0,
-      "money_3d": 0.37732000000000027,
+      "money_3d": 0.32717700000000005,
       "in_hot_industry": false
     },
     {
@@ -599,7 +599,7 @@
       ],
       "group": "mild_profit",
       "money_1d": 0,
-      "money_3d": 1.6874399999999996,
+      "money_3d": 2.132725,
       "in_hot_industry": false
     },
     {
@@ -614,7 +614,7 @@
       ],
       "group": "mild_profit",
       "money_1d": 0,
-      "money_3d": -0.12346799999999994,
+      "money_3d": -0.06992599999999993,
       "in_hot_industry": false
     },
     {
@@ -629,7 +629,7 @@
       ],
       "group": "mild_profit",
       "money_1d": 0,
-      "money_3d": -1.226168,
+      "money_3d": 0.5528309999999997,
       "in_hot_industry": false
     },
     {
@@ -644,7 +644,7 @@
       ],
       "group": "mild_profit",
       "money_1d": 0,
-      "money_3d": 0.032579000000000004,
+      "money_3d": 0.017928,
       "in_hot_industry": false
     },
     {
@@ -659,7 +659,7 @@
       ],
       "group": "mild_profit",
       "money_1d": 0,
-      "money_3d": 4.390931999999999,
+      "money_3d": 1.7380759999999995,
       "in_hot_industry": false
     },
     {
@@ -674,7 +674,7 @@
       ],
       "group": "mild_profit",
       "money_1d": 0,
-      "money_3d": -0.6306299999999996,
+      "money_3d": -0.7423979999999996,
       "in_hot_industry": false
     },
     {
@@ -689,7 +689,7 @@
       ],
       "group": "mild_profit",
       "money_1d": 0,
-      "money_3d": -0.20740099999999984,
+      "money_3d": 0.25751100000000005,
       "in_hot_industry": false
     },
     {
@@ -704,7 +704,7 @@
       ],
       "group": "high_profit",
       "money_1d": 0,
-      "money_3d": 0.023984999999999992,
+      "money_3d": -0.033022000000000024,
       "in_hot_industry": false
     }
   ],
