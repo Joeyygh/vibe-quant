@@ -1,7 +1,7 @@
 {
   "date": "2026-09-24",
   "update_time": "17:30 (盘后)",
-  "actual_run_time": "16:06",
+  "actual_run_time": "18:05",
   "version": "v3.3 (大小盘风格+量能+逆动量+修复iloc[0]bug)",
   "data_source": "20260924 行情 + 资金流 + 板块",
   "market": {
@@ -14,14 +14,125 @@
     "market_style": "unknown",
     "large_cap_pct": 0.0,
     "small_cap_pct": 0.0,
-    "volume_status": "unknown",
-    "volume_ratio_avg": 1.0,
+    "volume_status": "contraction",
+    "volume_ratio_avg": 0.9445478978690727,
     "bias_small_cap": false
   },
   "strategies": {
     "A_保守稳健": [],
     "B_趋势跟随": [],
-    "C_抄底反弹": []
+    "C_抄底反弹": [
+      {
+        "code": "000656",
+        "name": "金科股份",
+        "pct_chg": -2.381,
+        "industry": "全国地产",
+        "close": 1.23,
+        "money_1d": 0.14822000000000007,
+        "volume_ratio": 0.81,
+        "in_hot_industry": false,
+        "score": 56.92
+      },
+      {
+        "code": "605088",
+        "name": "冠盛股份",
+        "pct_chg": -5.056,
+        "industry": "汽车配件",
+        "close": 24.6,
+        "money_1d": 0.7493300000000002,
+        "volume_ratio": 0.85,
+        "in_hot_industry": false,
+        "score": 56.72
+      },
+      {
+        "code": "002582",
+        "name": "好想你",
+        "pct_chg": -1.7672,
+        "industry": "食品",
+        "close": 9.45,
+        "money_1d": -0.15922999999999998,
+        "volume_ratio": 0.82,
+        "in_hot_industry": false,
+        "score": 52.86
+      },
+      {
+        "code": "601600",
+        "name": "中国铝业",
+        "pct_chg": -2.6316,
+        "industry": "铝",
+        "close": 8.88,
+        "money_1d": -1.7742829999999994,
+        "volume_ratio": 0.91,
+        "in_hot_industry": false,
+        "score": 51.88
+      },
+      {
+        "code": "002572",
+        "name": "索菲亚",
+        "pct_chg": -1.8445,
+        "industry": "家居用品",
+        "close": 7.45,
+        "money_1d": 0.0008819999999999709,
+        "volume_ratio": 0.93,
+        "in_hot_industry": false,
+        "score": 51.55
+      },
+      {
+        "code": "002532",
+        "name": "天山铝业",
+        "pct_chg": -2.4174,
+        "industry": "铝",
+        "close": 12.11,
+        "money_1d": -0.34153099999999975,
+        "volume_ratio": 0.86,
+        "in_hot_industry": false,
+        "score": 51.43
+      },
+      {
+        "code": "603529",
+        "name": "爱玛科技",
+        "pct_chg": -1.8797,
+        "industry": "摩托车",
+        "close": 20.88,
+        "money_1d": 0.03474599999999998,
+        "volume_ratio": 0.96,
+        "in_hot_industry": false,
+        "score": 51.2
+      },
+      {
+        "code": "300724",
+        "name": "捷佳伟创",
+        "pct_chg": -1.5933,
+        "industry": "专用机械",
+        "close": 54.35,
+        "money_1d": 0.17980200000000005,
+        "volume_ratio": 0.87,
+        "in_hot_industry": false,
+        "score": 51.16
+      },
+      {
+        "code": "000776",
+        "name": "广发证券",
+        "pct_chg": -2.2084,
+        "industry": "证券",
+        "close": 20.37,
+        "money_1d": -0.35239000000000015,
+        "volume_ratio": 0.91,
+        "in_hot_industry": false,
+        "score": 50.81
+      },
+      {
+        "code": "603799",
+        "name": "华友钴业",
+        "pct_chg": -2.0735,
+        "industry": "小金属",
+        "close": 35.42,
+        "money_1d": -1.2809789999999994,
+        "volume_ratio": 0.73,
+        "in_hot_industry": false,
+        "score": 50.73
+      }
+    ]
   },
   "resonance": [],
   "holdings_warnings": [
@@ -420,7 +531,7 @@
     "strategies": {
       "A_保守稳健": 0,
       "B_趋势跟随": 0,
-      "C_抄底反弹": 0
+      "C_抄底反弹": 10
     },
     "resonance_total": 0,
     "resonance_2": 0,
