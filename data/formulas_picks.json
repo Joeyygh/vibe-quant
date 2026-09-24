@@ -1,7 +1,7 @@
 {
   "date": "2026-09-24",
   "update_time": "17:30 (盘后)",
-  "actual_run_time": "22:35",
+  "actual_run_time": "23:04",
   "version": "v3.3 (大小盘风格+量能+逆动量+修复iloc[0]bug)",
   "data_source": "20260924 行情 + 资金流 + 板块",
   "market": {
@@ -15,7 +15,7 @@
     "large_cap_pct": 0.0,
     "small_cap_pct": 0.0,
     "volume_status": "contraction",
-    "volume_ratio_avg": 0.9445478978690727,
+    "volume_ratio_avg": 0.9445459781148012,
     "bias_small_cap": false
   },
   "strategies": {
