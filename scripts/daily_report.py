@@ -1013,7 +1013,10 @@ def generate_report():
     sections.append("## 十三、持仓卖出信号")
     sections.append("")
     if holdings:
-        sections.append("> 基于 `my_holdings.json` 自动计算,包含止损/止盈/突破/趋势建议。股价为最新收盘价(6.25)。")
+        # 🐛 v4 修复: 这里原本硬编码 "股价为最新收盘价(6.25)" —— 6 月 25 日
+        # 之后再没更新过,报告挂了 9 天也没人发现脚注在说谎。改成动态取报告日期。
+        sections.append(f"> 基于 `data/my_holdings.json` 自动计算(唯一事实来源),"
+                        f"包含止损/止盈/突破/趋势建议。股价为 {date_str} 收盘价。")
         sections.append("")
         # 按分组组织 (兼容中英文 group 字段)
         from collections import defaultdict
