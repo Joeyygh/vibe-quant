@@ -446,36 +446,39 @@ def strategy_C_contrarian(df, money_3d, money_1d, hot_industries, market_ctx=Non
 
 
 # ==================== 持仓风险预警 ====================
-def analyze_holdings_risk(df_today, money_3d, money_1d, hot_industries, holdings_path="my_holdings.json"):
-    """分析持仓, 输出建议"""
-    p = Path(holdings_path)
-    if not p.exists():
-        return []
+def analyze_holdings_risk(df_today, money_3d, money_1d, hot_industries, holdings_path=None):
+    """分析持仓, 输出建议
+
+    🐛 v4 修复: 默认路径原来指向**仓库根目录**的孤儿 my_holdings.json
+    (v2.2 格式 27 只),而 App / check_holdings 用的是 data/ 下那份
+    (2026-09-18, 33 只)。这里改走 holdings_io 统一入口,和数据源对齐。
+    """
     try:
-        data = json.loads(p.read_text(encoding="utf-8"))
-        # 兼容 list 或 dict
-        holdings = []
-        if isinstance(data, list):
-            holdings = data
-        elif isinstance(data, dict):
-            # v3.3 修复: 嵌套结构兼容 {groups: {deep_loss: [...], ...}}
-            for grp, items in data.items():
-                if isinstance(items, list):
-                    holdings.extend(items)
-                elif isinstance(items, dict):
-                    # 二层 dict (新版格式: {groups: {deep_loss: [{...}]}})
-                    for sub_grp, sub_items in items.items():
-                        if isinstance(sub_items, list):
-                            holdings.extend(sub_items)
-        if not holdings:
-            return []
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import holdings_io
+        if holdings_path:
+            with open(holdings_path, 'r', encoding='utf-8') as f:
+                holdings = holdings_io.normalize(json.load(f))
+        else:
+            holdings = holdings_io.load_holdings(quiet=True)
     except Exception:
+        try:
+            p = Path(holdings_path or "data/my_holdings.json")
+            if not p.exists():
+                return []
+            data = json.loads(p.read_text(encoding="utf-8"))
+            holdings = data if isinstance(data, list) else []
+        except Exception:
+            return []
+    if not holdings:
         return []
 
     warnings = []
     for h in holdings:
-        code = h.get("code", "")
-        if not code:
+        # holdings_io.normalize 已统一: code 去后缀 + zfill(6),
+        # 这里只需要保证和 df_today["code"] 的 dtype 一致
+        code = str(h.get("code", "") or "").zfill(6)
+        if not code or code == "000000":
             continue
         row = df_today[df_today["code"] == code]
         if row.empty:
