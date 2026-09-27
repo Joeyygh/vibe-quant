@@ -3,6 +3,13 @@ name: Daily Report
 # v2: 报告改为北京 21:00 出 (UTC 13) - 当天收盘复盘
 # 数据由 daily.yml 19:30 北京 (UTC 11:30) 提前拉好
 # v3 (2026-09-18): 增加 my_holdings.json 健康检查
+# v4 (2026-09-27): 修 P0 —— 健康检查从"门禁"降级为"体检"
+#   起因: v3 用 STALE_DAYS=3 + continue-on-error=false,持仓超过 3 天没更新
+#   就把整个流水线(fetch_news + 选股 + 复盘)全部 fail 掉,
+#   9/18~9/27 连续 9 天日报停摆。
+#   根因: 持仓是"用户调仓才更新"的数据,不是每天刷新的数据。
+#   修复: check_holdings.py 内部改为只对文件级损坏 fail(见该文件 v2 说明),
+#         本步骤再兜一层 continue-on-error,保证体检永远不会阻断出报告。
 on:
   schedule:
     - cron: '0 13 * * 1-5'    # 北京 21:00 当日报告
@@ -29,11 +36,13 @@ jobs:
         run: |
           pip install tushare pandas pyarrow yfinance numpy
 
-      - name: Health check: my_holdings.json
+      - name: Health check: my_holdings.json (advisory)
         id: holdings
         run: |
           python scripts/check_holdings.py
-        continue-on-error: false
+        # 只体检,绝不阻断。持仓坏了 daily_report.py 内部会降级跳过持仓章节,
+        # 日资金流/选股/指数该出还是出。
+        continue-on-error: true
 
       - name: Fetch news & announcements
         env:
