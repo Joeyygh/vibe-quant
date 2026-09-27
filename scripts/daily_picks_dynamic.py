@@ -44,26 +44,22 @@ def get_today_data():
 
 
 def get_user_holdings():
-    """读 my_holdings.json"""
-    p = Path('my_holdings.json')
-    if not p.exists():
-        return []
+    """读持仓 — 统一走 holdings_io(唯一事实来源 data/my_holdings.json)
+
+    🐛 v4 修复: 原来读根目录 my_holdings.json,且解析只认一层 list:
+        for grp, items in data.items():
+            if isinstance(items, list):      # ← data/ 的 groups 是 dict 不是 list
+                ...
+    遇到 data/my_holdings.json 的 {"groups": {...}} 结构时被整段跳过,
+    **这个函数长期返回空列表**,持仓相关推荐全部失效且无任何报错。
+    """
     try:
-        data = json.loads(p.read_text(encoding='utf-8'))
-        # 兼容 list 或 dict
-        if isinstance(data, list):
-            return [h.get('code', '') for h in data]
-        elif isinstance(data, dict):
-            codes = []
-            for grp, items in data.items():
-                if isinstance(items, list):
-                    for h in items:
-                        if 'code' in h:
-                            codes.append(h['code'])
-            return codes
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import holdings_io
+        return [h['code'] for h in holdings_io.load_holdings(quiet=True) if h.get('code')]
     except Exception as e:
-        print(f"读 my_holdings.json 失败: {e}")
-    return []
+        print(f"读持仓失败: {e}")
+        return []
 
 
 def calc_indicators(df_today):
