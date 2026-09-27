@@ -23,6 +23,13 @@ import pandas as pd
 import numpy as np
 import yfinance as yf
 
+# 统一持仓加载(唯一事实来源 data/my_holdings.json)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+try:
+    import holdings_io
+except Exception:  # 兜底:模块缺失时保持旧行为,不炸整个报告
+    holdings_io = None
+
 beijing_tz = timezone(timedelta(hours=8))
 now = datetime.now(beijing_tz)
 REPORTS_DIR = 'reports'
@@ -138,16 +145,17 @@ def get_session_label():
 
 
 def extract_holdings_list(raw):
-    """兼容两种 my_holdings.json 结构:
-    - 新版 dict: {'version':..,'holdings':[{...},{...}], 'closed_holdings':[...]}
-    - 老版 list: [{...},{...}]
-    返回当前持仓 list[dict]
+    """兼容持仓文件的全部历史结构 —— 委托给 holdings_io 统一处理。
+
+    🐛 v4 修复: 原来只认 {"holdings":[...]} 和裸 list 两种,
+    **唯独不认 data/my_holdings.json 实际在用的 {"groups": {...}} 格式**,
+    结果对当前线上文件直接返回 []。app.py 的 load_holdings() 早就补上了
+    groups 兼容,但 daily_report.py 一直漏着 —— 持仓信号章节长期是空的。
+
+    现在统一走 scripts/holdings_io.py,三种格式 + 字段归一化都覆盖,
+    并且固定指向 data/my_holdings.json(唯一事实来源)。
     """
-    if isinstance(raw, dict):
-        return raw.get('holdings', []) or []
-    if isinstance(raw, list):
-        return raw
-    return []
+    return holdings_io.normalize(raw)
 
 
 def fmt_pct(v):
@@ -463,32 +471,59 @@ def get_today_picks(date_str):
 
         all_klines = []
         batch_size = 200
+        failed_batches = []
         for i in range(0, len(codes), batch_size):
             batch = codes[i:i+batch_size]
-            for attempt in range(2):
+            # 🐛 v4 修复: 原来 df 跨循环存活。若本批 2 次都失败,
+            #    df 仍是上一批的数据 -> 同一批 K 线被 append 两次,
+            #    concat 后出现重复行,均线/量比全部算错且无任何报错。
+            #    现在每轮显式重置 + 记录失败批次。
+            df = None
+            for attempt in range(3):
                 try:
                     df = pro.daily(ts_code=','.join(batch), start_date=start, end_date=date_str)
                     break
-                except Exception:
-                    time.sleep(2)
+                except Exception as e:
+                    if attempt < 2:
+                        time.sleep(2 * (attempt + 1))
+                    else:
+                        print(f'  ⚠️ 批次 {i}-{i+len(batch)} 拉取失败: {e}')
             if df is not None and not df.empty:
                 all_klines.append(df)
+            else:
+                failed_batches.append((i, len(batch)))
+
+        if failed_batches:
+            print(f'  ⚠️ {len(failed_batches)}/{len(range(0, len(codes), batch_size))} '
+                  f'批拉取失败,选股池不完整({sum(b for _, b in failed_batches)} 只股缺数据)')
 
         if not all_klines:
             return {'early_open': [], 'seven': [], 'five_filter': []}
 
         df_all = pd.concat(all_klines, ignore_index=True)
+        # 🐛 v4 修复: 显式去重(防重复 ts_code+trade_date 行)
+        before = len(df_all)
+        df_all = df_all.drop_duplicates(subset=['ts_code', 'trade_date'], keep='first')
+        if len(df_all) != before:
+            print(f'  ⚠️ 去重 {before - len(df_all)} 行重复 K 线')
         df_all = df_all.loc[:, ~df_all.columns.duplicated()]
-        df_all = df_all.sort_values(['ts_code', 'trade_date']).reset_index(drop=True)
+        df_all = df_all.sort_values(['ts_code', 'trade_date'], ascending=[True, False]).reset_index(drop=True)
+
+        # 🐛 v4 性能修复: 原来在 5000+ 只股的循环里对 15 万行全表做
+        #    df_all[df_all['ts_code']==code] 布尔筛选 = O(n²) 约 7.5 亿次比较,
+        #    是 30 分钟超时的头号嫌疑。改成一次 groupby 建索引。
+        grouped = {code: g for code, g in df_all.groupby('ts_code', sort=False)}
 
         early_open = []
         seven_cond = []
         five_filter = []
 
         for ts_code in codes:
-            sub = df_all[df_all['ts_code'] == ts_code].sort_values('trade_date', ascending=False).reset_index(drop=True)
-            if len(sub) < 20:
+            g = grouped.get(ts_code)
+            if g is None or len(g) < 20:
                 continue
+            # 已是 trade_date 倒序(最新在第一行),直接用
+            sub = g.reset_index(drop=True)
             try:
                 last = sub.iloc[0]
                 close = float(last['close'])
@@ -498,19 +533,26 @@ def get_today_picks(date_str):
                 code = ts_code.split('.')[0]
 
                 # ===== 早盘预测 4 条件 =====
-                if len(sub) >= 6:
+                # 🐛 v4 修复 1: 原来 if len(sub) >= 6 就去算 sub['close'].iloc[:20].mean()
+                #    并命名为 ma20 —— 不足 20 根时算出来其实是 MA6,却顶着 MA20 的名字
+                #    参与 `close > ma20` 判断,静默产出错误指标。现在强制 >= 20。
+                # 🐛 v4 修复 2: 原来量比门槛 5.0(今日量 / 前5日均量),
+                #    正常票几乎不可能达到,导致 early_open 常年空数组 —— 死条件。
+                #    改为 2.0 起跳(仍属"显著放量"),并在下面再分档输出。
+                if len(sub) >= 20:
                     vol_5d = sub['vol'].iloc[1:6].mean()
                     vol_ratio = vol / vol_5d if vol_5d > 0 else 0
-                    if (vol_ratio >= 5 and 2.0 <= pct_chg <= 5.0 
-                        and len(sub) >= 3 and amount > sub['amount'].iloc[1] > sub['amount'].iloc[2]):
-                        ma20 = sub['close'].iloc[:20].mean()
-                        if close > ma20:
+                    if (vol_ratio >= 2.0 and 2.0 <= pct_chg <= 5.0
+                        and amount > sub['amount'].iloc[1] > sub['amount'].iloc[2]):
+                        ma20_open = sub['close'].iloc[:20].mean()
+                        if close > ma20_open:
                             early_open.append({
                                 'code': code, 'name': name_map.get(code, code),
                                 'industry': industry_map.get(code, ''),
                                 'close': close, 'pct_chg': pct_chg,
                                 'vol_ratio': vol_ratio,
-                                'score': '4/4',
+                                'ma20': ma20_open,
+                                'score': f'{min(4, 1 + int(vol_ratio >= 3) + int(pct_chg >= 4))}/4',
                             })
 
                 # ===== 7 条件叠加(简化版 · 2026-08-06 加动量保护) =====
@@ -543,9 +585,14 @@ def get_today_picks(date_str):
                 #   - 5 日涨幅 < 5% + 近 20 日新高 + 成交量放大 + 收盘 > MA20
                 if len(sub) >= 20:
                     stock_name = name_map.get(code, '')
-                    is_st = 'ST' in stock_name.upper() or '*ST' in stock_name
+                    # 🐛 v4 修复 3: 原来 `'ST' in name.upper() or '*ST' in name`,
+                    #    后半截永远被前半截覆盖(纯冗余)。现在显式列出
+                    #    交易所 ST 命名规则:*ST / ST / SST / PT / 退,
+                    #    任一命中即排除,避免改名或字段异常导致漏网。
+                    is_st = any(tag in stock_name.upper()
+                                for tag in ('ST', 'SST', 'PT', '退'))
                     if is_st:
-                        continue  # 跳过 ST
+                        continue  # 跳过 ST/退市整理股
 
                     if pct_chg >= 9.0:
                         continue  # 跳过今日暴涨
@@ -555,8 +602,10 @@ def get_today_picks(date_str):
                         continue  # 跳过近 5 日有大阴线
 
                     recent_5d = (close / sub['close'].iloc[4] - 1) * 100
-                    if recent_5d > 20:
-                        continue  # 跳过 5 日暴涨超 20%
+                    # 🐛 v4 修复 4: 注释写"排除 5 日涨幅 ≥ 20%",代码是 > 20,
+                    #    正好等于 20.00 的漏网。改成 >=。
+                    if recent_5d >= 20:
+                        continue  # 跳过 5 日暴涨 ≥ 20%
 
                     # 🛡️ 动量天花板 (2026-08-06 新增)
                     # 20日涨幅 ≥ 80% 的票, 次日接盘风险高
@@ -594,22 +643,27 @@ def get_holding_signals(target_date, date_str):
     """读持仓文件 + 计算卖出信号"""
     if not pro:
         return []
-    holdings_file = 'my_holdings.json'
-    if not os.path.exists(holdings_file):
+    # 🐛 v4 修复: 原来优先读**仓库根目录**的 my_holdings.json(孤儿陈旧文件,
+    #    v2.2 格式 27 只),而 App / check_holdings 读的是 data/ 下那份
+    #    (2026-09-18, 33 只)。体检 A、计算 B,6 只真实持仓信号从来没算过。
+    #    现在统一走 holdings_io,固定 data/my_holdings.json。
+    if holdings_io is not None:
+        holdings = holdings_io.load_holdings()
+    else:
         script_dir = os.path.dirname(os.path.abspath(__file__))
         repo_root = os.path.dirname(script_dir)
-        alt_path = os.path.join(repo_root, 'my_holdings.json')
-        if os.path.exists(alt_path):
-            holdings_file = alt_path
-        else:
+        alt = os.path.join(repo_root, 'data', 'my_holdings.json')
+        if not os.path.exists(alt):
+            alt = os.path.join(repo_root, 'my_holdings.json')
+        if not os.path.exists(alt):
             return []
-    try:
-        with open(holdings_file, 'r', encoding='utf-8') as f:
-            raw = json.load(f)
-        holdings = extract_holdings_list(raw)
-        if not holdings:
+        try:
+            with open(alt, 'r', encoding='utf-8') as f:
+                holdings = extract_holdings_list(json.load(f))
+        except Exception:
             return []
-    except Exception:
+
+    if not holdings:
         return []
 
     signals = []
@@ -620,11 +674,22 @@ def get_holding_signals(target_date, date_str):
         cost = float(h.get('cost_price', 0)) if h.get('cost_price') else 0
         group = h.get('group', '')
 
-        # 跳过港股(暂不支持)、债券
-        if code_raw.endswith('.HK') or h.get('type') == 'bond' or h.get('currency') == 'HKD':
+        # 🐛 v4 修复: normalize() 已把 code 去掉后缀,2228.HK 变成 02228,
+        #    原来的 `code_raw.endswith('.HK')` 永远为 False,港股会漏进
+        #    ts_code 推导,被错当成 02228.SZ 去查(查不到,静默跳过)。
+        #    现在用 raw_code(保留原始后缀)判断,并补上债券/ETF 前缀排除。
+        raw_code_full = str(h.get('raw_code') or h.get('code') or '').strip()
+        if (raw_code_full.upper().endswith(('.HK', '.HKS'))
+                or h.get('type') == 'bond'
+                or h.get('currency') in ('HKD', 'HKDH')):
             continue
 
         code = code_raw.zfill(6)
+
+        # 100xxx = 国债逆回购, 15xxxx/16xxxx/18xxxx = ETF/LOF,
+        # 都不在 pro.daily 覆盖的股票范围内,查了也是白查
+        if code.startswith(('1', '5')):
+            continue
 
         if code.startswith(('4', '8')):
             ts_code = f"{code}.BJ"
@@ -980,14 +1045,22 @@ def generate_report():
             sections.append("")
 
     # 港股/债券/已清仓(从原始文件读,不调 Tushare)
-    repo_root_h = os.path.dirname(os.path.abspath(os.path.join(os.path.dirname(__file__))) if False else 'scripts/daily_report.py')
+    # 🐛 v4 修复: 同样指向 data/my_holdings.json(见 holdings_io 说明),
+    #    并清掉那行 `if False else` 的死代码。
     repo_root_h = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    raw_holdings_file = os.path.join(repo_root_h, 'my_holdings.json')
+    raw_holdings_file = (holdings_io.resolve_path(repo_root_h)
+                         if holdings_io is not None
+                         else os.path.join(repo_root_h, 'data', 'my_holdings.json'))
     if os.path.exists(raw_holdings_file):
         with open(raw_holdings_file, 'r', encoding='utf-8') as f:
             _raw_all = json.load(f)
         raw_all = extract_holdings_list(_raw_all)
-        other_items = [h for h in raw_all if str(h.get('code', '')).endswith('.HK') or h.get('type') == 'bond' or h.get('currency') == 'HKD']
+        # raw_code 保留了原始后缀(.HK / .CSI),据此判断才能覆盖港股和债券
+        other_items = [h for h in raw_all
+                       if str(h.get('raw_code') or h.get('code', '')).upper().endswith(('.HK', '.HKS', '.CSI'))
+                       or h.get('type') == 'bond'
+                       or h.get('currency') in ('HKD', 'HKDH')
+                       or str(h.get('code', '')).startswith(('1', '5'))]
         if other_items:
             sections.append("### 港股/债券(不参与 A 股信号)")
             sections.append("")
