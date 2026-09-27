@@ -14,7 +14,8 @@ import shutil
 import argparse
 import pandas as pd
 
-HOLDINGS_FILE = 'my_holdings.json'
+# 🐛 v4: 事实来源统一到 data/ 下(app.py 读的就是这份)
+HOLDINGS_FILE = os.path.join('data', 'my_holdings.json')
 STOCK_LIST_FILE = 'data/stock_list.csv'
 TODAY_QUOTE_FILE = 'data/today_quote.csv'
 
@@ -196,13 +197,25 @@ def main():
         print(f"❌ {HOLDINGS_FILE} 不存在")
         sys.exit(1)
 
-    with open(HOLDINGS_FILE, 'r', encoding='utf-8') as f:
-        _raw = json.load(f)
-    # 兼容新版 dict 结构: {holdings:[...], closed_holdings:[...]}
-    if isinstance(_raw, dict):
-        holdings = _raw.get('holdings', [])
-    else:
-        holdings = _raw
+    # 🐛 v4 修复: 原来读仓库根目录的孤儿 my_holdings.json,且只解析
+    #    {"holdings": [...]}。对着 data/ 下的 {"groups": {...}} 会得到
+    #    holdings=[] → **校验 0 只却显示"全部正常"**,
+    #    等于这个"防错配"的校验脚本一直是空转。
+    #    (2026-09-18 的 605358/605111 名字成本互换就是这么漏过去的)
+    #    现在统一走 holdings_io,固定 data/my_holdings.json。
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    try:
+        import holdings_io
+        holdings = holdings_io.load_holdings(quiet=False)
+    except Exception as e:
+        print(f"❌ holdings_io 加载失败: {e}")
+        sys.exit(1)
+
+    if not holdings:
+        print('❌ 解析出 0 只持仓,文件格式可能不兼容 — 拒绝给出"全部正常"的假结论')
+        sys.exit(1)
+
+    print(f"  待校验: {len(holdings)} 只")
 
     code_to_name, name_to_codes = load_stock_list()
     if not code_to_name:
