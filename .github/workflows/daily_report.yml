@@ -3,6 +3,17 @@ name: Daily Report
 # v2: 报告改为北京 21:00 出 (UTC 13) - 当天收盘复盘
 # 数据由 daily.yml 19:30 北京 (UTC 11:30) 提前拉好
 # v3 (2026-09-18): 增加 my_holdings.json 健康检查
+# v5 (2026-09-27): 修真正的 P0 —— 本文件从 9/18 起就是"解析失败"状态
+#   起因: v3 加的那行 step 名是
+#       - name: Health check: my_holdings.json
+#   step 名里未加引号的 ": " 是 YAML 的键值分隔符 → 整个文件解析失败。
+#   症状: actions 注册表里本文件 name 显示成文件路径而不是 "Daily Report";
+#         每次 push 产生一条 event=push、0 job、秒挂的失败运行;
+#         workflow_dispatch 返回 422 "does not have workflow_dispatch";
+#         定时任务被 GitHub 静默跳过 —— 所以 9/18 之后日报一次都没出。
+#   修复: step 名加引号去掉冒号。已用探针 workflow 实证:
+#         裸 ": " 构造 → 解析失败;去掉冒号 → 正常。
+#   ⚠️ 同类隐患已用 scripts/lint_workflows.py 加了扫描,见 safety_net.yml 的 v5。
 # v4 (2026-09-27): 修 P0 —— 健康检查从"门禁"降级为"体检"
 #   起因: v3 用 STALE_DAYS=3 + continue-on-error=false,持仓超过 3 天没更新
 #   就把整个流水线(fetch_news + 选股 + 复盘)全部 fail 掉,
@@ -36,7 +47,7 @@ jobs:
         run: |
           pip install tushare pandas pyarrow yfinance numpy
 
-      - name: Health check: my_holdings.json (advisory)
+      - name: 'Health check - my_holdings.json (advisory)'
         id: holdings
         run: |
           python scripts/check_holdings.py
