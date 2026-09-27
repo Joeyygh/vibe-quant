@@ -1,0 +1,10 @@
+name: Probe A Colon
+
+on:
+  workflow_dispatch:
+jobs:
+  j:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Health check: my_holdings.json
+        run: echo hi
