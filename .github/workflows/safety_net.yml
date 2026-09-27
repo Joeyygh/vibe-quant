@@ -36,28 +36,12 @@ jobs:
         id: check
         env:
           TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
-        run: |
-          TODAY=$(date -d 'today' +%Y%m%d)
-          python -c "
-          import tushare as ts
-          import os
-          ts.set_token(os.environ['TUSHARE_TOKEN'])
-          pro = ts.pro_api()
-          today = '$TODAY'
-          try:
-              df = pro.daily(trade_date=today, fields='ts_code,trade_date')
-              if len(df) > 100:
-                  print('FRESH')
-              else:
-                  print('STALE')
-          except Exception as e:
-              print('STALE')
-              print(f'err: {e}', file=__import__('sys').stderr)
-          " > /tmp/freshness.txt 2>&1
-          STATE=$(tail -1 /tmp/freshness.txt | tr -d '
-')
-          echo "freshness=$STATE"
-          echo "freshness=$STATE" >> $GITHUB_OUTPUT
+        # v5 (2026-09-27): 原先这段是在 run: | 块标量里内嵌 python -c 和
+        # `tr -d '` + 真实换行 + `')`,而续行落在第 0 列 → 提前结束了块标量,
+        # YAML 直接解析失败 → GitHub 把本文件标记为无效 → 整个兜底机制
+        # 从来没跑过(actions 列表里 name 显示成文件路径就是症状)。
+        # 现在抽成 scripts/check_freshness.py,YAML 里只留一行干净调用。
+        run: python scripts/check_freshness.py
 
       - name: Update data if stale
         if: steps.check.outputs.freshness != 'FRESH'
