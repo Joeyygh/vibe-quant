@@ -1,7 +1,7 @@
 {
   "date": "2026-09-28",
   "update_time": "17:30 (盘后)",
-  "actual_run_time": "07:04",
+  "actual_run_time": "08:08",
   "version": "v3.3 (大小盘风格+量能+逆动量+修复iloc[0]bug)",
   "data_source": "20260924 行情 + 资金流 + 板块",
   "market": {
@@ -148,7 +148,7 @@
       ],
       "group": "深亏",
       "money_1d": 0,
-      "money_3d": -0.49397799999999986,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -163,7 +163,7 @@
       ],
       "group": "深亏",
       "money_1d": 0,
-      "money_3d": -0.024172000000000003,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -178,7 +178,7 @@
       ],
       "group": "深亏",
       "money_1d": 0,
-      "money_3d": -3.666070999999999,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -193,7 +193,7 @@
       ],
       "group": "深亏",
       "money_1d": 0,
-      "money_3d": 0.07308600000000005,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -208,7 +208,7 @@
       ],
       "group": "深亏",
       "money_1d": 0,
-      "money_3d": -3.068548999999999,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -223,7 +223,7 @@
       ],
       "group": "深亏",
       "money_1d": 0,
-      "money_3d": -8.502078999999998,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -238,7 +238,7 @@
       ],
       "group": "深亏",
       "money_1d": 0,
-      "money_3d": 0.008480999999999999,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -253,7 +253,7 @@
       ],
       "group": "浅亏",
       "money_1d": 0,
-      "money_3d": 1.2812059999999994,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -268,7 +268,7 @@
       ],
       "group": "浅亏",
       "money_1d": 0,
-      "money_3d": -1.5299690000000001,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -283,7 +283,7 @@
       ],
       "group": "浅亏",
       "money_1d": 0,
-      "money_3d": -0.25038999999999995,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -298,7 +298,7 @@
       ],
       "group": "浅亏",
       "money_1d": 0,
-      "money_3d": -9.681744999999998,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -313,7 +313,7 @@
       ],
       "group": "浅亏",
       "money_1d": 0,
-      "money_3d": 0.10185900000000038,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -328,7 +328,7 @@
       ],
       "group": "浅亏",
       "money_1d": 0,
-      "money_3d": -3.2692740000000007,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -343,7 +343,7 @@
       ],
       "group": "浅亏",
       "money_1d": 0,
-      "money_3d": 1.7477380000000005,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -358,7 +358,7 @@
       ],
       "group": "浅亏",
       "money_1d": 0,
-      "money_3d": 0.048201999999999995,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -373,7 +373,7 @@
       ],
       "group": "浅亏",
       "money_1d": 0,
-      "money_3d": 0.8285060000000001,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -388,7 +388,7 @@
       ],
       "group": "浅亏",
       "money_1d": 0,
-      "money_3d": 0.022955000000000017,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -403,7 +403,7 @@
       ],
       "group": "浅亏",
       "money_1d": 0,
-      "money_3d": -9.985163,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -418,7 +418,7 @@
       ],
       "group": "保本",
       "money_1d": 0,
-      "money_3d": -0.2804859999999986,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -433,7 +433,7 @@
       ],
       "group": "保本",
       "money_1d": 0,
-      "money_3d": -2.4912140000000016,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -448,7 +448,7 @@
       ],
       "group": "温和盈利",
       "money_1d": 0,
-      "money_3d": -5.120719999999999,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -463,7 +463,7 @@
       ],
       "group": "温和盈利",
       "money_1d": 0,
-      "money_3d": 4.592853999999999,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -478,7 +478,7 @@
       ],
       "group": "温和盈利",
       "money_1d": 0,
-      "money_3d": 0.20811899999999997,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -493,7 +493,7 @@
       ],
       "group": "温和盈利",
       "money_1d": 0,
-      "money_3d": -0.7139840000000004,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -508,7 +508,7 @@
       ],
       "group": "温和盈利",
       "money_1d": 0,
-      "money_3d": 0.027167000000000097,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -523,7 +523,7 @@
       ],
       "group": "高盈利",
       "money_1d": 0,
-      "money_3d": -0.05141500000000015,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -538,7 +538,7 @@
       ],
       "group": "高盈利",
       "money_1d": 0,
-      "money_3d": -15.393739999999996,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -553,7 +553,7 @@
       ],
       "group": "高盈利",
       "money_1d": 0,
-      "money_3d": -0.6143490000000001,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -568,7 +568,7 @@
       ],
       "group": "高盈利",
       "money_1d": 0,
-      "money_3d": 0.8496229999999996,
+      "money_3d": 0,
       "in_hot_industry": false
     },
     {
@@ -583,7 +583,7 @@
       ],
       "group": "高盈利",
       "money_1d": 0,
-      "money_3d": -0.18577700000000005,
+      "money_3d": 0,
       "in_hot_industry": false
     }
   ],
