@@ -1,6 +1,6 @@
 {
   "date": "2026-09-29",
-  "update_time": "04:05",
+  "update_time": "05:04",
   "version": "1.4-dynamic-auto",
   "weights": {
     "theme": 30,
@@ -359,10 +359,10 @@
     }
   ],
   "intersection": [
-    "000725",
     "002137",
-    "002228",
+    "000725",
     "000988",
+    "002228",
     "000651"
   ],
   "filtered_out": [],
