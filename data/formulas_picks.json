@@ -1,7 +1,7 @@
 {
   "date": "2026-09-29",
   "update_time": "17:30 (盘后)",
-  "actual_run_time": "07:06",
+  "actual_run_time": "08:10",
   "version": "v3.3 (大小盘风格+量能+逆动量+修复iloc[0]bug)",
   "data_source": "20260928 行情 + 资金流 + 板块",
   "market": {
@@ -28,7 +28,7 @@
         "pct_chg": -1.626,
         "industry": "全国地产",
         "close": 1.21,
-        "money_1d": 0.0,
+        "money_1d": -0.15145,
         "volume_ratio": 0.53,
         "in_hot_industry": false,
         "score": 54.66
@@ -39,7 +39,7 @@
         "pct_chg": -2.9727,
         "industry": "铝",
         "close": 11.75,
-        "money_1d": 0.0,
+        "money_1d": -0.34251100000000007,
         "volume_ratio": 0.87,
         "in_hot_industry": false,
         "score": 53.27
@@ -50,7 +50,7 @@
         "pct_chg": -2.5941,
         "industry": "互联网",
         "close": 19.15,
-        "money_1d": 0.0,
+        "money_1d": -0.045840999999999986,
         "volume_ratio": 0.82,
         "in_hot_industry": false,
         "score": 52.56
@@ -61,7 +61,7 @@
         "pct_chg": -1.4815,
         "industry": "食品",
         "close": 9.31,
-        "money_1d": 0.0,
+        "money_1d": -0.17102399999999998,
         "volume_ratio": 0.81,
         "in_hot_industry": false,
         "score": 52.04
@@ -72,7 +72,7 @@
         "pct_chg": -1.7633,
         "industry": "保险",
         "close": 36.77,
-        "money_1d": 0.0,
+        "money_1d": -0.340866,
         "volume_ratio": 0.79,
         "in_hot_industry": false,
         "score": 51.92
@@ -83,7 +83,7 @@
         "pct_chg": -2.0592,
         "industry": "运输设备",
         "close": 7.61,
-        "money_1d": 0.0,
+        "money_1d": -0.028949000000000003,
         "volume_ratio": 0.52,
         "in_hot_industry": false,
         "score": 51.5
@@ -94,7 +94,7 @@
         "pct_chg": -2.0817,
         "industry": "出版业",
         "close": 12.23,
-        "money_1d": 0.0,
+        "money_1d": -0.17035899999999998,
         "volume_ratio": 0.62,
         "in_hot_industry": false,
         "score": 51.07
@@ -105,7 +105,7 @@
         "pct_chg": -4.0352,
         "industry": "铜",
         "close": 33.77,
-        "money_1d": 0.0,
+        "money_1d": -1.9557299999999995,
         "volume_ratio": 0.99,
         "in_hot_industry": false,
         "score": 51.06
@@ -116,7 +116,7 @@
         "pct_chg": -4.3056,
         "industry": "黄金",
         "close": 22.67,
-        "money_1d": 0.0,
+        "money_1d": -1.167086,
         "volume_ratio": 0.95,
         "in_hot_industry": false,
         "score": 51.01
@@ -127,7 +127,7 @@
         "pct_chg": -1.2306,
         "industry": "保险",
         "close": 30.5,
-        "money_1d": 0.0,
+        "money_1d": -0.9565160000000004,
         "volume_ratio": 0.94,
         "in_hot_industry": false,
         "score": 50.95
@@ -147,8 +147,8 @@
         "✅ 持有 (浮-11.0%)"
       ],
       "group": "深亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -0.8575259999999998,
+      "money_3d": -0.8575259999999998,
       "in_hot_industry": false
     },
     {
@@ -162,8 +162,8 @@
         "✅ 持有 (浮+2.0%)"
       ],
       "group": "深亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -0.023214,
+      "money_3d": -0.023214,
       "in_hot_industry": false
     },
     {
@@ -177,8 +177,8 @@
         "⚠️ 继续下跌, 考虑止损"
       ],
       "group": "深亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -2.9452279999999993,
+      "money_3d": -2.9452279999999993,
       "in_hot_industry": false
     },
     {
@@ -192,8 +192,8 @@
         "✅ 持有 (浮-3.7%)"
       ],
       "group": "深亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": 0.03192800000000007,
+      "money_3d": 0.03192800000000007,
       "in_hot_industry": false
     },
     {
@@ -207,8 +207,8 @@
         "✅ 持有 (浮-5.0%)"
       ],
       "group": "深亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -1.7957650000000023,
+      "money_3d": -1.7957650000000023,
       "in_hot_industry": false
     },
     {
@@ -222,8 +222,8 @@
         "⚠️ 继续下跌, 考虑止损"
       ],
       "group": "深亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -6.645040999999997,
+      "money_3d": -6.645040999999997,
       "in_hot_industry": false
     },
     {
@@ -237,8 +237,8 @@
         "✅ 持有 (浮+0.0%)"
       ],
       "group": "深亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": 0.031154,
+      "money_3d": 0.031154,
       "in_hot_industry": false
     },
     {
@@ -252,8 +252,8 @@
         "✅ 持有 (浮-2.2%)"
       ],
       "group": "浅亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": 1.3113880000000004,
+      "money_3d": 1.3113880000000004,
       "in_hot_industry": false
     },
     {
@@ -269,8 +269,8 @@
         "🔴 今日大跌"
       ],
       "group": "浅亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -2.120943999999999,
+      "money_3d": -2.120943999999999,
       "in_hot_industry": false
     },
     {
@@ -284,8 +284,8 @@
         "✅ 持有 (浮-10.9%)"
       ],
       "group": "浅亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -0.05305899999999997,
+      "money_3d": -0.05305899999999997,
       "in_hot_industry": false
     },
     {
@@ -299,8 +299,8 @@
         "⚠️ 继续下跌, 考虑止损"
       ],
       "group": "浅亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -4.296632000000001,
+      "money_3d": -4.296632000000001,
       "in_hot_industry": false
     },
     {
@@ -314,8 +314,8 @@
         "⚠️ 继续下跌, 考虑止损"
       ],
       "group": "浅亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -0.09391100000000006,
+      "money_3d": -0.09391100000000006,
       "in_hot_industry": false
     },
     {
@@ -332,8 +332,8 @@
         "🔴 今日大跌"
       ],
       "group": "浅亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -4.724231999999998,
+      "money_3d": -4.724231999999998,
       "in_hot_industry": false
     },
     {
@@ -347,8 +347,8 @@
         "✅ 持有 (浮+3.3%)"
       ],
       "group": "浅亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -0.16126300000000046,
+      "money_3d": -0.16126300000000046,
       "in_hot_industry": false
     },
     {
@@ -362,8 +362,8 @@
         "✅ 持有 (浮+0.4%)"
       ],
       "group": "浅亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -0.020922000000000024,
+      "money_3d": -0.020922000000000024,
       "in_hot_industry": false
     },
     {
@@ -377,8 +377,8 @@
         "✅ 持有 (浮-0.9%)"
       ],
       "group": "浅亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": 0.18756799999999965,
+      "money_3d": 0.18756799999999965,
       "in_hot_industry": false
     },
     {
@@ -392,8 +392,8 @@
         "✅ 持有 (浮-0.8%)"
       ],
       "group": "浅亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -0.11099900000000003,
+      "money_3d": -0.11099900000000003,
       "in_hot_industry": false
     },
     {
@@ -409,8 +409,8 @@
         "🔴 今日大跌"
       ],
       "group": "浅亏",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -18.583058999999995,
+      "money_3d": -18.583058999999995,
       "in_hot_industry": false
     },
     {
@@ -424,8 +424,8 @@
         "✅ 持有 (浮-1.1%)"
       ],
       "group": "保本",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -4.1727919999999985,
+      "money_3d": -4.1727919999999985,
       "in_hot_industry": false
     },
     {
@@ -441,8 +441,8 @@
         "🔴 今日大跌"
       ],
       "group": "保本",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -7.764338999999995,
+      "money_3d": -7.764338999999995,
       "in_hot_industry": false
     },
     {
@@ -458,8 +458,8 @@
         "🔴 今日大跌"
       ],
       "group": "温和盈利",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -8.401461999999999,
+      "money_3d": -8.401461999999999,
       "in_hot_industry": false
     },
     {
@@ -474,8 +474,8 @@
         "⚠️ 继续下跌, 考虑止损"
       ],
       "group": "温和盈利",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -2.258858,
+      "money_3d": -2.258858,
       "in_hot_industry": false
     },
     {
@@ -489,8 +489,8 @@
         "🚨 深套 -58.2%, 慎加仓"
       ],
       "group": "温和盈利",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": 0.02136300000000001,
+      "money_3d": 0.02136300000000001,
       "in_hot_industry": false
     },
     {
@@ -504,8 +504,8 @@
         "💰 浮盈 24.6%, 可考虑止盈"
       ],
       "group": "温和盈利",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -0.23657700000000023,
+      "money_3d": -0.23657700000000023,
       "in_hot_industry": false
     },
     {
@@ -519,8 +519,8 @@
         "✅ 持有 (浮-0.9%)"
       ],
       "group": "温和盈利",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -0.5300829999999999,
+      "money_3d": -0.5300829999999999,
       "in_hot_industry": false
     },
     {
@@ -535,8 +535,8 @@
         "🔴 今日大跌"
       ],
       "group": "高盈利",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -0.8186160000000003,
+      "money_3d": -0.8186160000000003,
       "in_hot_industry": false
     },
     {
@@ -550,8 +550,8 @@
         "✅ 持有 (浮-1.0%)"
       ],
       "group": "高盈利",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -18.123241000000004,
+      "money_3d": -18.123241000000004,
       "in_hot_industry": false
     },
     {
@@ -566,8 +566,8 @@
         "🔴 今日大跌"
       ],
       "group": "高盈利",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -0.4008290000000001,
+      "money_3d": -0.4008290000000001,
       "in_hot_industry": false
     },
     {
@@ -581,8 +581,8 @@
         "✅ 持有 (浮+6.3%)"
       ],
       "group": "高盈利",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": -0.06446699999999983,
+      "money_3d": -0.06446699999999983,
       "in_hot_industry": false
     },
     {
@@ -596,8 +596,8 @@
         "✅ 持有 (浮+18.7%)"
       ],
       "group": "高盈利",
-      "money_1d": 0,
-      "money_3d": 0,
+      "money_1d": 0.067692,
+      "money_3d": 0.067692,
       "in_hot_industry": false
     }
   ],
