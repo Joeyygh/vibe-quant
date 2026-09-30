@@ -1,6 +1,6 @@
 {
   "date": "2026-10-01",
-  "update_time": "06:04",
+  "update_time": "07:04",
   "version": "1.4-dynamic-auto",
   "weights": {
     "theme": 30,
@@ -359,9 +359,9 @@
     }
   ],
   "intersection": [
-    "000725",
+    "000651",
     "000988",
-    "000651"
+    "000725"
   ],
   "filtered_out": [],
   "risk_warning": "本榜单基于 Tushare 当日真实数据动态生成, 仅供参考, 不构成投资建议. 投资有风险, 入市需谨慎."
