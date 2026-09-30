@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-30",
-  "update_time": "07:06",
+  "date": "2026-10-01",
+  "update_time": "00:13",
   "version": "1.4-dynamic-auto",
   "weights": {
     "theme": 30,
@@ -13,49 +13,104 @@
     "pct_today_max": 7.0,
     "bias_5_max": 15.0
   },
-  "market_view": "09/30 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
+  "market_view": "10/01 当日盘面已动态生成, 5 企推基于涨停+高成交, 量化补充基于强势股+用户持仓, 双引擎交集=高信心",
   "summary": {
     "theme_picks": 5,
     "quant_picks": 7,
-    "intersection": 5,
+    "intersection": 3,
     "total": 12
   },
   "picks": [
     {
       "rank": 1,
-      "code": "000651",
-      "name": "格力电器",
-      "score": 8,
+      "code": "001246",
+      "name": "N力勤资源",
+      "score": 55,
+      "score_breakdown": {
+        "theme": 30,
+        "money": 0,
+        "tech": 5,
+        "event": 20
+      },
+      "industry": "小金属",
+      "themes": [
+        "钨",
+        "稀土",
+        "战略金属",
+        "军工"
+      ],
+      "pct_chg_today": 206.5944,
+      "ret_20d": 0,
+      "close": 65.09,
+      "thesis": "小金属 行业, 涨幅 +206.59%, 成交 0.08 亿, 钨, 稀土",
+      "entry": "已涨停 (206.6%), 激进者次日开盘轻仓, 稳健者等回踩 5日线 65.09",
+      "target": "突破前高/MA60 (70.30, +8%)",
+      "stop": "跌破 5日线 (63.14, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 2,
+      "code": "600418",
+      "name": "江淮汽车",
+      "score": 21,
       "score_breakdown": {
         "theme": 8,
         "money": 0,
-        "tech": 0,
+        "tech": 5,
+        "event": 8
+      },
+      "industry": "汽车整车",
+      "themes": [
+        "汽车整车"
+      ],
+      "pct_chg_today": 5.4916,
+      "ret_20d": 0,
+      "close": 27.47,
+      "thesis": "汽车整车 行业, 涨幅 +5.49%, 成交 0.07 亿, 汽车整车",
+      "entry": "现价 27.47, 突破 28.02 加仓",
+      "target": "突破前高/MA60 (29.67, +8%)",
+      "stop": "跌破 5日线 (26.65, -3%)",
+      "risk_level": "中",
+      "source": "theme",
+      "tag": "🔥 仅精选"
+    },
+    {
+      "rank": 3,
+      "code": "000651",
+      "name": "格力电器",
+      "score": 13,
+      "score_breakdown": {
+        "theme": 8,
+        "money": 0,
+        "tech": 5,
         "event": 0
       },
       "industry": "家用电器",
       "themes": [
         "家用电器"
       ],
-      "pct_chg_today": -0.7813,
+      "pct_chg_today": 0.4724,
       "ret_20d": 0,
-      "close": 38.1,
-      "thesis": "家用电器 行业, 涨幅 -0.78%, 成交 0.01 亿, 家用电器",
-      "entry": "现价 38.10, 不追高, 等回踩 5日线 38.10 介入",
-      "target": "突破前高/MA60 (41.15, +8%)",
-      "stop": "跌破 5日线 (36.96, -3%)",
+      "close": 38.28,
+      "thesis": "家用电器 行业, 涨幅 +0.47%, 成交 0.01 亿, 家用电器",
+      "entry": "现价 38.28, 不追高, 等回踩 5日线 38.28 介入",
+      "target": "突破前高/MA60 (41.34, +8%)",
+      "stop": "跌破 5日线 (37.13, -3%)",
       "risk_level": "中",
       "source": "theme",
       "tag": "🎯 双引擎"
     },
     {
-      "rank": 2,
+      "rank": 4,
       "code": "000725",
       "name": "京东方A",
-      "score": 36,
+      "score": 41,
       "score_breakdown": {
         "theme": 24,
         "money": 0,
-        "tech": 0,
+        "tech": 5,
         "event": 12
       },
       "industry": "元器件",
@@ -65,26 +120,26 @@
         "AI硬件",
         "消费电子"
       ],
-      "pct_chg_today": -1.5517,
+      "pct_chg_today": 0.1751,
       "ret_20d": 0,
-      "close": 5.71,
-      "thesis": "元器件 行业, 涨幅 -1.55%, 成交 0.05 亿, MLCC, 元器件",
-      "entry": "现价 5.71, 不追高, 等回踩 5日线 5.71 介入",
-      "target": "突破前高/MA60 (6.17, +8%)",
-      "stop": "跌破 5日线 (5.54, -3%)",
+      "close": 5.72,
+      "thesis": "元器件 行业, 涨幅 +0.18%, 成交 0.05 亿, MLCC, 元器件",
+      "entry": "现价 5.72, 不追高, 等回踩 5日线 5.72 介入",
+      "target": "突破前高/MA60 (6.18, +8%)",
+      "stop": "跌破 5日线 (5.55, -3%)",
       "risk_level": "中",
       "source": "theme",
       "tag": "🎯 双引擎"
     },
     {
-      "rank": 3,
+      "rank": 5,
       "code": "000988",
       "name": "华工科技",
-      "score": 41,
+      "score": 36,
       "score_breakdown": {
         "theme": 24,
         "money": 0,
-        "tech": 5,
+        "tech": 0,
         "event": 12
       },
       "industry": "专用机械",
@@ -93,68 +148,13 @@
         "船舶",
         "航天"
       ],
-      "pct_chg_today": 1.7709,
+      "pct_chg_today": -2.122,
       "ret_20d": 0,
-      "close": 94.25,
-      "thesis": "专用机械 行业, 涨幅 +1.77%, 成交 0.03 亿, 军工, 船舶",
-      "entry": "现价 94.25, 不追高, 等回踩 5日线 94.25 介入",
-      "target": "突破前高/MA60 (101.79, +8%)",
-      "stop": "跌破 5日线 (91.42, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🎯 双引擎"
-    },
-    {
-      "rank": 4,
-      "code": "002137",
-      "name": "实益达",
-      "score": 41,
-      "score_breakdown": {
-        "theme": 24,
-        "money": 0,
-        "tech": 5,
-        "event": 12
-      },
-      "industry": "元器件",
-      "themes": [
-        "MLCC",
-        "元器件",
-        "AI硬件",
-        "消费电子"
-      ],
-      "pct_chg_today": 2.0672,
-      "ret_20d": 0,
-      "close": 7.9,
-      "thesis": "元器件 行业, 涨幅 +2.07%, 成交 0.00 亿, MLCC, 元器件",
-      "entry": "现价 7.90, 不追高, 等回踩 5日线 7.90 介入",
-      "target": "突破前高/MA60 (8.53, +8%)",
-      "stop": "跌破 5日线 (7.66, -3%)",
-      "risk_level": "中",
-      "source": "theme",
-      "tag": "🎯 双引擎"
-    },
-    {
-      "rank": 5,
-      "code": "002228",
-      "name": "合兴包装",
-      "score": 8,
-      "score_breakdown": {
-        "theme": 8,
-        "money": 0,
-        "tech": 0,
-        "event": 0
-      },
-      "industry": "广告包装",
-      "themes": [
-        "广告包装"
-      ],
-      "pct_chg_today": 0.0,
-      "ret_20d": 0,
-      "close": 3.23,
-      "thesis": "广告包装 行业, 涨幅 +0.00%, 成交 0.00 亿, 广告包装",
-      "entry": "现价 3.23, 不追高, 等回踩 5日线 3.23 介入",
-      "target": "突破前高/MA60 (3.49, +8%)",
-      "stop": "跌破 5日线 (3.13, -3%)",
+      "close": 92.25,
+      "thesis": "专用机械 行业, 涨幅 -2.12%, 成交 0.02 亿, 军工, 船舶",
+      "entry": "现价 92.25, 不追高, 等回踩 5日线 92.25 介入",
+      "target": "突破前高/MA60 (99.63, +8%)",
+      "stop": "跌破 5日线 (89.48, -3%)",
       "risk_level": "中",
       "source": "theme",
       "tag": "🎯 双引擎"
@@ -165,24 +165,24 @@
       "rank": 0,
       "code": "000651",
       "name": "格力电器",
-      "score": 8,
+      "score": 13,
       "score_breakdown": {
         "theme": 8,
         "money": 0,
-        "tech": 0,
+        "tech": 5,
         "event": 0
       },
       "industry": "家用电器",
       "themes": [
         "家用电器"
       ],
-      "pct_chg_today": -0.7813,
+      "pct_chg_today": 0.4724,
       "ret_20d": 0,
-      "close": 38.1,
-      "thesis": "家用电器 行业, 涨幅 -0.78%, 成交 0.01 亿, 家用电器",
-      "entry": "现价 38.10, 不追高, 等回踩 5日线 38.10 介入",
-      "target": "突破前高/MA60 (41.15, +8%)",
-      "stop": "跌破 5日线 (36.96, -3%)",
+      "close": 38.28,
+      "thesis": "家用电器 行业, 涨幅 +0.47%, 成交 0.01 亿, 家用电器",
+      "entry": "现价 38.28, 不追高, 等回踩 5日线 38.28 介入",
+      "target": "突破前高/MA60 (41.34, +8%)",
+      "stop": "跌破 5日线 (37.13, -3%)",
       "risk_level": "中",
       "source": "quant",
       "tag": "🎯 双引擎"
@@ -191,6 +191,63 @@
       "rank": 0,
       "code": "000725",
       "name": "京东方A",
+      "score": 41,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 0,
+        "tech": 5,
+        "event": 12
+      },
+      "industry": "元器件",
+      "themes": [
+        "MLCC",
+        "元器件",
+        "AI硬件",
+        "消费电子"
+      ],
+      "pct_chg_today": 0.1751,
+      "ret_20d": 0,
+      "close": 5.72,
+      "thesis": "元器件 行业, 涨幅 +0.18%, 成交 0.05 亿, MLCC, 元器件",
+      "entry": "现价 5.72, 不追高, 等回踩 5日线 5.72 介入",
+      "target": "突破前高/MA60 (6.18, +8%)",
+      "stop": "跌破 5日线 (5.55, -3%)",
+      "risk_level": "中",
+      "source": "quant",
+      "tag": "🎯 双引擎"
+    },
+    {
+      "rank": 0,
+      "code": "000988",
+      "name": "华工科技",
+      "score": 36,
+      "score_breakdown": {
+        "theme": 24,
+        "money": 0,
+        "tech": 0,
+        "event": 12
+      },
+      "industry": "专用机械",
+      "themes": [
+        "军工",
+        "船舶",
+        "航天"
+      ],
+      "pct_chg_today": -2.122,
+      "ret_20d": 0,
+      "close": 92.25,
+      "thesis": "专用机械 行业, 涨幅 -2.12%, 成交 0.02 亿, 军工, 船舶",
+      "entry": "现价 92.25, 不追高, 等回踩 5日线 92.25 介入",
+      "target": "突破前高/MA60 (99.63, +8%)",
+      "stop": "跌破 5日线 (89.48, -3%)",
+      "risk_level": "中",
+      "source": "quant",
+      "tag": "🎯 双引擎"
+    },
+    {
+      "rank": 0,
+      "code": "002137",
+      "name": "实益达",
       "score": 36,
       "score_breakdown": {
         "theme": 24,
@@ -205,73 +262,16 @@
         "AI硬件",
         "消费电子"
       ],
-      "pct_chg_today": -1.5517,
+      "pct_chg_today": -3.7975,
       "ret_20d": 0,
-      "close": 5.71,
-      "thesis": "元器件 行业, 涨幅 -1.55%, 成交 0.05 亿, MLCC, 元器件",
-      "entry": "现价 5.71, 不追高, 等回踩 5日线 5.71 介入",
-      "target": "突破前高/MA60 (6.17, +8%)",
-      "stop": "跌破 5日线 (5.54, -3%)",
+      "close": 7.6,
+      "thesis": "元器件 行业, 涨幅 -3.80%, 成交 0.00 亿, MLCC, 元器件",
+      "entry": "现价 7.60, 不追高, 等回踩 5日线 7.60 介入",
+      "target": "突破前高/MA60 (8.21, +8%)",
+      "stop": "跌破 5日线 (7.37, -3%)",
       "risk_level": "中",
       "source": "quant",
-      "tag": "🎯 双引擎"
-    },
-    {
-      "rank": 0,
-      "code": "000988",
-      "name": "华工科技",
-      "score": 41,
-      "score_breakdown": {
-        "theme": 24,
-        "money": 0,
-        "tech": 5,
-        "event": 12
-      },
-      "industry": "专用机械",
-      "themes": [
-        "军工",
-        "船舶",
-        "航天"
-      ],
-      "pct_chg_today": 1.7709,
-      "ret_20d": 0,
-      "close": 94.25,
-      "thesis": "专用机械 行业, 涨幅 +1.77%, 成交 0.03 亿, 军工, 船舶",
-      "entry": "现价 94.25, 不追高, 等回踩 5日线 94.25 介入",
-      "target": "突破前高/MA60 (101.79, +8%)",
-      "stop": "跌破 5日线 (91.42, -3%)",
-      "risk_level": "中",
-      "source": "quant",
-      "tag": "🎯 双引擎"
-    },
-    {
-      "rank": 0,
-      "code": "002137",
-      "name": "实益达",
-      "score": 41,
-      "score_breakdown": {
-        "theme": 24,
-        "money": 0,
-        "tech": 5,
-        "event": 12
-      },
-      "industry": "元器件",
-      "themes": [
-        "MLCC",
-        "元器件",
-        "AI硬件",
-        "消费电子"
-      ],
-      "pct_chg_today": 2.0672,
-      "ret_20d": 0,
-      "close": 7.9,
-      "thesis": "元器件 行业, 涨幅 +2.07%, 成交 0.00 亿, MLCC, 元器件",
-      "entry": "现价 7.90, 不追高, 等回踩 5日线 7.90 介入",
-      "target": "突破前高/MA60 (8.53, +8%)",
-      "stop": "跌破 5日线 (7.66, -3%)",
-      "risk_level": "中",
-      "source": "quant",
-      "tag": "🎯 双引擎"
+      "tag": "📊 仅量化"
     },
     {
       "rank": 0,
@@ -297,17 +297,17 @@
       "stop": "跌破 5日线 (3.13, -3%)",
       "risk_level": "中",
       "source": "quant",
-      "tag": "🎯 双引擎"
+      "tag": "📊 仅量化"
     },
     {
       "rank": 0,
       "code": "002281",
       "name": "光迅科技",
-      "score": 41,
+      "score": 36,
       "score_breakdown": {
         "theme": 24,
         "money": 0,
-        "tech": 5,
+        "tech": 0,
         "event": 12
       },
       "industry": "通信设备",
@@ -317,13 +317,13 @@
         "光模块",
         "5G"
       ],
-      "pct_chg_today": 1.8926,
+      "pct_chg_today": -1.2103,
       "ret_20d": 0,
-      "close": 166.9,
-      "thesis": "通信设备 行业, 涨幅 +1.89%, 成交 0.04 亿, AI算力, 服务器",
-      "entry": "现价 166.90, 不追高, 等回踩 5日线 166.90 介入",
-      "target": "突破前高/MA60 (180.25, +8%)",
-      "stop": "跌破 5日线 (161.89, -3%)",
+      "close": 164.88,
+      "thesis": "通信设备 行业, 涨幅 -1.21%, 成交 0.03 亿, AI算力, 服务器",
+      "entry": "现价 164.88, 不追高, 等回踩 5日线 164.88 介入",
+      "target": "突破前高/MA60 (178.07, +8%)",
+      "stop": "跌破 5日线 (159.93, -3%)",
       "risk_level": "中",
       "source": "quant",
       "tag": "📊 仅量化"
@@ -332,12 +332,12 @@
       "rank": 0,
       "code": "002487",
       "name": "大金重工",
-      "score": 41,
+      "score": 49,
       "score_breakdown": {
         "theme": 24,
         "money": 0,
         "tech": 5,
-        "event": 12
+        "event": 20
       },
       "industry": "电气设备",
       "themes": [
@@ -346,31 +346,23 @@
         "钠电池",
         "新型电力"
       ],
-      "pct_chg_today": 3.7458,
+      "pct_chg_today": 7.8267,
       "ret_20d": 0,
-      "close": 42.93,
-      "thesis": "电气设备 行业, 涨幅 +3.75%, 成交 0.04 亿, 储能, 电池",
-      "entry": "现价 42.93, 不追高, 等回踩 5日线 42.93 介入",
-      "target": "突破前高/MA60 (46.36, +8%)",
-      "stop": "跌破 5日线 (41.64, -3%)",
+      "close": 46.29,
+      "thesis": "电气设备 行业, 涨幅 +7.83%, 成交 0.04 亿, 储能, 电池",
+      "entry": "现价 46.29, 突破 47.22 加仓",
+      "target": "突破前高/MA60 (49.99, +8%)",
+      "stop": "跌破 5日线 (44.90, -3%)",
       "risk_level": "中",
       "source": "quant",
       "tag": "📊 仅量化"
     }
   ],
   "intersection": [
-    "002228",
-    "000651",
     "000725",
-    "000988",
-    "002137"
+    "000651",
+    "000988"
   ],
-  "filtered_out": [
-    {
-      "code": "301716",
-      "name": "N鸿富诚",
-      "reason": "新股首日 (653%, 无 20 日 K 线)"
-    }
-  ],
+  "filtered_out": [],
   "risk_warning": "本榜单基于 Tushare 当日真实数据动态生成, 仅供参考, 不构成投资建议. 投资有风险, 入市需谨慎."
 }
