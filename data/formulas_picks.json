@@ -1,7 +1,7 @@
 {
   "date": "2026-10-09",
   "update_time": "17:30 (盘后)",
-  "actual_run_time": "00:02",
+  "actual_run_time": "01:08",
   "version": "v3.3 (大小盘风格+量能+逆动量+修复iloc[0]bug)",
   "data_source": "20261008 行情 + 资金流 + 板块",
   "market": {
